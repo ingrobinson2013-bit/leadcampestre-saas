@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadCampestre OS — Proyecto La Estrella (Servidor Local En Vivo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #090d16;
+      --card: #111827;
+      --foreground: #f8fafc;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+    .lot-polygon { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .lot-polygon:hover { filter: brightness(1.25); transform: translateY(-2px); }
+    @media print {
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: fixed; inset: 0; background: white; color: black; padding: 24px; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-emerald-500/20">
+
+  <!-- TOP COMMAND BAR -->
+  <header class="border-b border-[var(--border)] bg-[var(--card)]/90 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3">
+        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center font-black text-sm shadow-lg shadow-emerald-500/20">
+          LC
+          <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[var(--card)]"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm tracking-tight">LeadCampestre OS</span>
+            <span id="serverBadge" class="px-2 py-0.5 text-xs font-semibold rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              🟢 BD Local Conectada
+            </span>
+            <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] font-mono">
+              Agente: Valentina Ríos (Máx 60 palabras)
+            </span>
+          </div>
+          <div class="text-xs text-[var(--muted-foreground)] flex items-center gap-2 mt-0.5">
+            <span>Proyecto: <strong class="text-[var(--foreground)]">La Estrella (Villavicencio - Vereda Las Mercedes)</strong></span>
+            <span>•</span>
+            <span class="text-emerald-400 font-medium">A 10m Vía Villavicencio–Acacías</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Navigation Pills -->
+      <nav class="flex items-center bg-[var(--background)] p-1 rounded-xl border border-[var(--border)] overflow-x-auto">
+        <button onclick="switchTab('command')" id="tab-command" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>💬 Monitor Valentina Ríos</span>
+        </button>
+        <button onclick="switchTab('masterplan')" id="tab-masterplan" class="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>🗺️ Planos Etapas 1, 2 y 3 (SVG)</span>
+        </button>
+        <button onclick="switchTab('mobile')" id="tab-mobile" class="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📲 App David en Terreno (QR)</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="tab-analytics" class="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📊 Botcake Agosto vs. Laravel</span>
+        </button>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2">
+        <button onclick="openNewLeadModal()" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition shadow-sm">
+          ➕ Simular Nuevo Lead de Anuncio
+        </button>
+
+        <button id="roleToggleBtn" onclick="toggleRoleView()" class="px-3 py-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition">
+          👑 Rol: Socio 40% (Ver como Coordinador)
+        </button>
+      </div>
+    </div>
+
+    <div id="coordNotice" class="hidden bg-amber-500/15 border-t border-amber-500/30 px-4 py-1.5 text-xs text-amber-400 flex items-center justify-between">
+      <span>👁️ <strong>VISTA COORDINADOR DE PAUTA (SOLO LECTURA):</strong> Teléfonos encriptados (<code class="font-mono">+57 311 *** 8821</code>) para proteger tu base de datos y tu 40%.</span>
+      <button onclick="toggleRoleView()" class="underline font-bold">Volver a Vista Socio 40%</button>
+    </div>
+  </header>
+
+  <main class="max-w-[1600px] mx-auto p-4">
+
+    <!-- VIEW 1: VALENTINA RÍOS COMMAND CENTER -->
+    <section id="view-command" class="space-y-4">
+      
+      <!-- Telemetry Ribbon -->
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)]">Leads Agosto ($30k/día)</div>
+            <div id="kpiLeadsCount" class="text-xl font-black mt-0.5">477 Leads</div>
+            <div class="text-xs text-emerald-400 font-medium">6,363 msgs → 2,100 con Debouncer</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-base">📣</div>
+        </div>
+
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)]">Teléfonos en tu BD</div>
+            <div class="text-xl font-black text-emerald-400 mt-0.5">100% Guardados</div>
+            <div class="text-xs text-rose-400">En Botcake salía en ~0%</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-base">📱</div>
+        </div>
+
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)]">Citas con David (Terreno)</div>
+            <div class="text-xl font-black mt-0.5">Lun–Dom 7a-5p</div>
+            <div class="text-xs text-amber-400 font-medium">Transferencia con Pase QR</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-base">🎟️</div>
+        </div>
+
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)]">Factura Mensual Total</div>
+            <div class="text-xl font-black text-emerald-400 mt-0.5">$1.45 USD</div>
+            <div class="text-xs text-rose-400 line-through">Pancake: $77.00 USD</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-base">⚡</div>
+        </div>
+
+        <div class="bg-[var(--card)] border border-emerald-500/40 rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-emerald-400 font-semibold">Lotes La Estrella</div>
+            <div class="text-xl font-black mt-0.5">$27M • $32M • $42M</div>
+            <div class="text-xs text-[var(--muted-foreground)]">Separa $500k • 40% ini • 18m</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base">⭐</div>
+        </div>
+      </div>
+
+      <!-- 3-Column Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- LEFT: Smart Lead Queue -->
+        <div class="lg:col-span-3 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden flex flex-col h-[670px]">
+          <div class="p-3.5 border-b border-[var(--border)] space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Bandeja Proyecto La Estrella</span>
+              <button onclick="openNewLeadModal()" class="text-xs text-emerald-400 font-semibold hover:underline">+ Nuevo Lead</button>
+            </div>
+            <div class="grid grid-cols-3 gap-1 bg-[var(--background)] p-1 rounded-xl border border-[var(--border)] text-xs">
+              <button onclick="filterList('all')" class="py-1 rounded-lg bg-emerald-600 text-white font-semibold">Todos</button>
+              <button onclick="filterList('hot')" class="py-1 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)]">📅 Citas</button>
+              <button onclick="filterList('alert')" class="py-1 rounded-lg text-rose-400 font-semibold">🚨 Alertas</button>
+            </div>
+          </div>
+          <div id="leadListContainer" class="divide-y divide-[var(--border)] overflow-y-auto custom-scroll flex-1"></div>
+        </div>
+
+        <!-- CENTER: Live Chat Valentina Ríos + Live 5s Debouncer -->
+        <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden flex flex-col h-[670px]">
+          <div class="p-3.5 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 bg-[var(--background)]/40">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 id="activeLeadName" class="font-bold text-sm">Mauricio Rincón</h3>
+                <span id="activeLeadBadge" class="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-400 font-semibold">
+                  📈 Invertir
+                </span>
+              </div>
+              <div class="text-xs text-[var(--muted-foreground)] flex items-center gap-2 mt-0.5">
+                <span id="activeLeadPhone" class="font-mono">+57 311 490 8821</span>
+                <span>•</span>
+                <span class="text-emerald-400 font-medium">🟢 Ventana 72h Meta CTWA Gratis</span>
+              </div>
+            </div>
+
+            <button id="takeoverBtn" onclick="toggleHumanTakeover()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white shadow-sm hover:bg-emerald-500 transition flex items-center gap-1.5">
+              <span>🤖</span>
+              <span>Valentina IA Activa</span>
+            </button>
+          </div>
+
+          <!-- Live Redis Debouncer Status Bar -->
+          <div id="debounceBar" class="px-3.5 py-1.5 bg-[var(--background)] border-b border-[var(--border)] flex items-center justify-between text-xs">
+            <span class="text-[var(--muted-foreground)]">Prompt Valentina: <strong class="text-[var(--foreground)] font-mono">48 tokens</strong></span>
+            <span id="debounceTimerText" class="text-emerald-400 font-mono">⚡ Debouncer 5s listo (Une mensajes seguidos)</span>
+          </div>
+
+          <!-- Messages Stream -->
+          <div id="chatStream" class="flex-1 p-4 overflow-y-auto custom-scroll space-y-3 bg-[var(--background)]/20"></div>
+
+          <!-- Interactive Buyer Simulator + Admin Input -->
+          <div class="p-3 border-t border-[var(--border)] bg-[var(--card)] space-y-2">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+              <span class="text-xs text-emerald-400 font-semibold whitespace-nowrap">Simular Comprador:</span>
+              <button onclick="queueBuyerMessage('Hola, ¿me envías ubicación exacta por Maps para ir solo?')" class="px-2.5 py-1 rounded-lg bg-[var(--background)] border border-[var(--border)] hover:border-emerald-500 text-xs whitespace-nowrap">
+                📍 Pedir Ubicación Exacta
+              </button>
+              <button onclick="queueBuyerMessage('¿Qué papeles tienen y cuándo entregan agua y luz?')" class="px-2.5 py-1 rounded-lg bg-[var(--background)] border border-[var(--border)] hover:border-emerald-500 text-xs whitespace-nowrap">
+                ⚖️ Escritura y Servicios
+              </button>
+              <button onclick="queueBuyerMessage('Agendemos para el sábado a las 10:00 am con mi esposa')" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold whitespace-nowrap">
+                📅 Confirmar Cita Sábado 10am
+              </button>
+            </div>
+
+            <!-- Dual Input: Buyer vs Admin -->
+            <div class="flex gap-2">
+              <input id="chatTextInput" type="text" placeholder="Escribe un mensaje aquí..." class="flex-1 bg-[var(--background)] border border-[var(--border)] rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-emerald-500">
+              <button onclick="sendAsBuyerWithDebounce()" class="px-3 py-2 rounded-xl bg-slate-800 border border-emerald-500/40 text-emerald-400 text-xs font-semibold hover:bg-slate-700 transition whitespace-nowrap" title="Envía como Comprador activando el Debouncer de 5s">
+                👤 Enviar como Comprador (5s)
+              </button>
+              <button onclick="sendManualMessage()" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition whitespace-nowrap">
+                👑 Responder Tú
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Ficha Financiera + Pase QR para David / Stella -->
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 space-y-4 h-[670px] overflow-y-auto custom-scroll">
+          <div class="p-3.5 rounded-2xl bg-[var(--background)] border border-[var(--border)] space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">⚡ Estructura Comercial La Estrella</span>
+              <span id="insCityIntent" class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 text-xs font-mono font-semibold">Bogotá • Invertir</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+                <div class="text-[var(--muted-foreground)]">Lote Perfilado</div>
+                <div id="insLot" class="text-sm font-black mt-0.5">8x20 (160 m²) — $32M</div>
+                <div class="text-xs text-emerald-400 font-medium">Separación: $500.000</div>
+              </div>
+              <div class="p-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+                <div class="text-[var(--muted-foreground)]">Inicial 40% (30 días)</div>
+                <div id="insInitial" class="text-sm font-black text-emerald-400 mt-0.5">$12.800.000 COP</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Se aceptan Cesantías</div>
+              </div>
+              <div class="p-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+                <div class="text-[var(--muted-foreground)]">Saldo 60% (18 Meses)</div>
+                <div id="insQuota" class="text-sm font-black mt-0.5">$1.066.667 / mes</div>
+                <div class="text-xs text-[var(--muted-foreground)]">0% Interés Directo</div>
+              </div>
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                <div class="text-emerald-400 font-semibold">Anuncio Origen</div>
+                <div id="insAdSource" class="text-xs font-bold text-emerald-400 mt-1 truncate">Video Dron #03</div>
+                <div class="text-xs text-[var(--muted-foreground)]">Socio 40% Protegido</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pasaporte QR VIP para David (3203146653) -->
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/60 to-slate-900/80 border border-emerald-500/40 text-white space-y-3 shadow-lg">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+              <div>
+                <div class="text-xs uppercase tracking-widest text-emerald-400 font-bold">PASAPORTE DE VISITA EN TERRENO</div>
+                <div class="text-sm font-bold">Vereda Las Mercedes • A 10m Vía Acacías</div>
+              </div>
+              <span id="passQrCode" class="px-2 py-0.5 rounded bg-emerald-500 text-black text-xs font-black font-mono">QR-EST-409</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <div class="text-white/60">VISITANTE</div>
+                <div id="passBuyer" class="font-bold truncate">Mauricio Rincón</div>
+              </div>
+              <div>
+                <div class="text-white/60">CITA</div>
+                <div id="passSlot" class="font-bold text-emerald-400">Sáb 10:00 AM</div>
+              </div>
+              <div>
+                <div class="text-white/60">RECIBE</div>
+                <div class="font-bold">David (3203146653)</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button onclick="openPrintPassModal()" class="py-2 rounded-xl bg-emerald-500 text-black font-bold text-xs hover:bg-emerald-400 transition">
+                📄 Ver / Imprimir PDF + QR
+              </button>
+              <button onclick="switchTab('mobile')" class="py-2 rounded-xl bg-white/10 text-white font-semibold text-xs hover:bg-white/20 transition">
+                📲 Abrir App de David →
+              </button>
+            </div>
+          </div>
+
+          <!-- Planos Controlados Etapas 1, 2 y 3 -->
+          <div class="p-3.5 rounded-2xl bg-[var(--background)] border border-[var(--border)] space-y-2 text-xs">
+            <div class="font-bold uppercase tracking-wider text-[var(--muted-foreground)]">🗺️ Planos Oficiales Controlados (Regla #15)</div>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <a href="https://drive.google.com/file/d/1MLr6SdQXqVMl0sB6EqFXoSr7iiHSmWiV/view?usp=sharing" target="_blank" class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-center hover:border-emerald-500 font-semibold text-emerald-400">
+                📂 Etapa 1
+              </a>
+              <a href="https://drive.google.com/file/d/1QbykFWTWgULMNyeDs1LcJTf3zHIjK_oZ/view?usp=sharing" target="_blank" class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-center hover:border-emerald-500 font-semibold text-emerald-400">
+                📂 Etapa 2
+              </a>
+              <a href="https://drive.google.com/file/d/1I9HXTIXYGlep-nVvvZu-EafYl79GMI6p/view?usp=sharing" target="_blank" class="p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-center hover:border-emerald-500 font-semibold text-emerald-400">
+                📂 Etapa 3
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: PLANOS ETAPAS 1, 2 Y 3 (MASTERPLAN SVG INTERACTIVO) -->
+    <section id="view-masterplan" class="hidden space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="font-bold text-base">🗺️ Masterplan en Vivo — Proyecto La Estrella (Vereda Las Mercedes)</h2>
+              <p class="text-xs text-[var(--muted-foreground)]">
+                Haz clic en cualquier lote para cambiar su estado en la base de datos local (`Disponible`, `Separado con $500.000`, `Financiado 18 meses`).
+              </p>
+            </div>
+          </div>
+
+          <div class="relative rounded-2xl overflow-hidden border border-[var(--border)] bg-slate-950 p-3">
+            <svg viewBox="0 0 800 420" class="w-full h-auto select-none">
+              <rect width="800" height="420" fill="#071318" />
+              <path d="M 0,40 L 800,40" stroke="#1e293b" stroke-width="38" />
+              <path d="M 0,40 L 800,40" stroke="#f59e0b" stroke-width="2" stroke-dasharray="14,10" />
+              <text x="195" y="44" fill="#fbbf24" font-size="12" font-weight="bold">🛣️ VÍA NACIONAL VILLAVICENCIO – ACACÍAS (PROYECTO A SOLO 10 METROS)</text>
+
+              <path d="M 60,220 L 760,220" stroke="#1e293b" stroke-width="30" stroke-linecap="round" />
+              <text x="240" y="224" fill="#94a3b8" font-size="11" font-weight="bold">VÍA INTERNA PROYECTO LA ESTRELLA (AGUA POTABLE + ENERGÍA + FIBRA)</text>
+
+              <!-- E1-01 (6x20) -->
+              <g onclick="selectMapLot('E1-01', '6x20 (120 m²)', '$27.000.000', '$10.800.000', '$900.000 / mes')" class="lot-polygon">
+                <polygon id="poly-E1-01" points="80,85 230,85 230,195 80,195" fill="#10b981" fill-opacity="0.25" stroke="#10b981" stroke-width="2.5" />
+                <text x="112" y="128" fill="#fff" font-size="14" font-weight="bold">E1-01 (6x20m)</text>
+                <text x="115" y="148" fill="#34d399" font-size="13" font-weight="bold">$27.000.000</text>
+                <text id="txt-E1-01" x="112" y="168" fill="#a7f3d0" font-size="11">🟢 DISPONIBLE</text>
+              </g>
+
+              <!-- E1-02 (8x20) -->
+              <g onclick="selectMapLot('E1-02', '8x20 (160 m²)', '$32.000.000', '$12.800.000', '$1.066.667 / mes')" class="lot-polygon">
+                <polygon id="poly-E1-02" points="250,85 420,85 420,195 250,195" fill="#10b981" fill-opacity="0.4" stroke="#34d399" stroke-width="3.5" />
+                <text x="285" y="128" fill="#fff" font-size="14" font-weight="bold">E1-02 (8x20m) ⭐</text>
+                <text x="295" y="148" fill="#34d399" font-size="13" font-weight="bold">$32.000.000</text>
+                <text id="txt-E1-02" x="280" y="168" fill="#fff" font-size="11" font-weight="bold">🔥 COTIZADO (MAURICIO)</text>
+              </g>
+
+              <!-- E1-03 (10x20) -->
+              <g onclick="selectMapLot('E1-03', '10x20 (200 m²)', '$42.000.000', '$16.800.000', '$1.400.000 / mes')" class="lot-polygon">
+                <polygon id="poly-E1-03" points="440,85 640,85 640,195 440,195" fill="#10b981" fill-opacity="0.25" stroke="#10b981" stroke-width="2.5" />
+                <text x="485" y="128" fill="#fff" font-size="14" font-weight="bold">E1-03 (10x20m)</text>
+                <text x="500" y="148" fill="#34d399" font-size="13" font-weight="bold">$42.000.000</text>
+                <text id="txt-E1-03" x="495" y="168" fill="#a7f3d0" font-size="11">🟢 DISPONIBLE</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 space-y-4">
+          <div class="border-b border-[var(--border)] pb-3">
+            <span class="text-xs font-bold uppercase text-emerald-400">Gestión de Inventario en Vivo</span>
+            <h3 id="mapLotTitle" class="font-black text-lg mt-0.5">Lote E1-02 — 8x20 (160 m²)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Terreno plano • Se puede construir al cancelar</p>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between p-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)]">
+              <span>Precio de Lista:</span><strong id="mapLotPrice">$32.000.000 COP</strong>
+            </div>
+            <div class="flex justify-between p-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)]">
+              <span>Separación Inmediata:</span><strong class="text-amber-400">$500.000 COP</strong>
+            </div>
+            <div class="flex justify-between p-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)]">
+              <span>Inicial 40% (30 días):</span><strong id="mapLotInitial" class="text-emerald-400">$12.800.000 COP</strong>
+            </div>
+            <div class="flex justify-between p-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)]">
+              <span>18 Cuotas Sin Interés (60%):</span><strong id="mapLotQuota">$1.066.667 / mes</strong>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-2">
+            <button onclick="updateSelectedLotStatus('separado_500k')" class="py-2.5 rounded-xl bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition">
+              🔒 Separar con $500k
+            </button>
+            <button onclick="updateSelectedLotStatus('disponible')" class="py-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-semibold hover:border-emerald-500 transition">
+              🟢 Marcar Disponible
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: APP MÓVIL DE DAVID EN TERRENO -->
+    <section id="view-mobile" class="hidden space-y-4">
+      <div class="flex justify-center py-4">
+        <div class="w-[370px] rounded-[36px] border-8 border-slate-800 bg-slate-950 text-white p-4 shadow-2xl space-y-4">
+          <div class="w-28 h-4 bg-slate-800 rounded-full mx-auto"></div>
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div>
+              <div class="text-xs text-emerald-400 font-bold">APP CAMPO • VEREDA LAS MERCEDES</div>
+              <div class="text-sm font-bold">David (Cel: 3203146653)</div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">En Línea</span>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900 border border-emerald-500/40 text-center space-y-2.5">
+            <div class="text-xs font-bold text-emerald-400">📷 ESCANEAR PASAPORTE QR DEL CLIENTE</div>
+            <div class="w-28 h-28 mx-auto rounded-xl border-2 border-dashed border-emerald-400 flex items-center justify-center bg-black/40">
+              <span id="qrScanStatusIcon" class="text-2xl">🎟️</span>
+            </div>
+            <p id="qrScanStatusText" class="text-xs text-slate-300">Valida la llegada del comprador a 10m de la vía Villavicencio–Acacías</p>
+            <button onclick="triggerDavidQrCheckIn()" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition">
+              ✔ Confirmar Check-in QR en Terreno
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: ANALYTICS -->
+    <section id="view-analytics" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 space-y-3">
+        <h2 class="font-bold text-base">📊 Tus Números de Agosto en Botcake AI vs. LeadCampestre OS</h2>
+        <p class="text-xs text-[var(--muted-foreground)]">
+          De <strong>$77.00 USD/mes</strong> ($50 recarga + $27 activos) y 0% teléfonos estructurados en Botcake, a <strong>$1.45 USD/mes</strong> y 100% de trazabilidad con QR para tu 40% de comisión.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: SIMULAR NUEVO LEAD DESDE ANUNCIO META CTWA -->
+  <div id="newLeadModal" class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl max-w-md w-full p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h3 class="font-bold text-sm">📣 Simular Nuevo Lead desde Anuncio del Coordinador</h3>
+        <button onclick="closeNewLeadModal()" class="text-xs text-[var(--muted-foreground)]">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-[var(--muted-foreground)] mb-1">Nombre del Comprador:</label>
+          <input id="newLeadName" type="text" value="Ing. Camilo Restrepo" class="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-[var(--muted-foreground)] mb-1">WhatsApp (Queda guardado 100% en tu BD):</label>
+          <input id="newLeadPhone" type="text" value="+57 314 892 1044" class="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-2 font-mono">
+        </div>
+        <div>
+          <label class="block text-[var(--muted-foreground)] mb-1">Botón del Anuncio que presionó (Router 0 Tokens):</label>
+          <select id="newLeadBtn" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-xl px-3 py-2">
+            <option value="PARA INVERTIR">📈 PARA INVERTIR</option>
+            <option value="PARA VIVIR">🏡 PARA VIVIR</option>
+            <option value="PARA RECREACIÓN">🌴 PARA RECREACIÓN</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="createNewLeadFromAd()" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition">
+        🚀 Disparar Webhook Meta CTWA Ahora
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: COTIZACIÓN OFICIAL + PASAPORTE QR IMPRIMIBLE -->
+  <div id="printPassModal" class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4">
+    <div id="printableArea" class="bg-white text-slate-900 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div>
+          <div class="text-xs font-bold uppercase text-emerald-700">PROYECTO LA ESTRELLA • VILLAVICENCIO - META</div>
+          <h3 class="font-black text-lg">Cotización Oficial & Pasaporte VIP de Visita</h3>
+          <p class="text-xs text-slate-500">Vereda Las Mercedes • A 10m Vía Nacional Villavicencio–Acacías</p>
+        </div>
+        <div class="text-right font-mono text-xs bg-emerald-100 text-emerald-900 px-3 py-1.5 rounded-lg font-bold" id="pdfQrBadge">
+          QR-EST-409
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+        <div><span class="text-slate-500">Titular Registrado:</span><br><strong id="pdfBuyerName" class="text-sm">Mauricio Rincón</strong></div>
+        <div><span class="text-slate-500">Recibe en Terreno:</span><br><strong class="text-sm">David (Cel: 3203146653)</strong></div>
+        <div><span class="text-slate-500">Lote Cotizado:</span><br><strong id="pdfLotDim" class="text-emerald-700">8x20 (160 m²) — $32.000.000</strong></div>
+        <div><span class="text-slate-500">Separación (Congela Lote):</span><br><strong>$500.000 COP (Abona al 40%)</strong></div>
+        <div><span class="text-slate-500">Inicial 40% (Plazo 30 días):</span><br><strong id="pdfInitial">$12.800.000 COP (Acepta Cesantías)</strong></div>
+        <div><span class="text-slate-500">Saldo 60% (18 Meses 0%):</span><br><strong id="pdfQuota" class="text-emerald-700">$1.066.667 / mes</strong></div>
+      </div>
+
+      <div class="text-xs text-slate-600 space-y-1 border-t border-slate-200 pt-2">
+        <div>✔ <strong>Respaldo Jurídico:</strong> Escritura pública por porcentaje sobre 35 hectáreas libres de embargo, POT Sub-Urbano.</div>
+        <div>✔ <strong>Trazabilidad Comercial:</strong> Lead originado por canal digital oficial (Socio 40%).</div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">🖨️ Imprimir / Guardar PDF</button>
+        <button onclick="closePrintPassModal()" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-800 text-xs font-semibold">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isCoordinator = false;
+    let activeLeadIdx = 0;
+    let selectedMapLotCode = 'E1-02';
+    let debounceQueue = [];
+    let debounceTimer = null;
+    let debounceSecondsLeft = 0;
+
+    let appState = {
+      leads: [
+        {
+          id: 1,
+          name: 'Mauricio Rincón',
+          phone: '+57 311 490 8821',
+          masked: '+57 311 *** 8821',
+          city: 'Bogotá',
+          intent: 'Invertir',
+          tag: 'hot',
+          score: '📈 Invertir • Cita Sáb 10am',
+          badgeClass: 'bg-emerald-500/20 text-emerald-400',
+          lotDim: '8x20 (160 m²) — $32M',
+          initialCop: '$12.800.000 COP (40%)',
+          quotaCop: '$1.066.667 / mes (18m)',
+          adSource: 'Video Dron Vía Acacías #03',
+          qrCode: 'QR-EST-409',
+          visitSlot: 'Sábado 10:00 AM',
+          aiActive: true,
+          messages: [
+            { from: 'client', time: '7:58 PM', text: 'PARA INVERTIR' },
+            { from: 'router', time: '7:58 PM • ⚡ Router 0 Tokens', text: 'Excelente que lo veas como inversión 📈\n\nEsta zona en Villavicencio (Vereda Las Mercedes, a 10m de la vía nacional) está entrando en crecimiento sub-urbano y la valorización es estratégica.\n\n¿Desde qué ciudad nos visitarías?' },
+            { from: 'client', time: '8:01 PM • ⚡ Debouncer Redis', text: 'Voy desde Bogotá con mi esposa. ¿Qué opciones tienen y cómo es la financiación?' },
+            { from: 'ai', time: '8:01 PM • Valentina Ríos QLoRA (46 palabras)', text: 'Muchos clientes que vienen de Bogotá buscan valorización estratégica.\n\nSeparas hoy con *$500.000* (se abona al *40% inicial*) y el *60% restante hasta 18 meses sin interés*:\n• *6x20 (120m²):* $27.000.000\n• *8x20 (160m²):* $32.000.000\n\nTenemos visitas el *sábado a las 10:00 am* o el *domingo a las 2:00 pm*. ¿Cuál te queda mejor?' }
+          ]
+        }
+      ]
+    };
+
+    async function syncFromLocalServer() {
+      try {
+        const res = await fetch('/api/state');
+        if (res.ok) {
+          appState = await res.json();
+          renderLeadQueue();
+          selectLeadItem(activeLeadIdx);
+        }
+      } catch (e) {
+        // Fallback autónomo si se abre sin servidor
+        renderLeadQueue();
+        selectLeadItem(0);
+      }
+    }
+
+    function renderLeadQueue(filter = 'all') {
+      const box = document.getElementById('leadListContainer');
+      box.innerHTML = '';
+      appState.leads.forEach((l, i) => {
+        if (filter !== 'all' && l.tag !== filter) return;
+        const active = i === activeLeadIdx;
+        const phoneStr = isCoordinator ? l.masked : l.phone;
+        const div = document.createElement('div');
+        div.className = `p-3.5 cursor-pointer transition hover:bg-[var(--background)]/60 ${active ? 'bg-emerald-500/10 border-l-4 border-emerald-500' : ''}`;
+        div.onclick = () => selectLeadItem(i);
+        div.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-bold text-xs truncate">${l.name}</span>
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${l.badgeClass}">${l.score}</span>
+          </div>
+          <div class="text-xs font-mono text-[var(--muted-foreground)] mt-0.5">${phoneStr} • ${l.lotDim}</div>
+          <div class="text-xs text-[var(--muted-foreground)] truncate mt-1">${l.messages[l.messages.length - 1].text}</div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selectLeadItem(i) {
+      if (i >= appState.leads.length) i = 0;
+      activeLeadIdx = i;
+      const l = appState.leads[i];
+      renderLeadQueue();
+
+      document.getElementById('activeLeadName').textContent = l.name;
+      document.getElementById('activeLeadBadge').textContent = l.score;
+      document.getElementById('activeLeadPhone').textContent = isCoordinator ? l.masked : l.phone;
+
+      document.getElementById('insCityIntent').textContent = `${l.city || 'Bogotá'} • ${l.intent || 'Invertir'}`;
+      document.getElementById('insLot').textContent = l.lotDim;
+      document.getElementById('insInitial').textContent = l.initialCop;
+      document.getElementById('insQuota').textContent = l.quotaCop;
+      document.getElementById('insAdSource').textContent = l.adSource;
+
+      document.getElementById('passQrCode').textContent = l.qrCode || 'QR-EST-409';
+      document.getElementById('passBuyer').textContent = l.name;
+      document.getElementById('passSlot').textContent = l.visitSlot || 'Sábado 10:00 AM';
+
+      renderChatStream(l);
+    }
+
+    function renderChatStream(l) {
+      const stream = document.getElementById('chatStream');
+      stream.innerHTML = '';
+      l.messages.forEach(m => {
+        const el = document.createElement('div');
+        if (m.from === 'client') {
+          el.className = 'flex flex-col items-start max-w-[85%]';
+          el.innerHTML = `
+            <span class="text-xs text-[var(--muted-foreground)] mb-1">👤 Comprador • ${m.time}</span>
+            <div class="p-3 rounded-2xl rounded-tl-sm bg-[var(--card)] border border-[var(--border)] text-xs leading-relaxed whitespace-pre-line shadow-sm">${m.text}</div>
+          `;
+        } else {
+          el.className = 'flex flex-col items-end max-w-[85%] ml-auto';
+          el.innerHTML = `
+            <span class="text-xs text-emerald-400 mb-1">🤖 ${m.time}</span>
+            <div class="p-3 rounded-2xl rounded-tr-sm bg-emerald-500/15 border border-emerald-500/30 text-xs leading-relaxed whitespace-pre-line">${m.text}</div>
+          `;
+        }
+        stream.appendChild(el);
+      });
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    // Simulador real del Debouncer de 5 segundos en Redis
+    function queueBuyerMessage(text) {
+      debounceQueue.push(text);
+      debounceSecondsLeft = 3; // 3s visuales rápidos para demostración fluida
+      const statusEl = document.getElementById('debounceTimerText');
+
+      if (debounceTimer) clearInterval(debounceTimer);
+      statusEl.innerHTML = `<span class="text-amber-400 font-bold">⏳ Debouncer activo: agrupando ${debounceQueue.length} msg(s) (${debounceSecondsLeft}s)...</span>`;
+
+      debounceTimer = setInterval(async () => {
+        debounceSecondsLeft--;
+        if (debounceSecondsLeft > 0) {
+          statusEl.innerHTML = `<span class="text-amber-400 font-bold">⏳ Debouncer activo: agrupando ${debounceQueue.length} msg(s) (${debounceSecondsLeft}s)...</span>`;
+        } else {
+          clearInterval(debounceTimer);
+          const unifiedText = debounceQueue.join('. ');
+          const count = debounceQueue.length;
+          debounceQueue = [];
+          statusEl.innerHTML = `⚡ <span class="text-emerald-400">1 sola llamada enviada a Valentina Ríos (${count} msg unidos)</span>`;
+
+          const lead = appState.leads[activeLeadIdx];
+          try {
+            const res = await fetch('/api/webhook/simulate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ leadId: lead.id, text: unifiedText, debouncedCount: count })
+            });
+            if (res.ok) {
+              appState = await res.json();
+              selectLeadItem(activeLeadIdx);
+              return;
+            }
+          } catch (e) {}
+
+          // Fallback sin servidor
+          lead.messages.push({ from: 'client', time: 'Ahora', text: unifiedText });
+          lead.messages.push({
+            from: 'ai',
+            time: 'Ahora • Valentina Ríos QLoRA',
+            text: 'El proyecto está en Villavicencio, vereda Las Mercedes (a 10m de la vía Villavicencio–Acacías). Separas con $500.000. ¿Te queda mejor visitarnos mañana a las 10:00 am o el sábado en la mañana?'
+          });
+          renderChatStream(lead);
+        }
+      }, 700);
+    }
+
+    function sendAsBuyerWithDebounce() {
+      const inp = document.getElementById('chatTextInput');
+      if (!inp.value.trim()) return;
+      const txt = inp.value.trim();
+      inp.value = '';
+      queueBuyerMessage(txt);
+    }
+
+    async function sendManualMessage() {
+      if (isCoordinator) {
+        alert('En Vista Coordinador el chat está en Solo Lectura.');
+        return;
+      }
+      const inp = document.getElementById('chatTextInput');
+      if (!inp.value.trim()) return;
+      const txt = inp.value.trim();
+      inp.value = '';
+      const lead = appState.leads[activeLeadIdx];
+
+      try {
+        const res = await fetch('/api/lead/manual-send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadId: lead.id, text: txt })
+        });
+        if (res.ok) {
+          appState = await res.json();
+          selectLeadItem(activeLeadIdx);
+          return;
+        }
+      } catch (e) {}
+
+      lead.messages.push({ from: 'admin', time: 'Ahora • 👑 Socio 40%', text: txt });
+      renderChatStream(lead);
+    }
+
+    async function createNewLeadFromAd() {
+      const name = document.getElementById('newLeadName').value.trim();
+      const phone = document.getElementById('newLeadPhone').value.trim();
+      const button = document.getElementById('newLeadBtn').value;
+      closeNewLeadModal();
+
+      try {
+        const res = await fetch('/api/lead/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, button })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          appState = data.db;
+          selectLeadItem(0);
+          return;
+        }
+      } catch (e) {}
+    }
+
+    async function triggerDavidQrCheckIn() {
+      const lead = appState.leads[activeLeadIdx];
+      document.getElementById('qrScanStatusIcon').textContent = '✅';
+      document.getElementById('qrScanStatusText').innerHTML = `<strong class="text-emerald-400">¡${lead.qrCode} Validado por David!</strong><br>Visita registrada en Vereda Las Mercedes.`;
+      try {
+        const res = await fetch('/api/qr/checkin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadId: lead.id })
+        });
+        if (res.ok) {
+          appState = await res.json();
+          selectLeadItem(activeLeadIdx);
+        }
+      } catch (e) {}
+    }
+
+    function selectMapLot(code, dim, price, initial, quota) {
+      selectedMapLotCode = code;
+      document.getElementById('mapLotTitle').textContent = `Lote ${code} — ${dim}`;
+      document.getElementById('mapLotPrice').textContent = `${price} COP`;
+      document.getElementById('mapLotInitial').textContent = `${initial} COP`;
+      document.getElementById('mapLotQuota').textContent = quota;
+    }
+
+    async function updateSelectedLotStatus(status) {
+      const poly = document.getElementById(`poly-${selectedMapLotCode}`);
+      const txt = document.getElementById(`txt-${selectedMapLotCode}`);
+      if (poly && txt) {
+        if (status === 'separado_500k') {
+          poly.setAttribute('fill', '#f59e0b');
+          poly.setAttribute('stroke', '#fbbf24');
+          txt.textContent = '🔒 SEPARADO $500K';
+        } else {
+          poly.setAttribute('fill', '#10b981');
+          poly.setAttribute('stroke', '#10b981');
+          txt.textContent = '🟢 DISPONIBLE';
+        }
+      }
+      try {
+        await fetch('/api/lot/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: selectedMapLotCode, status })
+        });
+      } catch (e) {}
+    }
+
+    function openPrintPassModal() {
+      const l = appState.leads[activeLeadIdx];
+      document.getElementById('pdfQrBadge').textContent = l.qrCode || 'QR-EST-409';
+      document.getElementById('pdfBuyerName').textContent = l.name;
+      document.getElementById('pdfLotDim').textContent = l.lotDim;
+      document.getElementById('pdfInitial').textContent = l.initialCop;
+      document.getElementById('pdfQuota').textContent = l.quotaCop;
+      document.getElementById('printPassModal').classList.remove('hidden');
+      document.getElementById('printPassModal').classList.add('flex');
+    }
+
+    function closePrintPassModal() {
+      document.getElementById('printPassModal').classList.add('hidden');
+      document.getElementById('printPassModal').classList.remove('flex');
+    }
+
+    function openNewLeadModal() {
+      document.getElementById('newLeadModal').classList.remove('hidden');
+      document.getElementById('newLeadModal').classList.add('flex');
+    }
+
+    function closeNewLeadModal() {
+      document.getElementById('newLeadModal').classList.add('hidden');
+      document.getElementById('newLeadModal').classList.remove('flex');
+    }
+
+    function toggleHumanTakeover() {
+      const l = appState.leads[activeLeadIdx];
+      l.aiActive = !l.aiActive;
+      document.getElementById('takeoverBtn').innerHTML = l.aiActive
+        ? '<span>🤖</span><span>Valentina IA Activa</span>'
+        : '<span>👑</span><span>Modo Manual Humano</span>';
+    }
+
+    function toggleRoleView() {
+      isCoordinator = !isCoordinator;
+      document.getElementById('coordNotice').classList.toggle('hidden', !isCoordinator);
+      document.getElementById('roleToggleBtn').textContent = isCoordinator
+        ? '👁️ Rol: Coordinador (Volver a Socio 40%)'
+        : '👑 Rol: Socio 40% (Ver como Coordinador)';
+      selectLeadItem(activeLeadIdx);
+    }
+
+    function switchTab(id) {
+      ['command', 'masterplan', 'mobile', 'analytics'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.add('hidden');
+        document.getElementById(`tab-${t}`).className = 'px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition flex items-center gap-1.5 whitespace-nowrap';
+      });
+      document.getElementById(`view-${id}`).classList.remove('hidden');
+      document.getElementById(`tab-${id}`).className = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm transition flex items-center gap-1.5 whitespace-nowrap';
+    }
+
+    function filterList(tag) { renderLeadQueue(tag); }
+
+    syncFromLocalServer();
+  </script>
+</body>
+</html>

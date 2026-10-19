@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, html, body {
+    font-family: 'Inter', Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+.gradient-headline {
+    background: linear-gradient(135deg, #6D28D9 0%, #A855F7 50%, #0E7490 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-headline-dark {
+    background: linear-gradient(135deg, #A855F7 0%, #35DDF5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@keyframes laserScan {
+    0% { top: 4%; opacity: 0.9; }
+    50% { top: 90%; opacity: 1; }
+    100% { top: 4%; opacity: 0.9; }
+}
+
+.animate-laser {
+    animation: laserScan 2.4s ease-in-out infinite;
+}
+
+@keyframes shimmerGlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+.shimmer-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer-effect::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: translateX(-100%);
+    animation: shimmerGlow 3s infinite;
+}
+

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  avi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: avi-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=pgsql
+      - DB_HOST=avi-db
+      - DB_PORT=5432
+      - DB_DATABASE=avi_saas
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=Ashley2023
+      - REDIS_HOST=avi-redis
+      - REDIS_PORT=6379
+      - AI_SERVICE_URL=http://avi-ai:8001
+    depends_on:
+      - avi-db
+      - avi-redis
+      - avi-ai
+    networks:
+      - avi-network
+
+  avi-ai:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: avi-ai
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - LLM_PROVIDER=gemini
+    networks:
+      - avi-network
+
+  avi-db:
+    image: postgres:17-alpine
+    container_name: avi-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: avi_saas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Ashley2023
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - avi-network
+
+  avi-redis:
+    image: redis:7-alpine
+    container_name: avi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - avi-network
+
+networks:
+  avi-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
