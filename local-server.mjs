@@ -536,6 +536,151 @@ const STAGE_META = {
     perdido: { title: 'Perdido', color: 'bg-slate-800 text-slate-300' },
 };
 
+let pgPool = null;
+let redisClient = null;
+let infraStatus = {
+    postgres: 'local-json',
+    redis: 'local-memory',
+    pg_host: process.env.DB_HOST || 'local',
+    redis_host: process.env.REDIS_HOST || 'local',
+    synced_at: null
+};
+
+async function syncToInfra(data) {
+    try {
+        if (redisClient) {
+            await redisClient.set('leadcampestre:state:v4', JSON.stringify(data), 'EX', 86400);
+            await redisClient.set('leadcampestre:heartbeat', new Date().toISOString(), 'EX', 3600);
+            infraStatus.redis = 'connected (Redis 7)';
+        }
+        if (pgPool) {
+            await pgPool.query(
+                `INSERT INTO leadcampestre_state (id, schema_version, payload, updated_at)
+                 VALUES (1, $1, $2::jsonb, NOW())
+                 ON CONFLICT (id) DO UPDATE SET schema_version = EXCLUDED.schema_version, payload = EXCLUDED.payload, updated_at = NOW()`,
+                [data.schema_version || 4, JSON.stringify(data)]
+            );
+            for (const p of (data.projects || [])) {
+                await pgPool.query(
+                    `INSERT INTO projects (id, name, short_name, location, commission_pct, data, updated_at)
+                     VALUES ($1, $2, $3, $4, $5, $6::jsonb, NOW())
+                     ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, short_name = EXCLUDED.short_name, location = EXCLUDED.location, commission_pct = EXCLUDED.commission_pct, data = EXCLUDED.data, updated_at = NOW()`,
+                    [p.id, p.name, p.short_name, p.location, p.commission_pct || 40, JSON.stringify(p)]
+                );
+            }
+            for (const l of (data.lots || [])) {
+                await pgPool.query(
+                    `INSERT INTO lots (id, project_id, code, area_m2, price_cop, status, buyer, data)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
+                     ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status, buyer = EXCLUDED.buyer, data = EXCLUDED.data`,
+                    [l.id, l.project_id, l.code, l.area_m2, l.price_cop, l.status, l.buyer, JSON.stringify(l)]
+                );
+            }
+            for (const lead of (data.leads || [])) {
+                await pgPool.query(
+                    `INSERT INTO leads (id, project_id, buyer_name, buyer_phone, kanban_stage, status_label, asesor_id, fecha_cita, nota, pass_code, data, updated_at)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb, NOW())
+                     ON CONFLICT (id) DO UPDATE SET kanban_stage = EXCLUDED.kanban_stage, status_label = EXCLUDED.status_label, asesor_id = EXCLUDED.asesor_id, fecha_cita = EXCLUDED.fecha_cita, nota = EXCLUDED.nota, data = EXCLUDED.data, updated_at = NOW()`,
+                    [lead.id, lead.project_id, lead.buyer_name, lead.buyer_phone, lead.kanban_stage, lead.status_label, lead.asesor_id || '', lead.fecha_cita || '', lead.nota || '', lead.pass_code || '', JSON.stringify(lead)]
+                );
+            }
+            infraStatus.postgres = 'connected (PostgreSQL 17)';
+            infraStatus.synced_at = new Date().toISOString();
+        }
+    } catch (err) {
+        console.error('Infra sync warning:', err.message);
+    }
+}
+
+async function initInfra() {
+    if (process.env.DB_HOST) {
+        try {
+            const pgMod = await import('pg');
+            const Pool = pgMod.default?.Pool || pgMod.Pool;
+            pgPool = new Pool({
+                host: process.env.DB_HOST,
+                port: Number(process.env.DB_PORT || 5432),
+                database: process.env.DB_DATABASE || 'leadcampestre',
+                user: process.env.DB_USERNAME || 'postgres',
+                password: process.env.DB_PASSWORD || 'Ashley2023',
+            });
+            await pgPool.query(`
+                CREATE TABLE IF NOT EXISTS leadcampestre_state (
+                    id INT PRIMARY KEY,
+                    schema_version INT NOT NULL DEFAULT 4,
+                    payload JSONB NOT NULL,
+                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                );
+                CREATE TABLE IF NOT EXISTS projects (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    short_name TEXT,
+                    location TEXT,
+                    commission_pct NUMERIC DEFAULT 40,
+                    data JSONB,
+                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                );
+                CREATE TABLE IF NOT EXISTS lots (
+                    id INT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    code TEXT NOT NULL,
+                    area_m2 INT,
+                    price_cop BIGINT,
+                    status TEXT,
+                    buyer TEXT,
+                    data JSONB
+                );
+                CREATE TABLE IF NOT EXISTS leads (
+                    id BIGINT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    buyer_name TEXT,
+                    buyer_phone TEXT,
+                    kanban_stage TEXT,
+                    status_label TEXT,
+                    asesor_id TEXT,
+                    fecha_cita TEXT,
+                    nota TEXT,
+                    pass_code TEXT,
+                    data JSONB,
+                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                );
+            `);
+            const res = await pgPool.query('SELECT payload, schema_version FROM leadcampestre_state WHERE id = 1');
+            if (res.rows.length > 0 && res.rows[0].schema_version === 4) {
+                fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+                fs.writeFileSync(DB_PATH, JSON.stringify(res.rows[0].payload, null, 2), 'utf8');
+                infraStatus.postgres = 'connected (PostgreSQL 17)';
+            } else {
+                const current = loadDb();
+                await syncToInfra(current);
+            }
+            console.log('✅ Connected & Migrated PostgreSQL 17 at', process.env.DB_HOST);
+        } catch (e) {
+            console.error('PostgreSQL init error:', e.message);
+            infraStatus.postgres = 'error: ' + e.message;
+        }
+    }
+    if (process.env.REDIS_HOST) {
+        try {
+            const RedisMod = await import('ioredis');
+            const Redis = RedisMod.default || RedisMod;
+            redisClient = new Redis({
+                host: process.env.REDIS_HOST,
+                port: Number(process.env.REDIS_PORT || 6379),
+                password: process.env.REDIS_PASSWORD || 'Ashley2023',
+                lazyConnect: false
+            });
+            await redisClient.ping();
+            infraStatus.redis = 'connected (Redis 7)';
+            console.log('✅ Connected to Redis 7 at', process.env.REDIS_HOST);
+            await syncToInfra(loadDb());
+        } catch (e) {
+            console.error('Redis init error:', e.message);
+            infraStatus.redis = 'error: ' + e.message;
+        }
+    }
+}
+
 function loadDb() {
     try {
         if (fs.existsSync(DB_PATH)) {
@@ -555,6 +700,7 @@ function loadDb() {
 function saveDb(data) {
     fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+    syncToInfra(data);
 }
 
 /**
@@ -2249,13 +2395,31 @@ const server = http.createServer((req, res) => {
         }
     }
 
+    if (req.method === 'GET' && url.pathname === '/api/health') {
+        const db = loadDb();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            ok: true,
+            service: 'LeadCampestre OS v4',
+            infra: infraStatus,
+            counts: {
+                projects: (db.projects || []).length,
+                lots: (db.lots || []).length,
+                leads: (db.leads || []).length
+            }
+        }));
+    }
+
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(renderAppHtml());
 });
 
 const PORT = Number(process.env.PORT || 3050);
 const HOST = process.env.HOST || '0.0.0.0';
-server.listen(PORT, HOST, () => {
-    console.log(`LeadCampestre OS v4 (10-Column Kanban + Auto-Tagging IA) running at http://${HOST}:${PORT}`);
+initInfra().finally(() => {
+    server.listen(PORT, HOST, () => {
+        console.log(`LeadCampestre OS v4 (10-Column Kanban + Auto-Tagging IA) running at http://${HOST}:${PORT}`);
+    });
 });
+
 
