@@ -3,529 +3,593 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LeadCampestre · Centro de Control Multi-Proyecto & CRM con IA</title>
+  <title>LeadCampestre CRM · Multi-Project Kanban & IA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #F4F7FC; color: #15213B; }
-    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
-    .tabular { font-variant-numeric: tabular-nums; }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #E9EEF6; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    /* Exact Ant Design (antd v5) + Pancake CRM Typography & Scrollbars */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #F0F2F5;
+      color: #1F2937;
+      font-size: 13px;
+    }
+    /* Custom slim scrollbars like Pancake CRM columns */
+    ::-webkit-scrollbar { width: 6px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #E5E7EB; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #9CA3AF; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6B7280; }
+    .field-box {
+      background-color: #F4F5F7;
+      border-radius: 4px;
+      min-height: 27px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.15s ease;
+    }
+    .field-box:hover {
+      background-color: #EBEDF0;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-[#F4F7FC] text-[#15213B] antialiased flex flex-col md:flex-row overflow-x-hidden selection:bg-[#6D28D9]/15 selection:text-[#6D28D9]">
+<body class="h-screen flex flex-col overflow-hidden select-none">
 
   <!-- =====================================================================
-       SIDEBAR IZQUIERDA (Diseño Ejecutivo Claro · Estilo AviPetApp SaaS)
+       1. TOP GLOBAL HEADER BAR (Exact Pancake CRM / Ant Design Pro Header)
        ===================================================================== -->
-  <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 h-screen sticky top-0 z-30 select-none">
-    <div>
-      <!-- Brand Header -->
-      <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-[#6D28D9] text-white flex items-center justify-center shadow-xs shrink-0">
-          <i data-lucide="building-2" class="w-5 h-5"></i>
-        </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5">
-            <span class="font-extrabold text-[15px] tracking-tight text-[#15213B]">LeadCampestre</span>
-            <span class="text-[9.5px] font-bold uppercase px-1.5 py-0.5 rounded-md bg-[#6D28D9]/10 text-[#6D28D9]">SaaS</span>
-          </div>
-          <p class="text-[11px] font-medium text-[#5C6B85] truncate">Software con IA inmobiliaria</p>
-        </div>
+  <header class="h-12 bg-[#F3F5F8] border-b border-[#E5E7EB] px-4 flex items-center justify-between shrink-0 z-30">
+    <!-- Left Brand -->
+    <div class="flex items-center gap-2.5 w-56">
+      <div class="w-7 h-7 rounded-lg bg-[#FA8C16] text-white flex items-center justify-center font-black text-sm shadow-2xs">
+        <i data-lucide="layers" class="w-4 h-4"></i>
       </div>
-
-      <!-- MULTI-PROJECT SELECTOR (Clean Card inside Sidebar) -->
-      <div class="p-3.5 border-b border-slate-100 bg-[#F8FAFC]">
-        <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[10.5px] font-bold uppercase tracking-wider text-[#5C6B85]">Proyecto Activo</span>
-          <button onclick="openNewProjectModal()" class="text-[11px] font-semibold text-[#6D28D9] hover:text-[#5b21b6] flex items-center gap-0.5 cursor-pointer">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nuevo
-          </button>
-        </div>
-
-        <select id="project-selector" onchange="changeProject(this.value)" class="w-full bg-white border border-slate-200 hover:border-slate-300 focus:border-[#6D28D9] rounded-xl px-3 py-2 text-xs font-bold text-[#15213B] focus:outline-none cursor-pointer shadow-2xs transition">
-          <option value="la-estrella">Proyecto La Estrella (Villavicencio)</option>
-          <option value="reserva-llano">Reserva del Llano (Acacías)</option>
-          <option value="mirador-restrepo">Mirador de Restrepo (Meta)</option>
-          <option value="all">Todos los Proyectos (Consolidado)</option>
-        </select>
-
-        <div class="mt-2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200/80 flex items-center justify-between text-[11px]">
-          <span id="sidebar-proj-loc" class="text-[#5C6B85] font-medium truncate">Estrella · $27M · $32M · $42M</span>
-          <span id="sidebar-proj-comm" class="px-1.5 py-0.5 rounded bg-[#0F9F9A]/10 text-[#0F9F9A] font-bold text-[10px] shrink-0">Socio 40%</span>
-        </div>
-      </div>
-
-      <!-- Navigation Menu (Exact SuperAdminLayout style) -->
-      <nav class="p-3 space-y-1">
-        <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#5C6B85]">Gestión Comercial & IA</div>
-
-        <button onclick="setTab('kanban')" id="nav-kanban" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="kanban" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Pipeline CRM (10 Etapas)</span>
-          <span id="sidebar-kanban-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#6D28D9]/10 text-[#6D28D9] tabular">2.737</span>
-        </button>
-
-        <button onclick="setTab('inbox')" id="nav-inbox" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="sparkles" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Valentina IA & WhatsApp</span>
-          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0F9F9A]/10 text-[#0F9F9A]">Auto</span>
-        </button>
-
-        <button onclick="setTab('overview')" id="nav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Centro de Control & Dron</span>
-        </button>
-
-        <button onclick="setTab('lots')" id="nav-lots" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="map" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Inventario de Lotes (1-3)</span>
-        </button>
-
-        <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#5C6B85]">Operación en Terreno</div>
-
-        <button onclick="setTab('checkin')" id="nav-checkin" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="qr-code" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Portería QR · Visitas</span>
-        </button>
-
-        <button onclick="setTab('landing')" id="nav-landing" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-          <i data-lucide="globe" class="w-4 h-4 shrink-0"></i>
-          <span class="flex-1 text-left">Micrositio Público B2C</span>
-        </button>
-      </nav>
+      <span class="font-bold text-[15px] text-[#1F2937] tracking-tight">LeadCampestre CRM</span>
     </div>
 
-    <!-- Bottom Watermark & Role Switcher -->
-    <div class="p-3.5 m-3 rounded-2xl bg-[#F4F7FC] border border-slate-200/80 space-y-2.5">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-[#080B20] text-white flex items-center justify-center shrink-0 font-bold text-xs">
-          LC
-        </div>
-        <div class="min-w-0 leading-tight">
-          <div class="font-bold text-xs text-[#15213B] flex items-center gap-1.5">
-            <span>LeadCampestre</span>
-            <span class="w-2 h-2 rounded-full bg-[#0F9F9A] inline-block" title="PostgreSQL 17 + Redis 7 Conectados"></span>
-          </div>
-          <div class="text-[10.5px] text-[#5C6B85] truncate">PostgreSQL 17 · Redis 7</div>
-        </div>
+    <!-- Center Pill Search Bar -->
+    <div class="flex-1 max-w-xl mx-4">
+      <div class="relative flex items-center">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5"></i>
+        <input id="kanban-search" oninput="renderKanbanAndTable()" type="text" placeholder="Buscar contacto, +573..., proyecto o nota"
+               class="w-full bg-white border border-[#E5E7EB] focus:border-[#1677FF] rounded-full pl-9 pr-4 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition">
       </div>
+    </div>
 
-      <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between">
-        <span class="text-[10px] font-semibold text-[#5C6B85]">Vista activa:</span>
-        <span id="sidebar-role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#0F9F9A]/10 text-[#0F9F9A]">Socio 40%</span>
-      </div>
-      <button onclick="toggleRole()" class="w-full py-1.5 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[11px] font-semibold text-[#15213B] shadow-2xs transition flex items-center justify-center gap-1.5 cursor-pointer">
-        <i data-lucide="eye" class="w-3.5 h-3.5 text-[#6D28D9]"></i>
-        <span id="role-switch-label">Ver como Coordinador Ads</span>
+    <!-- Right Action Icons & Avatar -->
+    <div class="flex items-center gap-3.5 text-slate-600">
+      <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-[#E5E7EB] text-[11px] font-medium text-slate-600" title="PostgreSQL 17 + Redis 7 en VPS">
+        <span class="w-2 h-2 rounded-full bg-[#52C41A]"></span>
+        PG17 + Redis
+      </span>
+      <button onclick="setTab('inbox')" class="p-1.5 hover:bg-slate-200/70 rounded-md transition relative cursor-pointer" title="Valentina IA Auto-Tagger">
+        <i data-lucide="bot" class="w-4 h-4 text-[#1677FF]"></i>
+        <span class="w-2 h-2 rounded-full bg-[#52C41A] absolute top-1 right-1"></span>
       </button>
+      <button onclick="triggerNoShowRemarketing()" class="p-1.5 hover:bg-slate-200/70 rounded-md transition cursor-pointer" title="Reactivar No Asistió con IA">
+        <i data-lucide="history" class="w-4 h-4"></i>
+      </button>
+      <button onclick="openNewLeadModal()" class="p-1.5 hover:bg-slate-200/70 rounded-md transition cursor-pointer" title="Nuevo Contacto">
+        <i data-lucide="bell" class="w-4 h-4"></i>
+      </button>
+      <div class="w-7 h-7 rounded-full bg-[#1677FF] text-white font-bold text-xs flex items-center justify-center shadow-2xs cursor-pointer" title="Robinson Naranjo">
+        RN
+      </div>
     </div>
-  </aside>
+  </header>
 
   <!-- =====================================================================
-       MAIN CONTENT AREA (Fondo #F4F7FC Cloud White + Navbar Blanca)
+       2. MAIN WORKSPACE (Left Ant Design Sidebar + Right Board Area)
        ===================================================================== -->
-  <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+  <div class="flex-1 flex min-h-0 overflow-hidden">
 
-    <!-- TOP NAVBAR (Idéntica a SuperAdminLayout.tsx) -->
-    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between gap-4 sticky top-0 z-20">
-      <!-- Breadcrumbs -->
-      <div class="flex items-center gap-2 text-xs font-semibold text-[#5C6B85] min-w-0">
-        <i data-lucide="home" class="w-3.5 h-3.5 text-[#5C6B85] shrink-0"></i>
-        <span class="hidden sm:inline">LeadCampestre</span>
-        <span class="text-slate-300 hidden sm:inline">/</span>
-        <span id="header-project-title" class="text-[#15213B] font-bold truncate">Proyecto La Estrella</span>
-        <span id="header-project-badge" class="px-2 py-0.5 rounded-md bg-[#F4F7FC] border border-slate-200 text-[#5C6B85] text-[11px] font-semibold shrink-0">Estrella · 35 Ha</span>
-        <span class="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0F9F9A]/10 text-[#0F9F9A] text-[11px] font-semibold">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#0F9F9A]"></span>
-          Valentina IA Activa
-        </span>
-      </div>
-
-      <!-- Right Actions & User Profile -->
-      <div class="flex items-center gap-3">
-        <button onclick="openNewLeadModal()" class="px-4 py-2 rounded-xl bg-[#6D28D9] hover:bg-[#5b21b6] text-white text-xs font-semibold shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Registrar prospecto / Simular Ads</span>
+    <!-- LEFT SIDEBAR (Exact Pancake CRM 215px White Sidebar) -->
+    <aside class="w-[220px] bg-white border-r border-[#E5E7EB] flex flex-col justify-between shrink-0 h-full">
+      <div class="p-2.5 space-y-1">
+        <!-- Top Global Links -->
+        <button onclick="setTab('overview')" id="side-overview" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+          <span class="flex items-center gap-2.5"><i data-lucide="home" class="w-4 h-4 text-slate-500"></i> Página de inicio (Dron)</span>
+          <i data-lucide="panel-left" class="w-3.5 h-3.5 text-slate-400"></i>
         </button>
 
-        <div class="hidden sm:flex items-center gap-2.5 pl-3 border-l border-slate-200">
-          <div class="w-8 h-8 rounded-full bg-[#6D28D9]/10 text-[#6D28D9] font-bold text-xs flex items-center justify-center">
-            RN
-          </div>
-          <div class="leading-tight">
-            <div class="text-xs font-bold text-[#15213B]">Robinson Naranjo</div>
-            <div class="text-[10.5px] text-[#5C6B85]">Socio Master (40%)</div>
-          </div>
-        </div>
-      </div>
-    </header>
+        <button onclick="setTab('inbox')" id="side-inbox" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+          <span class="flex items-center gap-2.5"><i data-lucide="message-square-Code" class="w-4 h-4 text-slate-500"></i> Inbox WhatsApp & IA</span>
+          <span class="px-1.5 py-0.5 rounded bg-[#E6F4FF] text-[#1677FF] font-semibold text-[10px]">Bot</span>
+        </button>
 
-    <!-- TOAST DE AUTO-ETIQUETADO IA -->
-    <div id="ai-toast" class="hidden fixed bottom-5 right-5 z-50 max-w-md bg-white border border-slate-200 rounded-2xl p-4 shadow-xl flex items-start gap-3">
-      <div class="w-9 h-9 rounded-xl bg-[#6D28D9]/10 text-[#6D28D9] flex items-center justify-center shrink-0">
-        <i data-lucide="sparkles" class="w-5 h-5"></i>
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="text-[11px] font-bold uppercase tracking-wider text-[#6D28D9]">Auto-Etiquetado Valentina IA</div>
-        <div id="ai-toast-text" class="text-xs font-semibold text-[#15213B] mt-0.5"></div>
-      </div>
-    </div>
+        <button onclick="setTab('checkin')" id="side-checkin" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+          <span class="flex items-center gap-2.5"><i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i> Citas & Portería QR</span>
+        </button>
 
-    <!-- ===================================================================
-         TAB 1: PIPELINE CRM KANBAN (10 ETAPAS) + TABLA — ESTILO CLARO EJECUTIVO
-         =================================================================== -->
-    <main id="tab-kanban" class="p-6 space-y-5 flex-1">
+        <div class="my-2 border-t border-[#E5E7EB]"></div>
 
-      <!-- 4 KPI SUMMARY CARDS (Estilo Dashboard.tsx de AviPetApp) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-start gap-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-[#6D28D9]/10 text-[#6D28D9] flex items-center justify-center shrink-0">
-            <i data-lucide="users" class="w-5 h-5"></i>
+        <!-- MULTI-PROJECT SELECTOR (Exact "Lead Campestre v" dropdown position) -->
+        <div class="px-1 py-1">
+          <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400 uppercase px-1.5 mb-1">
+            <span>Proyecto Inmobiliario</span>
+            <button onclick="openNewProjectModal()" class="text-[#1677FF] hover:underline cursor-pointer">+ Nuevo</button>
           </div>
-          <div class="min-w-0">
-            <div class="text-xs font-bold text-[#15213B]">Total prospectos</div>
-            <div id="kanban-total-badge" class="text-2xl font-black text-[#15213B] tabular mt-0.5">2.737</div>
-            <div class="text-[11px] text-[#5C6B85] mt-0.5">Captados en Meta Ads y WhatsApp</div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-start gap-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-[#0F9F9A]/10 text-[#0F9F9A] flex items-center justify-center shrink-0">
-            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-xs font-bold text-[#15213B]">Calificados por IA</div>
-            <div id="kpi-calificados" class="text-2xl font-black text-[#15213B] tabular mt-0.5">898</div>
-            <div class="text-[11px] text-[#0F9F9A] font-semibold mt-0.5">Presupuesto validado (40% inicial)</div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-start gap-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-[#0E7490]/10 text-[#0E7490] flex items-center justify-center shrink-0">
-            <i data-lucide="calendar-check" class="w-5 h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-xs font-bold text-[#15213B]">Visitas & Citas activas</div>
-            <div id="kpi-citas" class="text-2xl font-black text-[#15213B] tabular mt-0.5">13</div>
-            <div class="text-[11px] text-[#5C6B85] mt-0.5">Atendidas por David & Stella</div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-start gap-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-[#6D28D9]/10 text-[#6D28D9] flex items-center justify-center shrink-0">
-            <i data-lucide="award" class="w-5 h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-xs font-bold text-[#15213B]">Lotes separados / cerrados</div>
-            <div id="kpi-cierres" class="text-2xl font-black text-[#15213B] tabular mt-0.5">4 lotes</div>
-            <div class="text-[11px] text-[#0F9F9A] font-semibold mt-0.5">Comisión Socio 40% blindada</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FILTER & VIEW TOOLBAR (Card Blanca Limpia) -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-3">
-          <!-- View Switcher: Kanban vs Tabla -->
-          <div class="inline-flex rounded-xl bg-[#F4F7FC] p-1 border border-slate-200/80">
-            <button onclick="setCrmView('kanban')" id="btn-view-kanban" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-[#15213B] shadow-2xs transition flex items-center gap-1.5 cursor-pointer">
-              <i data-lucide="kanban" class="w-3.5 h-3.5 text-[#6D28D9]"></i> Tablero Kanban (10 Etapas)
-            </button>
-            <button onclick="setCrmView('table')" id="btn-view-table" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#5C6B85] hover:text-[#15213B] transition flex items-center gap-1.5 cursor-pointer">
-              <i data-lucide="table-2" class="w-3.5 h-3.5"></i> Vista Tabla (<span id="table-total-count">2.737</span>)
-            </button>
-          </div>
-
-          <!-- Filter by Advisor -->
-          <select id="filter-advisor" onchange="renderKanbanAndTable()" class="bg-[#F4F7FC] hover:bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-[#15213B] focus:outline-none focus:border-[#6D28D9] cursor-pointer transition">
-            <option value="all">Todos los asesores (david@nodia.com / stella@nodia.com)</option>
-            <option value="david@nodia.com">Asesor: david@nodia.com (Terreno)</option>
-            <option value="stella@nodia.com">Asesora: stella@nodia.com (Oficina Camoa)</option>
-          </select>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2.5">
           <div class="relative">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-[#5C6B85] absolute left-3 top-2.5"></i>
-            <input id="kanban-search" oninput="renderKanbanAndTable()" type="text" placeholder="Buscar cliente, teléfono o nota..." class="bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#6D28D9] rounded-xl pl-8 pr-3 py-1.5 text-xs text-[#15213B] placeholder-[#5C6B85] focus:outline-none w-60 transition">
+            <select id="project-selector" onchange="changeProject(this.value)"
+                    class="w-full bg-white hover:bg-slate-50 border border-[#E5E7EB] rounded-md px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#1677FF] cursor-pointer">
+              <option value="la-estrella">🌳 Proyecto La Estrella</option>
+              <option value="reserva-llano">🌴 Reserva del Llano</option>
+              <option value="mirador-restrepo">🏞️ Mirador de Restrepo</option>
+              <option value="all">🌎 Todos los Proyectos</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sidebar Filter Input -->
+        <div class="px-1 pt-1">
+          <div class="relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2"></i>
+            <input type="text" placeholder="Buscar módulo..." oninput="renderKanbanAndTable()" class="w-full bg-white border border-[#E5E7EB] rounded-md pl-8 pr-2.5 py-1 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#1677FF]">
+          </div>
+        </div>
+
+        <!-- Tree Navigation: Resumen & Contacto (Active Blue Pill #E6F4FF) -->
+        <div class="pt-2 space-y-0.5">
+          <div class="px-2 py-1 text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+            <i data-lucide="chevron-down" class="w-3 h-3"></i> Resumen
           </div>
 
-          <button onclick="triggerNoShowRemarketing()" class="px-3.5 py-2 rounded-xl bg-[#F4F7FC] hover:bg-[#6D28D9]/10 text-[#6D28D9] border border-slate-200 hover:border-[#6D28D9]/30 text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Reactivar "No asistió" con IA
+          <button onclick="setTab('lots')" id="nav-lots" class="w-full flex items-center justify-between px-3 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+            <span class="flex items-center gap-2.5"><i data-lucide="map" class="w-4 h-4 text-[#1677FF]"></i><span>Planos & Lotes</span></span>
+            <span class="px-1.5 py-0.5 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] font-bold text-[10px]">569 Disp</span>
+          </button>
+
+          <button onclick="setTab('kanban')" id="nav-kanban" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold bg-[#E6F4FF] text-[#1677FF] transition cursor-pointer">
+            <i data-lucide="users" class="w-4 h-4 text-[#1677FF]"></i>
+            <span>Contacto</span>
+          </button>
+
+          <button onclick="setTab('landing')" id="nav-landing" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4 text-slate-500"></i>
+            <span>Landing Pública</span>
           </button>
         </div>
       </div>
 
-      <!-- SUBTLE HELPER BAR -->
-      <div class="flex items-center justify-between px-1 text-xs text-[#5C6B85]">
-        <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#6D28D9]/10 text-[#6D28D9] font-semibold text-[11px]">
-            <i data-lucide="bot" class="w-3 h-3"></i> Automático + Manual
-          </span>
-          <span>Valentina Ríos clasifica y mueve los prospectos según la conversación en WhatsApp, o puedes arrastrarlos con el mouse.</span>
+      <!-- Bottom Create View Button -->
+      <div class="p-3 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-slate-600 hover:bg-slate-50 cursor-pointer" onclick="openNewProjectModal()">
+        <span class="flex items-center gap-2 font-medium"><i data-lucide="plus" class="w-4 h-4"></i> Crear proyecto</span>
+        <i data-lucide="chevron-up" class="w-3.5 h-3.5 text-slate-400"></i>
+      </div>
+    </aside>
+
+    <!-- RIGHT WORKSPACE AREA -->
+    <div class="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+
+      <!-- TOAST DE AUTO-ETIQUETADO IA -->
+      <div id="ai-toast" class="hidden fixed bottom-5 right-5 z-50 max-w-md bg-white border border-[#1677FF] rounded-lg p-3.5 shadow-lg flex items-start gap-3">
+        <div class="w-8 h-8 rounded-md bg-[#E6F4FF] text-[#1677FF] flex items-center justify-center shrink-0">
+          <i data-lucide="bot" class="w-4 h-4"></i>
         </div>
-        <span class="text-[11px] font-semibold text-[#5C6B85] hidden md:inline">Desliza horizontalmente para ver las 10 etapas &rarr;</span>
+        <div class="flex-1 min-w-0">
+          <div class="text-[11px] font-bold text-[#1677FF]">Automatización Valentina IA</div>
+          <div id="ai-toast-text" class="text-xs text-slate-800 mt-0.5"></div>
+        </div>
       </div>
 
-      <!-- 10-COLUMN KANBAN CONTAINER (Superficie Clara, Limpia y Ejecutiva) -->
-      <div id="crm-kanban-view" class="flex gap-4 overflow-x-auto pb-6 pt-1 select-none">
-        <!-- Renderizado dinámicamente por JS -->
-      </div>
+      <!-- =================================================================
+           VIEW 1: CONTACTO (PANCAKE CRM TABS + KANBAN + TABLE)
+           ================================================================= -->
+      <main id="tab-kanban" class="flex-1 flex flex-col min-h-0 overflow-hidden">
 
-      <!-- TABLE VIEW CONTAINER -->
-      <div id="crm-table-view" class="hidden bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
+        <!-- ROW 1: TABS BAR (Contacto | Tabla 2737 | Kanban 2737 | Planos & Lotes 569 | Dashboard | Automatización) -->
+        <div class="h-11 px-5 border-b border-[#E5E7EB] flex items-center justify-between bg-white shrink-0">
+          <div class="flex items-center gap-5 h-full">
+            <span id="header-project-title" class="font-bold text-[14px] text-slate-800 pr-2 border-r border-slate-200">Contacto · Proyecto La Estrella</span>
+
+            <button onclick="setCrmView('table')" id="tab-btn-table" class="h-full flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1677FF] border-b-2 border-transparent transition cursor-pointer">
+              <i data-lucide="table-2" class="w-3.5 h-3.5"></i>
+              <span>Tabla</span>
+              <span id="table-total-count" class="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[11px]">2737</span>
+            </button>
+
+            <button onclick="setCrmView('kanban')" id="tab-btn-kanban" class="h-full flex items-center gap-1.5 text-xs font-semibold text-[#1677FF] border-b-2 border-[#1677FF] transition cursor-pointer">
+              <span>Kanban</span>
+              <span id="kanban-total-badge" class="px-1.5 py-0.2 rounded-full bg-[#E6F4FF] text-[#1677FF] text-[11px]">2737</span>
+            </button>
+
+            <button onclick="setTab('lots')" class="h-full flex items-center gap-1.5 text-xs font-semibold text-[#389E0D] hover:text-[#1677FF] border-b-2 border-transparent transition cursor-pointer">
+              <i data-lucide="map" class="w-3.5 h-3.5"></i>
+              <span>Planos Etapa 1, 2 y 3</span>
+              <span class="px-1.5 py-0.2 rounded-full bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[11px]">569 Disp.</span>
+            </button>
+
+            <button onclick="setTab('overview')" class="h-full flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1677FF] border-b-2 border-transparent transition cursor-pointer">
+              <span>Dashboard & Dron</span>
+            </button>
+
+            <button onclick="openNewProjectModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer" title="Nuevo Proyecto">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="setTab('inbox')" class="flex items-center gap-1.5 text-xs font-medium text-slate-700 hover:text-[#1677FF] px-2.5 py-1 rounded hover:bg-slate-100 transition cursor-pointer">
+              <i data-lucide="bot" class="w-4 h-4 text-[#1677FF]"></i>
+              <span>Automatización IA</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ROW 2: ACTION SUB-TOOLBAR (Crear | Recargar | Filtro | Empleado | Ordenar | Acciones) -->
+        <div class="h-11 px-5 border-b border-[#E5E7EB] flex items-center justify-between bg-white shrink-0">
+          <div class="flex items-center gap-4">
+            <!-- Ant Design Split Primary Button -->
+            <div class="inline-flex rounded-md shadow-2xs">
+              <button onclick="openNewLeadModal()" class="px-3 py-1.5 bg-[#1677FF] hover:bg-[#0958D9] text-white text-xs font-medium rounded-l-md transition cursor-pointer">
+                Crear
+              </button>
+              <button onclick="openNewLeadModal()" class="px-1.5 py-1.5 bg-[#1677FF] hover:bg-[#0958D9] text-white border-l border-blue-400/40 rounded-r-md transition cursor-pointer">
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <button onclick="fetchState()" class="flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1677FF] transition cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Recargar</span>
+            </button>
+
+            <div class="flex items-center gap-1.5 text-xs text-slate-600">
+              <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+              <span>Filtro</span>
+            </div>
+
+            <!-- Empleado Filter -->
+            <div class="flex items-center gap-1.5 text-xs text-slate-600">
+              <i data-lucide="user-circle" class="w-3.5 h-3.5"></i>
+              <select id="filter-advisor" onchange="renderKanbanAndTable()" class="bg-transparent hover:text-[#1677FF] text-xs font-medium text-slate-700 focus:outline-none cursor-pointer">
+                <option value="all">Empleado (Todos)</option>
+                <option value="david@nodia.com">david@nodia.com</option>
+                <option value="stella@nodia.com">stella@nodia.com</option>
+              </select>
+            </div>
+
+            <button onclick="triggerNoShowRemarketing()" class="flex items-center gap-1.5 text-xs text-[#1677FF] hover:underline font-medium cursor-pointer">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Reactivar "No asistió" con IA</span>
+            </button>
+          </div>
+
+          <div class="text-[11px] text-slate-400 hidden xl:block">
+            Valentina IA etiqueta en automático · Arrastra cualquier tarjeta para moverla manualmente
+          </div>
+        </div>
+
+        <!-- ROW 3: KANBAN BOARD AREA (Exact Pancake CRM Columns & White Cards with #F4F5F7 Field Boxes) -->
+        <div id="crm-kanban-view" class="flex-1 flex gap-3 overflow-x-auto p-4 bg-white">
+          <!-- Renderizado dinámicamente por JS -->
+        </div>
+
+        <!-- TABLE VIEW AREA -->
+        <div id="crm-table-view" class="hidden flex-1 overflow-auto p-4 bg-white">
+          <table class="w-full text-left border-collapse border border-[#E5E7EB]">
             <thead>
-              <tr class="border-b border-slate-200 bg-[#F8FAFC] text-[11px] font-bold uppercase tracking-wider text-[#5C6B85]">
-                <th class="py-3.5 px-4">Cliente</th>
-                <th class="py-3.5 px-4">WhatsApp</th>
-                <th class="py-3.5 px-4">Proyecto</th>
-                <th class="py-3.5 px-4">Etapa Kanban (Manual / IA)</th>
-                <th class="py-3.5 px-4">Asesor Asignado</th>
-                <th class="py-3.5 px-4">Fecha Cita</th>
-                <th class="py-3.5 px-4">Nota / Última Acción IA</th>
-                <th class="py-3.5 px-4 text-right">Acciones</th>
+              <tr class="bg-[#FAFAFA] border-b border-[#E5E7EB] text-[11px] font-semibold text-slate-600">
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">Name</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">Phone Number</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">Proyecto</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">Estado</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">asesor_id</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">fecha_cita</th>
+                <th class="py-2.5 px-3 border-r border-[#E5E7EB]">Nota</th>
+                <th class="py-2.5 px-3 text-right">Acción</th>
               </tr>
             </thead>
-            <tbody id="crm-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
+            <tbody id="crm-table-body" class="divide-y divide-[#E5E7EB] text-xs"></tbody>
           </table>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <!-- ===================================================================
-         TAB 2: INBOX WHATSAPP & AUTO-TAGGER IA (Valentina Ríos en Claro)
-         =================================================================== -->
-    <main id="tab-inbox" class="hidden p-6 flex-1">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[760px]">
-        <!-- Lista de Conversaciones -->
-        <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-[#F8FAFC]">
-            <div>
-              <h2 class="font-bold text-sm text-[#15213B]">Conversaciones WhatsApp</h2>
-              <p class="text-[11px] text-[#5C6B85]">Con auto-etiquetado en vivo hacia el Kanban</p>
+      <!-- =================================================================
+           VIEW 2: INBOX WHATSAPP & AUTOMATIZACIÓN IA
+           ================================================================= -->
+      <main id="tab-inbox" class="hidden flex-1 p-5 bg-[#F0F2F5] overflow-y-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[calc(100vh-96px)]">
+          <div class="lg:col-span-4 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden">
+            <div class="p-3.5 border-b border-[#E5E7EB] flex items-center justify-between bg-[#FAFAFA]">
+              <div>
+                <h2 class="font-bold text-xs text-slate-800">Conversaciones WhatsApp</h2>
+                <p class="text-[11px] text-slate-500">Valentina IA etiqueta y mueve el Kanban sola</p>
+              </div>
+              <button onclick="setTab('kanban')" class="text-xs text-[#1677FF] font-semibold hover:underline cursor-pointer">&larr; Volver al Kanban</button>
             </div>
-            <span class="px-2.5 py-1 rounded-full bg-[#0F9F9A]/10 text-[#0F9F9A] text-[10px] font-bold">Cloud API</span>
+            <div id="leads-list" class="flex-1 overflow-y-auto divide-y divide-[#E5E7EB]"></div>
           </div>
-          <div id="leads-list" class="flex-1 overflow-y-auto divide-y divide-slate-100"></div>
-        </div>
 
-        <!-- Panel Central de Chat + Simulador de Intenciones -->
-        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden">
-          <div id="chat-header" class="p-4 border-b border-slate-100 bg-[#F8FAFC] flex flex-wrap items-center justify-between gap-3"></div>
-          <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-3.5 bg-[#F4F7FC]/60"></div>
+          <div class="lg:col-span-8 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden">
+            <div id="chat-header" class="p-3.5 border-b border-[#E5E7EB] bg-[#FAFAFA] flex flex-wrap items-center justify-between gap-2"></div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F3F5F8]"></div>
 
-          <!-- Barra de Pruebas de Auto-Etiquetado IA -->
-          <div class="p-4 border-t border-slate-200 bg-white space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-[11px] font-bold text-[#6D28D9] flex items-center gap-1.5">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                Simular respuesta del comprador (Valentina IA etiqueta y mueve el Kanban sola):
-              </span>
-              <div class="flex flex-wrap gap-1.5">
-                <button onclick="queueFragment('Tengo los 12 millones de cuota inicial para el lote de 8x20')" class="px-2.5 py-1 rounded-lg bg-[#F4F7FC] hover:bg-[#6D28D9]/10 text-[#15213B] hover:text-[#6D28D9] border border-slate-200 text-[11px] font-semibold cursor-pointer transition">
+            <div class="p-3.5 border-t border-[#E5E7EB] bg-white space-y-2.5">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-[11px] font-semibold text-slate-500 mr-1">Simular mensaje del cliente:</span>
+                <button onclick="queueFragment('Tengo los 12 millones de cuota inicial para el lote de 8x20')" class="px-2 py-1 rounded bg-[#FFFBE6] border border-[#FFE58F] text-[#D48806] text-[11px] font-medium cursor-pointer">
                   1. Presupuesto &rarr; Calificado
                 </button>
-                <button onclick="queueFragment('Quiero agendar visita este sábado a las 10am')" class="px-2.5 py-1 rounded-lg bg-[#F4F7FC] hover:bg-[#6D28D9]/10 text-[#15213B] hover:text-[#6D28D9] border border-slate-200 text-[11px] font-semibold cursor-pointer transition">
+                <button onclick="queueFragment('Quiero agendar cita este sábado a las 10am')" class="px-2 py-1 rounded bg-[#F9F0FF] border border-[#D3ADF7] text-[#722ED1] text-[11px] font-medium cursor-pointer">
                   2. Cita &rarr; Cita Agendada
                 </button>
-                <button onclick="queueFragment('Ya estamos en el terreno con David viendo el lote')" class="px-2.5 py-1 rounded-lg bg-[#F4F7FC] hover:bg-[#6D28D9]/10 text-[#15213B] hover:text-[#6D28D9] border border-slate-200 text-[11px] font-semibold cursor-pointer transition">
-                  3. En Terreno &rarr; Visitó Proyecto
+                <button onclick="queueFragment('Ya estamos en el terreno con David viendo el lote')" class="px-2 py-1 rounded bg-[#E6F4FF] border border-[#91CAFF] text-[#0958D9] text-[11px] font-medium cursor-pointer">
+                  3. En terreno &rarr; Visito Proyecto
                 </button>
-                <button onclick="queueFragment('Estamos haciendo cuentas con mis cesantías para negociar')" class="px-2.5 py-1 rounded-lg bg-[#F4F7FC] hover:bg-[#6D28D9]/10 text-[#15213B] hover:text-[#6D28D9] border border-slate-200 text-[11px] font-semibold cursor-pointer transition">
-                  4. Cuentas &rarr; En Negociación
+                <button onclick="queueFragment('Estamos haciendo cuentas con mis cesantías para negociar')" class="px-2 py-1 rounded bg-[#FFF2E8] border border-[#FFBB96] text-[#D4380D] text-[11px] font-medium cursor-pointer">
+                  4. Cuentas &rarr; En Negociacion
                 </button>
-                <button onclick="queueFragment('Ya hice la transferencia de 500 mil para separar el lote')" class="px-2.5 py-1 rounded-lg bg-[#0F9F9A]/10 hover:bg-[#0F9F9A]/20 text-[#0F9F9A] border border-[#0F9F9A]/30 text-[11px] font-bold cursor-pointer transition">
-                  5. $500k &rarr; Separó Lote
+                <button onclick="queueFragment('Ya hice la transferencia de 500 mil para separar el lote')" class="px-2 py-1 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[11px] font-medium cursor-pointer">
+                  5. $500k &rarr; Separo Lote
                 </button>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-              <div class="flex gap-2">
-                <input id="buyer-input" type="text" placeholder="Escribe como comprador en WhatsApp..." class="flex-1 bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#6D28D9] rounded-xl px-3.5 py-2 text-xs text-[#15213B] focus:outline-none" onkeydown="if(event.key==='Enter') sendBuyerMessage()">
-                <button onclick="sendBuyerMessage()" class="px-4 py-2 rounded-xl bg-[#6D28D9] hover:bg-[#5b21b6] text-white font-semibold text-xs cursor-pointer transition shrink-0">
-                  Enviar (Cliente)
+                <button onclick="queueFragment('¿Me envías el plano actualizado para ver qué lotes tienen disponibles en Etapa 1, 2 y 3?')" class="px-2 py-1 rounded bg-[#E6F4FF] border border-[#91CAFF] text-[#1677FF] text-[11px] font-semibold cursor-pointer">
+                  🗺️ Pedir Planos Actualizados
                 </button>
               </div>
-              <div class="flex gap-2">
-                <input id="advisor-input" type="text" placeholder="Responder manualmente como Socio / Asesor..." class="flex-1 bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#15213B] rounded-xl px-3.5 py-2 text-xs text-[#15213B] focus:outline-none" onkeydown="if(event.key==='Enter') sendAdvisorMessage()">
-                <button onclick="sendAdvisorMessage()" class="px-4 py-2 rounded-xl bg-[#15213B] hover:bg-slate-800 text-white font-semibold text-xs cursor-pointer transition shrink-0">
-                  Intervenir
-                </button>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="flex gap-2">
+                  <input id="buyer-input" type="text" placeholder="Escribe como comprador en WhatsApp..." class="flex-1 bg-white border border-[#D9D9D9] focus:border-[#1677FF] rounded-md px-3 py-1.5 text-xs focus:outline-none" onkeydown="if(event.key==='Enter') sendBuyerMessage()">
+                  <button onclick="sendBuyerMessage()" class="px-3.5 py-1.5 rounded-md bg-[#1677FF] hover:bg-[#0958D9] text-white font-medium text-xs cursor-pointer">Enviar Cliente</button>
+                </div>
+                <div class="flex gap-2">
+                  <input id="advisor-input" type="text" placeholder="Responder manualmente como asesor..." class="flex-1 bg-white border border-[#D9D9D9] focus:border-slate-700 rounded-md px-3 py-1.5 text-xs focus:outline-none" onkeydown="if(event.key==='Enter') sendAdvisorMessage()">
+                  <button onclick="sendAdvisorMessage()" class="px-3.5 py-1.5 rounded-md bg-slate-800 text-white font-medium text-xs cursor-pointer">Intervenir</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <!-- ===================================================================
-         TAB 3: CENTRO DE CONTROL & VIDEO DRON
-         =================================================================== -->
-    <main id="tab-overview" class="hidden p-6 space-y-6 flex-1">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-          <div class="relative h-[360px] bg-slate-900">
-            <video src="/assets/la-estrella/hero-video.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-90"></video>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
-            <div class="absolute bottom-5 left-5 right-5 text-white">
-              <span class="px-2.5 py-1 rounded-md bg-[#0F9F9A] text-white text-[10px] font-bold uppercase tracking-wider">Toma Aérea Real · 35 Hectáreas</span>
-              <h2 class="text-2xl font-extrabold mt-2">Proyecto La Estrella · Villavicencio, Meta</h2>
-              <p class="text-xs text-slate-200 mt-1">Vereda Las Mercedes · A 10 metros de la vía nacional pavimentada Villavicencio–Acacías · 3 Etapas</p>
+      <!-- =================================================================
+           VIEW 3: DASHBOARD & VIDEO DRON
+           ================================================================= -->
+      <main id="tab-overview" class="hidden flex-1 p-6 bg-[#F0F2F5] overflow-y-auto space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-7 bg-white rounded-lg border border-[#E5E7EB] overflow-hidden shadow-2xs">
+            <div class="relative h-[340px] bg-slate-900">
+              <video src="/assets/la-estrella/hero-video.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-90"></video>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+              <div class="absolute bottom-4 left-4 right-4 text-white">
+                <span class="px-2 py-0.5 rounded bg-[#1677FF] text-white text-[10px] font-bold uppercase">Video Dron Real · 35 Hectáreas</span>
+                <h2 class="text-xl font-bold mt-1">Proyecto La Estrella · Villavicencio, Meta</h2>
+                <p class="text-xs text-slate-200">Vereda Las Mercedes · A 10m de la vía nacional Villavicencio–Acacías</p>
+              </div>
+            </div>
+            <div class="p-3 grid grid-cols-3 gap-2.5">
+              <img src="/assets/la-estrella/frame_3.jpg" class="h-24 w-full object-cover rounded border border-[#E5E7EB]">
+              <img src="/assets/la-estrella/frame_6.jpg" class="h-24 w-full object-cover rounded border border-[#E5E7EB]">
+              <img src="/assets/la-estrella/frame_9.jpg" class="h-24 w-full object-cover rounded border border-[#E5E7EB]">
             </div>
           </div>
-          <div class="p-4 grid grid-cols-3 gap-3 bg-white">
-            <img src="/assets/la-estrella/frame_3.jpg" class="h-24 w-full object-cover rounded-xl border border-slate-200">
-            <img src="/assets/la-estrella/frame_6.jpg" class="h-24 w-full object-cover rounded-xl border border-slate-200">
-            <img src="/assets/la-estrella/frame_9.jpg" class="h-24 w-full object-cover rounded-xl border border-slate-200">
-          </div>
-        </div>
 
-        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
-          <div class="space-y-4">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#6D28D9]/10 text-[#6D28D9] text-xs font-bold">
-              <i data-lucide="calculator" class="w-4 h-4"></i> Calculadora Financiera Directa (0% Interés)
-            </div>
-            <h3 class="text-xl font-extrabold text-[#15213B]">Simulador de Financiación a 18 Meses</h3>
-            <p class="text-xs text-[#5C6B85]">Selecciona la tipología de lote para calcular la cuota inicial (40%) y las 18 cuotas mensuales sin bancos ni fiadores.</p>
-
-            <div class="grid grid-cols-3 gap-2.5 pt-1">
-              <button onclick="selectCalcLot(120, 27000000, '6x20 m')" class="p-3 rounded-xl border-2 border-[#6D28D9] bg-[#6D28D9]/5 text-left cursor-pointer">
-                <div class="text-xs font-extrabold text-[#15213B]">120 m² (6x20)</div>
-                <div class="text-sm font-black text-[#6D28D9] mono mt-0.5">$27.000.000</div>
+          <div class="lg:col-span-5 bg-white rounded-lg border border-[#E5E7EB] p-5 shadow-2xs space-y-4">
+            <h3 class="text-base font-bold text-slate-800">Simulador Financiero Directo (18 Meses 0% Interés)</h3>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="selectCalcLot(114, 27000000)" class="p-2.5 rounded border border-[#1677FF] bg-[#E6F4FF]/40 text-left cursor-pointer">
+                <div class="text-xs font-bold text-slate-800">Etapa 3 (114m²)</div>
+                <div class="text-xs font-bold text-[#1677FF] mt-0.5">$27.000.000</div>
               </button>
-              <button onclick="selectCalcLot(160, 32000000, '8x20 m')" class="p-3 rounded-xl border border-slate-200 hover:border-[#6D28D9] bg-[#F8FAFC] text-left cursor-pointer">
-                <div class="text-xs font-extrabold text-[#15213B]">160 m² (8x20)</div>
-                <div class="text-sm font-black text-[#15213B] mono mt-0.5">$32.000.000</div>
+              <button onclick="selectCalcLot(152, 32000000)" class="p-2.5 rounded border border-[#E5E7EB] hover:border-[#1677FF] text-left cursor-pointer">
+                <div class="text-xs font-bold text-slate-800">Etapa 2 (152m²)</div>
+                <div class="text-xs font-bold text-slate-700 mt-0.5">$32.000.000</div>
               </button>
-              <button onclick="selectCalcLot(200, 42000000, '10x20 m')" class="p-3 rounded-xl border border-slate-200 hover:border-[#6D28D9] bg-[#F8FAFC] text-left cursor-pointer">
-                <div class="text-xs font-extrabold text-[#15213B]">200 m² (10x20)</div>
-                <div class="text-sm font-black text-[#15213B] mono mt-0.5">$42.000.000</div>
+              <button onclick="selectCalcLot(190, 42000000)" class="p-2.5 rounded border border-[#E5E7EB] hover:border-[#1677FF] text-left cursor-pointer">
+                <div class="text-xs font-bold text-slate-800">Etapa 1 (190m²+)</div>
+                <div class="text-xs font-bold text-slate-700 mt-0.5">$42.000.000</div>
               </button>
             </div>
-
-            <div class="p-4 rounded-2xl bg-[#F4F7FC] border border-slate-200 space-y-2.5 text-xs">
-              <div class="flex justify-between"><span class="text-[#5C6B85]">1. Separación inmediata:</span><span class="font-bold text-[#0F9F9A] mono">$500.000 COP</span></div>
-              <div class="flex justify-between"><span class="text-[#5C6B85]">2. Cuota Inicial (40% · incluye cesantías):</span><span id="calc-init" class="font-bold text-[#15213B] mono">$10.800.000 COP</span></div>
-              <div class="flex justify-between pt-2 border-t border-slate-200"><span class="font-bold text-[#15213B]">3. 18 Cuotas Mensuales (0% Interés):</span><span id="calc-month" class="font-black text-base text-[#6D28D9] mono">$900.000 /mes</span></div>
+            <div class="p-4 rounded-md bg-[#F4F5F7] space-y-2 text-xs">
+              <div class="flex justify-between"><span>1. Separación:</span><strong class="text-[#389E0D]">$500.000 COP</strong></div>
+              <div class="flex justify-between"><span>2. Inicial (40%):</span><strong id="calc-init">$10.800.000 COP</strong></div>
+              <div class="flex justify-between pt-2 border-t border-slate-200"><span>3. 18 Cuotas sin interés:</span><strong id="calc-month" class="text-[#1677FF] text-sm">$900.000 /mes</strong></div>
             </div>
           </div>
-
-          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-[#5C6B85]">
-            <span>Oficina: Calle 19 # 40-89, Barrio Camoa</span>
-            <span class="font-bold text-[#0F9F9A]">Entrega: 8 a 9 meses</span>
-          </div>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <!-- ===================================================================
-         TAB 4: MASTERPLAN INTERACTIVO DE LOTES
-         =================================================================== -->
-    <main id="tab-lots" class="hidden p-6 space-y-5 flex-1">
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-extrabold text-[#15213B]">Masterplan Aéreo Georreferenciado · Etapas 1, 2 y 3</h2>
-          <p class="text-xs text-[#5C6B85]">Haz clic sobre cualquier lote para alternar su disponibilidad en tiempo real (Disponible &rarr; Separado $500k &rarr; Vendido).</p>
-        </div>
-        <div class="flex items-center gap-3 text-xs font-semibold">
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#0F9F9A] inline-block"></span> Disponible</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Separado ($500k)</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-600 inline-block"></span> Vendido</span>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-7 relative rounded-2xl overflow-hidden border border-slate-200 shadow-sm h-[500px] bg-slate-900">
-          <img src="/assets/la-estrella/frame_6.jpg" class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-slate-950/25"></div>
-          <div id="interactive-map-pins" class="absolute inset-0"></div>
-        </div>
-        <div id="lots-grid" class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-1"></div>
-      </div>
-    </main>
-
-    <!-- ===================================================================
-         TAB 5: PORTERÍA QR (DAVID & STELLA · PROTECCIÓN DE COMISIÓN 40%)
-         =================================================================== -->
-    <main id="tab-checkin" class="hidden p-6 flex-1">
-      <div class="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200/80 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-5">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-[#6D28D9]/10 text-[#6D28D9] flex items-center justify-center">
-            <i data-lucide="qr-code" class="w-6 h-6"></i>
-          </div>
+      <!-- =================================================================
+           VIEW 4: PLANOS OFICIALES ACTUALIZADOS (OCT 18, 2026) & INVENTARIO DE LOTES
+           ================================================================= -->
+      <main id="tab-lots" class="hidden flex-1 p-5 bg-[#F0F2F5] overflow-y-auto space-y-4">
+        
+        <!-- Top Header & KPI Summary Bar -->
+        <div class="bg-white rounded-lg border border-[#E5E7EB] p-4 flex flex-wrap items-center justify-between gap-4 shadow-2xs">
           <div>
-            <h2 class="text-lg font-extrabold text-[#15213B]">Validación de Pasaporte QR en Portería</h2>
-            <p class="text-xs text-[#5C6B85]">Cuando David o Stella escanean el código, el cliente pasa automáticamente a <strong>Visitó Proyecto</strong> y queda blindada tu comisión del 40%.</p>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-[#E6F4FF] text-[#1677FF] font-bold text-[11px]">CORTE OFICIAL: 18 OCTUBRE 2026</span>
+              <h2 class="text-sm font-bold text-slate-800">Planos Actualizados & Disponibilidad Real · Proyecto Campestre La Estrella</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Convención del Plano CAD: <span class="font-semibold text-[#389E0D]">○ Casilla en Blanco = Lote Disponible</span> · <span class="font-semibold text-[#CF1322]">● Punto Rojo = Lote Vendido</span></p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="px-3 py-1.5 rounded-md bg-[#F4F5F7] border border-[#E5E7EB] text-center">
+              <div class="text-[10px] text-slate-500 font-medium">Total Proyecto</div>
+              <div class="text-sm font-bold text-slate-800">1.530 Lotes</div>
+            </div>
+            <div class="px-3 py-1.5 rounded-md bg-[#F6FFED] border border-[#B7EB8F] text-center">
+              <div class="text-[10px] text-[#389E0D] font-semibold">Disponibles (○)</div>
+              <div class="text-sm font-bold text-[#389E0D]">569 Lotes</div>
+            </div>
+            <div class="px-3 py-1.5 rounded-md bg-[#FFF1F0] border border-[#FFA39E] text-center">
+              <div class="text-[10px] text-[#CF1322] font-semibold">Vendidos (●)</div>
+              <div class="text-sm font-bold text-[#CF1322]">961 Lotes</div>
+            </div>
+            <button onclick="setTab('kanban')" class="px-3 py-2 rounded-md border border-[#D9D9D9] hover:border-[#1677FF] text-xs font-medium text-slate-700 cursor-pointer">
+              &larr; Volver al Kanban
+            </button>
           </div>
         </div>
-        <div id="checkin-passes-list" class="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden"></div>
-      </div>
-    </main>
 
-    <!-- ===================================================================
-         TAB 6: MICROSITIO PÚBLICO B2C
-         =================================================================== -->
-    <main id="tab-landing" class="hidden p-6 flex-1">
-      <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-        <div class="relative h-[420px] bg-slate-900">
-          <video src="/assets/la-estrella/hero-video.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-85"></video>
-          <div class="absolute inset-0 bg-gradient-to-r from-[#080B20]/95 via-[#080B20]/70 to-transparent flex items-center p-8 md:p-12">
-            <div class="max-w-xl text-white space-y-4">
-              <span class="px-3 py-1 rounded-full bg-[#0F9F9A] text-white text-xs font-bold">Lotes Campestres en Villavicencio · Meta</span>
-              <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">Tu Lote Propio a 10m de la Vía Nacional desde $27 Millones</h1>
-              <p class="text-sm text-slate-200">Separa hoy con $500.000 COP y paga el 60% en 18 cuotas mensuales con 0% de interés directo con la desarrolladora.</p>
-              <button onclick="openNewLeadModal()" class="px-5 py-3 rounded-xl bg-[#6D28D9] hover:bg-[#5b21b6] text-white font-bold text-xs shadow-lg cursor-pointer transition">
-                Recibir Brochure y Agendar Visita en WhatsApp &rarr;
-              </button>
+        <!-- Stage Selector Tabs (Etapa 1 | Etapa 2 | Etapa 3) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <button onclick="selectBlueprintStage(1)" id="stage-btn-1" class="p-3.5 rounded-lg border-2 border-[#1677FF] bg-[#E6F4FF]/40 text-left transition cursor-pointer flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-slate-900">🗺️ PLANO ETAPA 1</span>
+                <span class="px-2 py-0.5 rounded bg-[#1677FF] text-white text-[10px] font-bold">Lago & Vía Nacional</span>
+              </div>
+              <div class="text-[11px] text-slate-600 mt-1">Área típica: <strong>190 m²</strong> (y especiales 200–780 m²)</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-bold text-[#389E0D]">102 Disp.</div>
+              <div class="text-[11px] text-slate-500">330 Vendidos ●</div>
+            </div>
+          </button>
+
+          <button onclick="selectBlueprintStage(2)" id="stage-btn-2" class="p-3.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#1677FF] text-left transition cursor-pointer flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-slate-900">🗺️ PLANO ETAPA 2</span>
+                <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-bold">Zona Plana Central</span>
+              </div>
+              <div class="text-[11px] text-slate-600 mt-1">Área típica: <strong>152 m²</strong> (y esquineros 191–405 m²)</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-bold text-[#389E0D]">298 Disp.</div>
+              <div class="text-[11px] text-slate-500">227 Vendidos ●</div>
+            </div>
+          </button>
+
+          <button onclick="selectBlueprintStage(3)" id="stage-btn-3" class="p-3.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#1677FF] text-left transition cursor-pointer flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-slate-900">🗺️ PLANO ETAPA 3</span>
+                <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-bold">Caño Corcobado</span>
+              </div>
+              <div class="text-[11px] text-slate-600 mt-1">Área típica: <strong>114 m² y 152 m²</strong> (Cesión Ambiental)</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-bold text-[#389E0D]">169 Disp.</div>
+              <div class="text-[11px] text-slate-500">404 Vendidos ●</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Main Split View: Left Interactive High-Res Blueprint + Right Searchable Lot Inventory -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          
+          <!-- Left: High-Res Blueprint Image with Zoom & PDF Download -->
+          <div class="lg:col-span-7 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden h-[560px] shadow-2xs">
+            <div class="px-4 py-2.5 border-b border-[#E5E7EB] bg-[#FAFAFA] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span id="bp-viewer-title" class="font-bold text-xs text-slate-800">PLANO ACTUALIZADO LA ESTRELLA ETAPA 1 (OCTUBRE 18 DE 2026)</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="zoomBlueprint(-0.25)" class="px-2 py-1 rounded border border-[#D9D9D9] bg-white hover:bg-slate-50 text-xs font-bold cursor-pointer" title="Alejar">-</button>
+                <button onclick="resetBlueprintZoom()" id="bp-zoom-label" class="px-2 py-1 rounded border border-[#D9D9D9] bg-white hover:bg-slate-50 text-[11px] font-medium cursor-pointer">100%</button>
+                <button onclick="zoomBlueprint(0.25)" class="px-2 py-1 rounded border border-[#D9D9D9] bg-white hover:bg-slate-50 text-xs font-bold cursor-pointer" title="Acercar">+</button>
+                <a id="bp-pdf-link" href="/assets/la-estrella/plano-etapa-1.pdf" target="_blank" class="ml-1 px-2.5 py-1 rounded bg-[#1677FF] hover:bg-[#0958D9] text-white text-[11px] font-medium flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                  <span>Abrir PDF Original</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="flex-1 overflow-auto bg-white p-3 flex items-start justify-center relative">
+              <img id="bp-image" src="/assets/la-estrella/plano-etapa-1.png" alt="Plano Proyecto La Estrella"
+                   style="width: 100%; max-width: none; transition: width 0.15s ease;"
+                   class="rounded border border-slate-200 shadow-xs">
+            </div>
+          </div>
+
+          <!-- Right: Live Searchable Lot Availability Directory (All 1,530 lots from PDFs) -->
+          <div class="lg:col-span-5 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden h-[560px] shadow-2xs">
+            <div class="p-3.5 border-b border-[#E5E7EB] bg-[#FAFAFA] space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-slate-800">Buscador de Lotes por Etapa</span>
+                <span id="bp-filter-count" class="text-[11px] font-semibold text-[#389E0D]">102 lotes disponibles</span>
+              </div>
+
+              <div class="flex gap-2">
+                <div class="relative flex-1">
+                  <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2"></i>
+                  <input id="lot-search-input" oninput="renderLots()" type="text" placeholder="Buscar # de lote (ej. 74, 79, 170, 240, 308...)"
+                         class="w-full bg-white border border-[#D9D9D9] focus:border-[#1677FF] rounded-md pl-8 pr-3 py-1.5 text-xs focus:outline-none">
+                </div>
+                <select id="lot-status-filter" onchange="renderLots()" class="bg-white border border-[#D9D9D9] rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none cursor-pointer">
+                  <option value="available">🟢 Solo Disponibles (○)</option>
+                  <option value="all">📋 Todos los Lotes</option>
+                  <option value="sold">🔴 Vendidos (●)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Scrollable Lots Grid -->
+            <div id="lots-grid" class="flex-1 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2 overflow-y-auto content-start bg-[#F8FAFC]"></div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- =================================================================
+           VIEW 5: CITAS & PORTERÍA QR
+           ================================================================= -->
+      <main id="tab-checkin" class="hidden flex-1 p-6 bg-[#F0F2F5] overflow-y-auto">
+        <div class="max-w-3xl mx-auto bg-white rounded-lg border border-[#E5E7EB] p-5 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Citas y Registro QR en Portería</h2>
+          <div id="checkin-passes-list" class="divide-y divide-[#E5E7EB]"></div>
+        </div>
+      </main>
+
+      <!-- =================================================================
+           VIEW 6: LANDING PÚBLICA
+           ================================================================= -->
+      <main id="tab-landing" class="hidden flex-1 p-6 bg-[#F0F2F5] overflow-y-auto">
+        <div class="bg-white rounded-lg border border-[#E5E7EB] overflow-hidden">
+          <div class="relative h-[400px] bg-slate-900">
+            <video src="/assets/la-estrella/hero-video.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-85"></video>
+            <div class="absolute inset-0 bg-black/55 flex items-center p-10">
+              <div class="max-w-lg text-white space-y-3">
+                <span class="px-2.5 py-1 rounded bg-[#389E0D] text-xs font-bold">Proyecto La Estrella · Villavicencio</span>
+                <h1 class="text-3xl font-bold">Lotes Campestres desde $27 Millones</h1>
+                <p class="text-xs text-slate-200">Separa con $500.000 COP y financia hasta en 18 meses sin intereses.</p>
+                <button onclick="openNewLeadModal()" class="px-4 py-2 rounded-md bg-[#1677FF] text-white text-xs font-semibold cursor-pointer">Captar Prospecto de Prueba</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
 
+    </div>
   </div>
 
-  <!-- MODAL: NUEVO PROSPECTO / SIMULAR ANUNCIO -->
-  <div id="modal-new-lead" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
-      <div class="flex items-center justify-between">
-        <h3 class="text-base font-extrabold text-[#15213B]">Registrar Prospecto / Simular Meta Ads</h3>
-        <button onclick="closeNewLeadModal()" class="text-[#5C6B85] hover:text-[#15213B] cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+  <!-- MODAL: CREAR CONTACTO -->
+  <div id="modal-new-lead" class="hidden fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+    <div class="bg-white border border-[#E5E7EB] rounded-lg max-w-md w-full p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-2.5">
+        <h3 class="text-sm font-bold text-slate-800">Crear Contacto</h3>
+        <button onclick="closeNewLeadModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-      <div class="space-y-3">
+      <div class="space-y-3 text-xs">
         <div>
-          <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Nombre Completo</label>
-          <input id="nl-name" type="text" placeholder="Ej. Carlos Andrés Mejía" class="w-full mt-1 bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#6D28D9] rounded-xl px-3.5 py-2 text-xs text-[#15213B] focus:outline-none">
+          <label class="font-semibold text-slate-600">Name</label>
+          <input id="nl-name" type="text" placeholder="Ej. Mauricio Rincón" class="w-full mt-1 border border-[#D9D9D9] rounded-md px-3 py-1.5 focus:outline-none focus:border-[#1677FF]">
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="text-[11px] font-bold text-[#5C6B85] uppercase">WhatsApp</label>
-            <input id="nl-phone" type="text" value="+573158892014" class="w-full mt-1 bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#6D28D9] rounded-xl px-3.5 py-2 text-xs text-[#15213B] mono focus:outline-none">
+            <label class="font-semibold text-slate-600">Phone Number</label>
+            <input id="nl-phone" type="text" value="+573158892014" class="w-full mt-1 border border-[#D9D9D9] rounded-md px-3 py-1.5 focus:outline-none focus:border-[#1677FF]">
           </div>
           <div>
-            <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Ciudad Origen</label>
-            <input id="nl-city" type="text" value="Bogotá D.C." class="w-full mt-1 bg-[#F4F7FC] focus:bg-white border border-slate-200 focus:border-[#6D28D9] rounded-xl px-3.5 py-2 text-xs text-[#15213B] focus:outline-none">
+            <label class="font-semibold text-slate-600">Ciudad</label>
+            <input id="nl-city" type="text" value="Bogotá D.C." class="w-full mt-1 border border-[#D9D9D9] rounded-md px-3 py-1.5 focus:outline-none focus:border-[#1677FF]">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Asesor Asignado</label>
-            <select id="nl-advisor" class="w-full mt-1 bg-[#F4F7FC] border border-slate-200 rounded-xl px-3 py-2 text-xs text-[#15213B]">
+            <label class="font-semibold text-slate-600">asesor_id</label>
+            <select id="nl-advisor" class="w-full mt-1 border border-[#D9D9D9] rounded-md px-2.5 py-1.5">
               <option value="david@nodia.com">david@nodia.com</option>
               <option value="stella@nodia.com">stella@nodia.com</option>
             </select>
           </div>
           <div>
-            <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Botón Anuncio</label>
-            <select id="nl-purpose" class="w-full mt-1 bg-[#F4F7FC] border border-slate-200 rounded-xl px-3 py-2 text-xs text-[#15213B]">
+            <label class="font-semibold text-slate-600">Intención Inicial</label>
+            <select id="nl-purpose" class="w-full mt-1 border border-[#D9D9D9] rounded-md px-2.5 py-1.5">
               <option value="PARA INVERTIR">PARA INVERTIR</option>
               <option value="PARA VIVIR">PARA VIVIR</option>
               <option value="PARA RECREACIÓN">PARA RECREACIÓN</option>
@@ -533,66 +597,65 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeNewLeadModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-[#5C6B85] hover:text-[#15213B] cursor-pointer">Cancelar</button>
-        <button onclick="createNewLead()" class="px-4 py-2 rounded-xl bg-[#6D28D9] hover:bg-[#5b21b6] text-white text-xs font-semibold cursor-pointer">Crear y Activar Valentina IA</button>
+      <div class="flex justify-end gap-2 pt-2 border-t border-[#E5E7EB]">
+        <button onclick="closeNewLeadModal()" class="px-3.5 py-1.5 rounded-md border border-[#D9D9D9] text-xs text-slate-600 cursor-pointer">Cancelar</button>
+        <button onclick="createNewLead()" class="px-3.5 py-1.5 rounded-md bg-[#1677FF] text-white text-xs font-medium cursor-pointer">Guardar</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: NUEVO PROYECTO (MULTI-TENANT) -->
-  <div id="modal-new-project" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
-      <div class="flex items-center justify-between">
-        <h3 class="text-base font-extrabold text-[#15213B]">Crear Nuevo Proyecto Inmobiliario</h3>
-        <button onclick="closeNewProjectModal()" class="text-[#5C6B85] hover:text-[#15213B] cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+  <!-- MODAL: NUEVO PROYECTO -->
+  <div id="modal-new-project" class="hidden fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+    <div class="bg-white border border-[#E5E7EB] rounded-lg max-w-md w-full p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-2.5">
+        <h3 class="text-sm font-bold text-slate-800">Crear Proyecto</h3>
+        <button onclick="closeNewProjectModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-      <div class="space-y-3">
-        <div>
-          <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Nombre del Proyecto</label>
-          <input id="np-name" type="text" placeholder="Ej. Hacienda San Marcos" class="w-full mt-1 bg-[#F4F7FC] border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-[#15213B]">
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Etiqueta Corta</label>
-          <input id="np-short" type="text" placeholder="Ej. San Marcos" class="w-full mt-1 bg-[#F4F7FC] border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-[#15213B]">
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-[#5C6B85] uppercase">Ubicación</label>
-          <input id="np-loc" type="text" placeholder="Ej. Cumaral - Meta" class="w-full mt-1 bg-[#F4F7FC] border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-[#15213B]">
-        </div>
+      <div class="space-y-2.5 text-xs">
+        <input id="np-name" type="text" placeholder="Nombre del Proyecto (Ej. Hacienda San Marcos)" class="w-full border border-[#D9D9D9] rounded-md px-3 py-1.5">
+        <input id="np-short" type="text" placeholder="Etiqueta (Ej. San Marcos)" class="w-full border border-[#D9D9D9] rounded-md px-3 py-1.5">
+        <input id="np-loc" type="text" placeholder="Ubicación (Ej. Cumaral - Meta)" class="w-full border border-[#D9D9D9] rounded-md px-3 py-1.5">
       </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeNewProjectModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-[#5C6B85] cursor-pointer">Cancelar</button>
-        <button onclick="createNewProject()" class="px-4 py-2 rounded-xl bg-[#6D28D9] text-white text-xs font-semibold cursor-pointer">Guardar Proyecto</button>
+      <div class="flex justify-end gap-2 pt-2 border-t border-[#E5E7EB]">
+        <button onclick="closeNewProjectModal()" class="px-3.5 py-1.5 rounded-md border border-[#D9D9D9] text-xs text-slate-600 cursor-pointer">Cancelar</button>
+        <button onclick="createNewProject()" class="px-3.5 py-1.5 rounded-md bg-[#1677FF] text-white text-xs font-medium cursor-pointer">Crear</button>
       </div>
     </div>
   </div>
 
   <script>
     let state = null;
+    let blueprintSummary = null;
+    let activeBlueprintStage = 1;
+    let blueprintZoom = 1.0;
     let activeProjectId = 'la-estrella';
     let selectedLeadId = 1;
-    let currentRole = 'partner';
     let currentTab = 'kanban';
     let crmView = 'kanban';
 
-    // Paleta Semántica Refinada sobre Claro (Sin barras neón chillonas)
+    // Exact Pancake CRM (React + Ant Design) 10 Column Colors from User's Screenshots
     const KANBAN_COLS = [
-      { key: 'lead_nuevo', title: 'Lead Nuevo', statKey: 'lead_nuevo', dot: 'bg-slate-400', badge: 'bg-slate-100 text-slate-700 border-slate-200' },
-      { key: 'calificado', title: 'Calificado', statKey: 'calificado', dot: 'bg-amber-500', badge: 'bg-amber-50 text-amber-800 border-amber-200' },
-      { key: 'cita_agendada', title: 'Cita Agendada', statKey: 'cita_agendada', dot: 'bg-[#6D28D9]', badge: 'bg-[#6D28D9]/10 text-[#6D28D9] border-[#6D28D9]/20' },
-      { key: 'no_asistio', title: 'No asistió', statKey: 'no_asistio', dot: 'bg-rose-500', badge: 'bg-rose-50 text-rose-700 border-rose-200' },
-      { key: 'archivo_inactividad', title: 'Archivo Inactividad', statKey: 'archivo_inactividad', dot: 'bg-slate-400', badge: 'bg-slate-100 text-slate-600 border-slate-200' },
-      { key: 'visito_proyecto', title: 'Visitó Proyecto', statKey: 'visito_proyecto', dot: 'bg-sky-600', badge: 'bg-sky-50 text-sky-800 border-sky-200' },
-      { key: 'en_negociacion', title: 'En Negociación', statKey: 'en_negociacion', dot: 'bg-orange-500', badge: 'bg-orange-50 text-orange-800 border-orange-200' },
-      { key: 'separo_lote', title: 'Separó Lote', statKey: 'separo_lote', dot: 'bg-[#0F9F9A]', badge: 'bg-[#0F9F9A]/10 text-[#0F9F9A] border-[#0F9F9A]/25' },
-      { key: 'venta_cerrada', title: 'Venta Cerrada', statKey: 'venta_cerrada', dot: 'bg-emerald-600', badge: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
-      { key: 'perdido', title: 'Perdido', statKey: 'perdido', dot: 'bg-slate-300', badge: 'bg-slate-100 text-slate-500 border-slate-200' }
+      { key: 'lead_nuevo', title: 'Lead Nuevo', statKey: 'lead_nuevo', headerBg: 'bg-[#5A6A85] text-white', pillBg: 'bg-[#5A6A85] text-white' },
+      { key: 'calificado', title: 'Calificado', statKey: 'calificado', headerBg: 'bg-[#FADB14] text-slate-900', pillBg: 'bg-[#FADB14] text-slate-900' },
+      { key: 'cita_agendada', title: 'Cita Agendada', statKey: 'cita_agendada', headerBg: 'bg-[#722ED1] text-white', pillBg: 'bg-[#722ED1] text-white' },
+      { key: 'no_asistio', title: 'No asistio', statKey: 'no_asistio', headerBg: 'bg-[#FF7875] text-slate-900', pillBg: 'bg-[#FF7875] text-slate-900' },
+      { key: 'archivo_inactividad', title: 'Archivo por Inactividad', statKey: 'archivo_inactividad', headerBg: 'bg-[#CF1322] text-white', pillBg: 'bg-[#CF1322] text-white' },
+      { key: 'visito_proyecto', title: 'Visito Proyecto', statKey: 'visito_proyecto', headerBg: 'bg-[#0958D9] text-white', pillBg: 'bg-[#0958D9] text-white' },
+      { key: 'en_negociacion', title: 'En Negociacion', statKey: 'en_negociacion', headerBg: 'bg-[#D4380D] text-white', pillBg: 'bg-[#D4380D] text-white' },
+      { key: 'separo_lote', title: 'Separo Lote', statKey: 'separo_lote', headerBg: 'bg-[#389E0D] text-white', pillBg: 'bg-[#389E0D] text-white' },
+      { key: 'venta_cerrada', title: 'Venta Cerrada', statKey: 'venta_cerrada', headerBg: 'bg-[#08979C] text-white', pillBg: 'bg-[#08979C] text-white' },
+      { key: 'perdido', title: 'Perdido', statKey: 'perdido', headerBg: 'bg-[#1F2937] text-white', pillBg: 'bg-[#1F2937] text-white' }
     ];
 
     async function fetchState() {
-      const res = await fetch('/api/state');
+      const [res, bpRes] = await Promise.all([
+        fetch('/api/state'),
+        fetch('/assets/la-estrella/blueprints_summary.json').catch(() => null)
+      ]);
       state = await res.json();
+      if (bpRes && bpRes.ok) {
+        blueprintSummary = await bpRes.json();
+      }
       populateProjectSelector();
       renderAll();
     }
@@ -600,8 +663,8 @@
     function populateProjectSelector() {
       const sel = document.getElementById('project-selector');
       const currentVal = activeProjectId;
-      sel.innerHTML = state.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('') +
-        '<option value="all">Todos los Proyectos (Consolidado)</option>';
+      sel.innerHTML = state.projects.map(p => `<option value="${p.id}">🌳 ${p.name}</option>`).join('') +
+        '<option value="all">🌎 Todos los Proyectos</option>';
       sel.value = currentVal;
     }
 
@@ -610,11 +673,8 @@
         const total = state.projects.reduce((acc, p) => acc + (p.stats?.total_leads || 0), 0);
         return {
           id: 'all',
-          name: 'Todos los Proyectos (Consolidado)',
+          name: 'Todos los Proyectos',
           short_name: 'Todos',
-          total_hectares: 75,
-          price_range: '$27M a $68M COP',
-          commission_pct: 40,
           stats: {
             total_leads: total,
             lead_nuevo: 1935,
@@ -658,15 +718,17 @@
       currentTab = tab;
       ['kanban', 'inbox', 'overview', 'lots', 'checkin', 'landing'].forEach(t => {
         document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
-        const nav = document.getElementById('nav-' + t);
-        if (nav) {
-          if (t === tab) {
-            nav.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-[#6D28D9]/10 text-[#6D28D9] transition-all cursor-pointer';
-          } else {
-            nav.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#5C6B85] hover:text-[#15213B] hover:bg-slate-50 transition-all cursor-pointer';
-          }
-        }
       });
+      const navKanban = document.getElementById('nav-kanban');
+      const navLots = document.getElementById('nav-lots');
+      if (navKanban && navLots) {
+        navKanban.className = tab === 'kanban'
+          ? 'w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold bg-[#E6F4FF] text-[#1677FF] transition cursor-pointer'
+          : 'w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer';
+        navLots.className = tab === 'lots'
+          ? 'w-full flex items-center justify-between px-3 py-2 rounded-md text-xs font-semibold bg-[#E6F4FF] text-[#1677FF] transition cursor-pointer'
+          : 'w-full flex items-center justify-between px-3 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer';
+      }
       lucide.createIcons();
     }
 
@@ -674,35 +736,20 @@
       crmView = view;
       document.getElementById('crm-kanban-view').classList.toggle('hidden', view !== 'kanban');
       document.getElementById('crm-table-view').classList.toggle('hidden', view !== 'table');
-      document.getElementById('btn-view-kanban').className = view === 'kanban'
-        ? 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-[#15213B] shadow-2xs transition flex items-center gap-1.5 cursor-pointer'
-        : 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#5C6B85] hover:text-[#15213B] transition flex items-center gap-1.5 cursor-pointer';
-      document.getElementById('btn-view-table').className = view === 'table'
-        ? 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-[#15213B] shadow-2xs transition flex items-center gap-1.5 cursor-pointer'
-        : 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#5C6B85] hover:text-[#15213B] transition flex items-center gap-1.5 cursor-pointer';
-    }
-
-    function toggleRole() {
-      currentRole = currentRole === 'partner' ? 'ads_coordinator' : 'partner';
-      document.getElementById('sidebar-role-badge').textContent = currentRole === 'partner' ? 'Socio 40%' : 'Coord. Ads';
-      document.getElementById('role-switch-label').textContent = currentRole === 'partner' ? 'Ver como Coordinador Ads' : 'Volver a Socio Master (40%)';
-      renderAll();
-    }
-
-    function getInitials(name) {
-      return (name || 'LC').replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ ]/g, '').trim().split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase() || '').join('') || 'LC';
+      document.getElementById('tab-btn-kanban').className = view === 'kanban'
+        ? 'h-full flex items-center gap-1.5 text-xs font-semibold text-[#1677FF] border-b-2 border-[#1677FF] transition cursor-pointer'
+        : 'h-full flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1677FF] border-b-2 border-transparent transition cursor-pointer';
+      document.getElementById('tab-btn-table').className = view === 'table'
+        ? 'h-full flex items-center gap-1.5 text-xs font-semibold text-[#1677FF] border-b-2 border-[#1677FF] transition cursor-pointer'
+        : 'h-full flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1677FF] border-b-2 border-transparent transition cursor-pointer';
     }
 
     function renderAll() {
       if (!state) return;
       const proj = getActiveProject();
-      document.getElementById('header-project-title').textContent = proj.name;
-      document.getElementById('header-project-badge').textContent = proj.short_name + ' · ' + (proj.total_hectares || 35) + ' Ha';
-      document.getElementById('sidebar-proj-loc').textContent = proj.short_name + ' · ' + (proj.price_range || '$27M - $42M');
-      document.getElementById('sidebar-proj-comm').textContent = 'Socio ' + (proj.commission_pct || 40) + '%';
+      document.getElementById('header-project-title').textContent = 'Contacto · ' + proj.name;
 
-      const totalCount = (proj.stats?.total_leads || getFilteredLeads().length).toLocaleString('es-CO');
-      document.getElementById('sidebar-kanban-count').textContent = totalCount;
+      const totalCount = proj.stats?.total_leads || getFilteredLeads().length;
       document.getElementById('kanban-total-badge').textContent = totalCount;
       document.getElementById('table-total-count').textContent = totalCount;
 
@@ -723,103 +770,104 @@
         const histCount = proj.stats?.[col.statKey] ?? colLeads.length;
 
         return `
-          <div class="w-[296px] shrink-0 bg-[#EAEFF7]/70 rounded-2xl border border-slate-200/90 flex flex-col max-h-[690px]"
-               ondragover="event.preventDefault(); this.classList.add('ring-2','ring-[#6D28D9]')"
-               ondragleave="this.classList.remove('ring-2','ring-[#6D28D9]')"
-               ondrop="this.classList.remove('ring-2','ring-[#6D28D9]'); handleKanbanDrop(event, '${col.key}')">
+          <div class="w-[278px] shrink-0 bg-[#EAEEF3] rounded-md flex flex-col h-full overflow-hidden"
+               ondragover="event.preventDefault(); this.classList.add('ring-2','ring-[#1677FF]')"
+               ondragleave="this.classList.remove('ring-2','ring-[#1677FF]')"
+               ondrop="this.classList.remove('ring-2','ring-[#1677FF]'); handleKanbanDrop(event, '${col.key}')">
             
-            <!-- Cabecera Limpia Estilo AviPetApp / Attio -->
-            <div class="px-3.5 py-3 bg-white border-b border-slate-200/80 rounded-t-2xl flex items-center justify-between">
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="w-2.5 h-2.5 rounded-full ${col.dot} shrink-0"></span>
-                <span class="font-bold text-xs text-[#15213B] truncate">${col.title}</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="px-2 py-0.5 rounded-full bg-[#F4F7FC] border border-slate-200 text-[#5C6B85] text-[10.5px] font-bold tabular">${histCount.toLocaleString('es-CO')}</span>
-              </div>
+            <!-- Exact Pancake CRM Column Header -->
+            <div class="px-3.5 py-2.5 ${col.headerBg} font-bold text-[12.5px] flex items-center justify-between shrink-0">
+              <span class="truncate">${col.title} / ${histCount}</span>
             </div>
 
-            <!-- Tarjetas Blancas Limpias -->
-            <div class="p-2.5 space-y-2.5 overflow-y-auto flex-1">
-              ${colLeads.length === 0 ? `
-                <div class="h-28 rounded-xl border border-dashed border-slate-300/80 bg-white/50 flex flex-col items-center justify-center text-[11px] text-[#5C6B85] p-4 text-center">
-                  <span>Arrastra un prospecto aquí</span>
-                </div>
-              ` : colLeads.map(lead => {
-                const phoneDisplay = currentRole === 'partner' ? lead.buyer_phone : lead.masked_phone;
+            <!-- Cards List on #EAEEF3 Gray Track -->
+            <div class="p-2 space-y-2.5 overflow-y-auto flex-1">
+              ${colLeads.map(lead => {
                 const stageSelectOptions = KANBAN_COLS.map(c =>
-                  `<option value="${c.key}" ${c.key === lead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
+                  `<option value="${c.key}" class="bg-white text-slate-800" ${c.key === lead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
                 ).join('');
 
                 return `
                   <div draggable="true"
                        ondragstart="handleDragStart(event, ${lead.id})"
-                       class="p-3.5 rounded-xl bg-white border border-slate-200/90 hover:border-[#6D28D9]/40 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-md transition-all cursor-grab active:cursor-grabbing space-y-2.5">
+                       class="bg-white rounded-md border border-[#E5E7EB] p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-md transition cursor-grab active:cursor-grabbing space-y-1.5">
                     
-                    <!-- Fila 1: Avatar + Nombre + Acciones -->
-                    <div class="flex items-start justify-between gap-2">
-                      <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="w-8 h-8 rounded-lg bg-[#F4F7FC] border border-slate-200 text-[#15213B] font-bold text-[11px] flex items-center justify-center shrink-0">
-                          ${getInitials(lead.buyer_name)}
-                        </div>
-                        <div class="min-w-0">
-                          <div class="font-bold text-[13px] text-[#15213B] truncate leading-tight">${lead.buyer_name}</div>
-                          <div class="text-[11px] text-[#5C6B85] truncate mt-0.5">${lead.city || 'Colombia'} · <span class="font-semibold text-[#15213B]">${lead.project_label || 'Estrella'}</span></div>
-                        </div>
-                      </div>
-                      <div class="flex items-center gap-1 shrink-0">
-                        <button onclick="openLeadChat(${lead.id})" class="px-2 py-1 rounded-lg bg-[#6D28D9]/10 hover:bg-[#6D28D9] text-[#6D28D9] hover:text-white text-[10.5px] font-bold transition cursor-pointer" title="Abrir Chat con Valentina IA">
-                          Chat IA
+                    <!-- Card Header: Name + 3 Subtle Icons (+ , Expand/Chat , ...) -->
+                    <div class="flex items-center justify-between gap-2 pb-1">
+                      <span class="font-medium text-[13px] text-slate-800 truncate">${lead.buyer_name}</span>
+                      <div class="flex items-center gap-1.5 text-slate-400 shrink-0">
+                        <button onclick="openLeadChat(${lead.id})" class="hover:text-[#1677FF] cursor-pointer" title="Abrir Chat con Valentina IA">
+                          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
                         </button>
-                        <a href="/quote/${lead.pass_code}" target="_blank" class="p-1 rounded-lg bg-[#F4F7FC] hover:bg-slate-200 text-[#5C6B85] hover:text-[#15213B] border border-slate-200 transition" title="Ver Cotización y Pasaporte QR">
-                          <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                        <button onclick="openLeadChat(${lead.id})" class="hover:text-[#1677FF] cursor-pointer" title="Expandir Conversación">
+                          <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <a href="/quote/${lead.pass_code}" target="_blank" class="hover:text-[#1677FF] cursor-pointer" title="Ver Cotización y QR">
+                          <i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>
                         </a>
                       </div>
                     </div>
 
-                    <!-- Fila 2: Teléfono Completo + Lote -->
-                    <div class="flex items-center justify-between gap-2 pt-0.5">
-                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F4F7FC] border border-slate-200/80 text-[11px] font-semibold text-[#15213B] mono">
-                        <i data-lucide="phone" class="w-3 h-3 text-[#0F9F9A]"></i>
-                        <span>${phoneDisplay}</span>
+                    <!-- Row 1: Phone Number -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0 truncate">Phone Nu...</span>
+                      <div class="field-box flex-1 gap-1.5 overflow-hidden">
+                        <i data-lucide="phone" class="w-3 h-3 text-[#1677FF] fill-current shrink-0"></i>
+                        <span class="text-[12px] text-slate-800 truncate">${lead.buyer_phone}</span>
                       </div>
-                      <span class="px-2 py-1 rounded-lg bg-[#0F9F9A]/10 text-[#0F9F9A] font-bold text-[10.5px] mono">${lead.lot_code || 'E1-L04'}</span>
                     </div>
 
-                    <!-- Fila 3: Selectores Limpios (Etapa y Asesor) -->
-                    <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-                      <div>
-                        <label class="block text-[9.5px] font-bold uppercase text-[#5C6B85] mb-0.5">Etapa</label>
-                        <select onchange="changeLeadStage(${lead.id}, this.value)" class="w-full bg-[#F8FAFC] hover:bg-white border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-semibold text-[#15213B] focus:outline-none focus:border-[#6D28D9] cursor-pointer">
+                    <!-- Row 2: Proyecto -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0">Proyecto</span>
+                      <div class="field-box flex-1">
+                        <span class="px-2 py-0.5 rounded bg-[#EEDCC6] text-[#5C4028] text-[11px] font-medium leading-tight">${lead.project_label || 'Estrella'}</span>
+                      </div>
+                    </div>
+
+                    <!-- Row 3: Estado (Interactive Dropdown Pill inside #F4F5F7 Box) -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0">Estado</span>
+                      <div class="field-box flex-1">
+                        <select onchange="changeLeadStage(${lead.id}, this.value)"
+                                class="px-2 py-0.5 rounded ${col.pillBg} text-[11px] font-medium leading-tight cursor-pointer focus:outline-none max-w-full truncate">
                           ${stageSelectOptions}
                         </select>
                       </div>
-                      <div>
-                        <label class="block text-[9.5px] font-bold uppercase text-[#5C6B85] mb-0.5">Asesor</label>
-                        <select onchange="updateLeadField(${lead.id}, 'asesor_id', this.value)" class="w-full bg-[#F8FAFC] hover:bg-white border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-medium text-[#15213B] focus:outline-none focus:border-[#6D28D9] cursor-pointer">
-                          <option value="david@nodia.com" ${lead.asesor_id === 'david@nodia.com' ? 'selected' : ''}>david@nodia.com</option>
-                          <option value="stella@nodia.com" ${lead.asesor_id === 'stella@nodia.com' ? 'selected' : ''}>stella@nodia.com</option>
+                    </div>
+
+                    <!-- Row 4: asesor_id -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0">asesor_id</span>
+                      <div class="field-box flex-1">
+                        <select onchange="updateLeadField(${lead.id}, 'asesor_id', this.value)"
+                                class="px-2 py-0.5 rounded bg-[#FADB14] text-slate-900 text-[11px] font-medium leading-tight cursor-pointer focus:outline-none">
+                          <option value="david@nodia.com" class="bg-white text-slate-800" ${lead.asesor_id === 'david@nodia.com' ? 'selected' : ''}>david@nodia.com</option>
+                          <option value="stella@nodia.com" class="bg-white text-slate-800" ${lead.asesor_id === 'stella@nodia.com' ? 'selected' : ''}>stella@nodia.com</option>
                         </select>
                       </div>
                     </div>
 
-                    <!-- Fila 4: Cita y Nota Editable -->
-                    <div class="space-y-1.5 pt-0.5">
-                      <div class="flex items-center gap-1.5 bg-[#F8FAFC] border border-slate-200/70 rounded-lg px-2.5 py-1">
-                        <i data-lucide="calendar" class="w-3 h-3 text-[#5C6B85] shrink-0"></i>
-                        <input type="text" value="${lead.fecha_cita || ''}" placeholder="Sin cita agendada"
+                    <!-- Row 5: fecha_cita -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0">fecha_cita</span>
+                      <div class="field-box flex-1">
+                        <input type="text" value="${lead.fecha_cita || ''}" placeholder=""
                                onchange="updateLeadField(${lead.id}, 'fecha_cita', this.value)"
-                               class="w-full bg-transparent text-[11px] font-medium text-[#15213B] placeholder-[#5C6B85]/70 focus:outline-none">
+                               class="w-full bg-transparent text-[11.5px] text-slate-700 focus:outline-none truncate">
                       </div>
-                      <input type="text" value="${lead.nota || ''}" placeholder="Agregar nota comercial..."
-                             onchange="updateLeadField(${lead.id}, 'nota', this.value)"
-                             class="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200/70 focus:border-[#6D28D9] rounded-lg px-2.5 py-1.5 text-[11px] text-[#5C6B85] focus:text-[#15213B] focus:outline-none">
                     </div>
 
-                    <!-- Pie de Tarjeta: Trazabilidad IA / Manual -->
-                    <div class="pt-1.5 border-t border-slate-100 flex items-center justify-between gap-1 text-[10px]">
-                      <span class="text-[#6D28D9] font-semibold truncate" title="${lead.last_auto_tag || ''}">${lead.last_auto_tag || '🤖 Valentina IA activa'}</span>
+                    <!-- Row 6: Nota -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-500 w-[64px] shrink-0">Nota</span>
+                      <div class="field-box flex-1">
+                        <input type="text" value="${lead.nota || ''}" placeholder=""
+                               onchange="updateLeadField(${lead.id}, 'nota', this.value)"
+                               class="w-full bg-transparent text-[11.5px] text-slate-700 focus:outline-none truncate">
+                      </div>
                     </div>
+
                   </div>
                 `;
               }).join('')}
@@ -831,25 +879,25 @@
       // Render Table View
       const tbody = document.getElementById('crm-table-body');
       tbody.innerHTML = leads.map(lead => {
-        const phoneDisplay = currentRole === 'partner' ? lead.buyer_phone : lead.masked_phone;
+        const col = KANBAN_COLS.find(c => c.key === lead.kanban_stage) || KANBAN_COLS[0];
         const stageSelectOptions = KANBAN_COLS.map(c =>
-          `<option value="${c.key}" ${c.key === lead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
+          `<option value="${c.key}" class="bg-white text-slate-800" ${c.key === lead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
         ).join('');
         return `
-          <tr class="hover:bg-[#F8FAFC] transition">
-            <td class="py-3 px-4 font-bold text-[#15213B]">${lead.buyer_name}<div class="text-[10.5px] font-normal text-[#5C6B85]">${lead.city || ''}</div></td>
-            <td class="py-3 px-4 mono font-semibold text-[#15213B]">${phoneDisplay}</td>
-            <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-md bg-[#F4F7FC] border border-slate-200 text-[#15213B] text-[11px] font-semibold">${lead.project_label}</span></td>
-            <td class="py-3 px-4">
-              <select onchange="changeLeadStage(${lead.id}, this.value)" class="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-semibold text-[#15213B] cursor-pointer">
+          <tr class="hover:bg-[#FAFAFA]">
+            <td class="py-2 px-3 border-r border-[#E5E7EB] font-medium text-slate-800">${lead.buyer_name}</td>
+            <td class="py-2 px-3 border-r border-[#E5E7EB] text-slate-700">📞 ${lead.buyer_phone}</td>
+            <td class="py-2 px-3 border-r border-[#E5E7EB]"><span class="px-2 py-0.5 rounded bg-[#EEDCC6] text-[#5C4028] text-[11px] font-medium">${lead.project_label}</span></td>
+            <td class="py-2 px-3 border-r border-[#E5E7EB]">
+              <select onchange="changeLeadStage(${lead.id}, this.value)" class="px-2 py-0.5 rounded ${col.pillBg} text-[11px] font-medium cursor-pointer">
                 ${stageSelectOptions}
               </select>
             </td>
-            <td class="py-3 px-4 text-[#5C6B85] font-medium">${lead.asesor_id}</td>
-            <td class="py-3 px-4 mono text-[#15213B]">${lead.fecha_cita || '—'}</td>
-            <td class="py-3 px-4 text-[#5C6B85] max-w-xs truncate">${lead.nota || ''}</td>
-            <td class="py-3 px-4 text-right">
-              <button onclick="openLeadChat(${lead.id})" class="px-3 py-1.5 rounded-lg bg-[#6D28D9]/10 text-[#6D28D9] font-bold text-xs hover:bg-[#6D28D9] hover:text-white transition cursor-pointer">Abrir Chat IA</button>
+            <td class="py-2 px-3 border-r border-[#E5E7EB]"><span class="px-2 py-0.5 rounded bg-[#FADB14] text-slate-900 text-[11px] font-medium">${lead.asesor_id}</span></td>
+            <td class="py-2 px-3 border-r border-[#E5E7EB] text-slate-700">${lead.fecha_cita || ''}</td>
+            <td class="py-2 px-3 border-r border-[#E5E7EB] text-slate-600 max-w-xs truncate">${lead.nota || ''}</td>
+            <td class="py-2 px-3 text-right">
+              <button onclick="openLeadChat(${lead.id})" class="px-2.5 py-1 rounded bg-[#1677FF] text-white text-[11px] cursor-pointer">Chat IA</button>
             </td>
           </tr>
         `;
@@ -877,7 +925,7 @@
       });
       state = await res.json();
       const col = KANBAN_COLS.find(c => c.key === stage);
-      showAiToast('Etapa actualizada a: ' + (col ? col.title : stage));
+      showAiToast('Contacto movido a: ' + (col ? col.title : stage));
       renderAll();
     }
 
@@ -895,7 +943,7 @@
       const toast = document.getElementById('ai-toast');
       document.getElementById('ai-toast-text').textContent = text;
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 4500);
+      setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
     function openLeadChat(leadId) {
@@ -916,41 +964,36 @@
         const isSel = l.id === activeLead.id;
         const col = KANBAN_COLS.find(c => c.key === l.kanban_stage) || KANBAN_COLS[0];
         return `
-          <div onclick="selectedLeadId=${l.id}; renderInbox();" class="p-3.5 cursor-pointer transition ${isSel ? 'bg-[#6D28D9]/[0.06] border-l-4 border-[#6D28D9]' : 'hover:bg-slate-50'}">
+          <div onclick="selectedLeadId=${l.id}; renderInbox();" class="p-3 cursor-pointer transition ${isSel ? 'bg-[#E6F4FF] border-l-4 border-[#1677FF]' : 'hover:bg-slate-50'}">
             <div class="flex items-center justify-between gap-2">
-              <span class="font-bold text-xs text-[#15213B] truncate">${l.buyer_name}</span>
-              <span class="px-2 py-0.5 rounded-md border text-[10px] font-bold ${col.badge}">${col.title}</span>
+              <span class="font-semibold text-xs text-slate-800 truncate">${l.buyer_name}</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-medium ${col.pillBg}">${col.title}</span>
             </div>
-            <div class="flex items-center justify-between text-[11px] text-[#5C6B85] mt-1">
-              <span class="mono">${currentRole === 'partner' ? l.buyer_phone : l.masked_phone}</span>
-              <span>${l.project_label}</span>
+            <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
+              <span>${l.buyer_phone}</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#EEDCC6] text-[#5C4028] text-[10px]">${l.project_label}</span>
             </div>
-            <div class="text-[10.5px] text-[#6D28D9] font-medium mt-1 truncate">${l.last_auto_tag || ''}</div>
           </div>
         `;
       }).join('');
 
       if (!activeLead) return;
+      const col = KANBAN_COLS.find(c => c.key === activeLead.kanban_stage) || KANBAN_COLS[0];
       const stageOptions = KANBAN_COLS.map(c =>
-        `<option value="${c.key}" ${c.key === activeLead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
+        `<option value="${c.key}" class="bg-white text-slate-800" ${c.key === activeLead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
       ).join('');
 
       document.getElementById('chat-header').innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-[#6D28D9]/10 text-[#6D28D9] font-bold text-xs flex items-center justify-center">
-            ${getInitials(activeLead.buyer_name)}
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm text-slate-800">${activeLead.buyer_name}</span>
+            <span class="text-xs text-slate-500">${activeLead.buyer_phone}</span>
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-extrabold text-sm text-[#15213B]">${activeLead.buyer_name}</span>
-              <span class="text-xs font-semibold text-[#5C6B85] mono">${currentRole === 'partner' ? activeLead.buyer_phone : activeLead.masked_phone}</span>
-            </div>
-            <div class="text-[11px] text-[#6D28D9] font-semibold mt-0.5">${activeLead.last_auto_tag || 'Valentina IA activa'}</div>
-          </div>
+          <div class="text-[11px] text-[#1677FF] font-medium mt-0.5">${activeLead.last_auto_tag || 'Valentina IA activa'}</div>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-[11px] font-bold text-[#5C6B85]">Etapa Kanban:</span>
-          <select onchange="changeLeadStage(${activeLead.id}, this.value)" class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-[#15213B] cursor-pointer">
+          <span class="text-xs text-slate-500">Estado:</span>
+          <select onchange="changeLeadStage(${activeLead.id}, this.value)" class="px-2.5 py-1 rounded text-xs font-medium ${col.pillBg} cursor-pointer">
             ${stageOptions}
           </select>
         </div>
@@ -961,14 +1004,14 @@
         const isBuyer = m.sender === 'buyer';
         return `
           <div class="flex ${isBuyer ? 'justify-start' : 'justify-end'}">
-            <div class="max-w-[78%] rounded-2xl p-3.5 shadow-2xs ${isBuyer ? 'bg-white border border-slate-200 text-[#15213B]' : 'bg-[#15213B] text-white'}">
-              <div class="flex items-center justify-between gap-4 mb-1 text-[10px] ${isBuyer ? 'text-[#5C6B85]' : 'text-slate-300'}">
-                <span class="font-bold">${isBuyer ? activeLead.buyer_name : '🤖 Valentina Ríos IA'}</span>
+            <div class="max-w-[75%] rounded-lg p-3 shadow-2xs ${isBuyer ? 'bg-white border border-[#E5E7EB] text-slate-800' : 'bg-[#E6F4FF] border border-[#91CAFF] text-slate-900'}">
+              <div class="flex items-center justify-between gap-4 mb-1 text-[10px] text-slate-500">
+                <span class="font-bold ${isBuyer ? 'text-slate-700' : 'text-[#1677FF]'}">${isBuyer ? activeLead.buyer_name : '🤖 Valentina Ríos IA'}</span>
                 <span>${m.time || ''}</span>
               </div>
               <div class="text-xs leading-relaxed whitespace-pre-line">${m.text}</div>
-              ${m.media ? `<img src="${m.media}" class="mt-2.5 rounded-xl max-h-48 w-full object-cover border border-white/10">` : ''}
-              ${m.meta ? `<div class="mt-2 pt-1.5 border-t ${isBuyer ? 'border-slate-100 text-[#5C6B85]' : 'border-white/10 text-[#35DDF5]'} text-[10px] font-semibold">${m.meta}</div>` : ''}
+              ${m.media ? `<img src="${m.media}" class="mt-2 rounded max-h-44 w-full object-cover">` : ''}
+              ${m.meta ? `<div class="mt-1.5 pt-1 border-t border-slate-200/70 text-[10px] font-medium text-[#1677FF]">${m.meta}</div>` : ''}
             </div>
           </div>
         `;
@@ -995,7 +1038,7 @@
       state = await res.json();
       const updatedLead = state.leads.find(l => l.id === selectedLeadId);
       if (updatedLead && updatedLead.kanban_stage !== prevStage) {
-        showAiToast(updatedLead.buyer_name + ' → ' + updatedLead.status_label + ' (' + updatedLead.last_auto_tag + ')');
+        showAiToast(updatedLead.buyer_name + ' pasó automáticamente a: ' + updatedLead.status_label);
       }
       renderAll();
     }
@@ -1017,46 +1060,143 @@
     async function triggerNoShowRemarketing() {
       const res = await fetch('/api/remarketing-noshow', { method: 'POST' });
       state = await res.json();
-      showAiToast('Valentina IA envió video dron y reprogramó los prospectos de "No asistió" → "Cita Agendada"');
+      showAiToast('Valentina IA reprogramó los contactos de "No asistio" → "Cita Agendada"');
       renderAll();
     }
 
-    function selectCalcLot(area, price, dim) {
+    function selectCalcLot(area, price) {
       const fmt = n => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
       document.getElementById('calc-init').textContent = fmt(price * 0.4) + ' COP';
       document.getElementById('calc-month').textContent = fmt((price * 0.6) / 18) + ' /mes';
     }
 
+    function selectBlueprintStage(stage) {
+      activeBlueprintStage = stage;
+      blueprintZoom = 1.0;
+      [1, 2, 3].forEach(s => {
+        const btn = document.getElementById('stage-btn-' + s);
+        if (!btn) return;
+        btn.className = s === stage
+          ? 'p-3.5 rounded-lg border-2 border-[#1677FF] bg-[#E6F4FF]/40 text-left transition cursor-pointer flex items-center justify-between'
+          : 'p-3.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#1677FF] text-left transition cursor-pointer flex items-center justify-between';
+      });
+      const img = document.getElementById('bp-image');
+      const pdfLink = document.getElementById('bp-pdf-link');
+      const title = document.getElementById('bp-viewer-title');
+      if (img) {
+        img.src = `/assets/la-estrella/plano-etapa-${stage}.png`;
+        img.style.width = '100%';
+      }
+      if (pdfLink) pdfLink.href = `/assets/la-estrella/plano-etapa-${stage}.pdf`;
+      if (title) title.textContent = `PLANO ACTUALIZADO LA ESTRELLA ETAPA ${stage} (OCTUBRE 18 DE 2026)`;
+      const zoomLbl = document.getElementById('bp-zoom-label');
+      if (zoomLbl) zoomLbl.textContent = '100%';
+      renderLots();
+    }
+
+    function zoomBlueprint(delta) {
+      blueprintZoom = Math.min(3.5, Math.max(0.5, blueprintZoom + delta));
+      const img = document.getElementById('bp-image');
+      const zoomLbl = document.getElementById('bp-zoom-label');
+      if (img) img.style.width = Math.round(blueprintZoom * 100) + '%';
+      if (zoomLbl) zoomLbl.textContent = Math.round(blueprintZoom * 100) + '%';
+    }
+
+    function resetBlueprintZoom() {
+      blueprintZoom = 1.0;
+      const img = document.getElementById('bp-image');
+      const zoomLbl = document.getElementById('bp-zoom-label');
+      if (img) img.style.width = '100%';
+      if (zoomLbl) zoomLbl.textContent = '100%';
+    }
+
     function renderLots() {
-      const pinsEl = document.getElementById('interactive-map-pins');
       const gridEl = document.getElementById('lots-grid');
-      if (!pinsEl || !gridEl) return;
+      const countEl = document.getElementById('bp-filter-count');
+      if (!gridEl) return;
       const fmt = n => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
+      const q = (document.getElementById('lot-search-input')?.value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('lot-status-filter')?.value || 'available';
 
-      pinsEl.innerHTML = state.lots.map(l => {
-        const bg = l.status === 'available' ? 'bg-[#0F9F9A]' : l.status === 'reserved' ? 'bg-amber-500' : 'bg-rose-600';
-        return `
-          <button onclick="toggleLotStatus(${l.id})" style="left:${l.x}%; top:${l.y}%"
-                  class="absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full ${bg} text-white font-bold text-[10px] shadow-md hover:scale-110 transition cursor-pointer">
-            ${l.code}
-          </button>
-        `;
-      }).join('');
+      // Combine real extracted lots from blueprints_summary.json with state.lots overrides
+      let stageLots = [];
+      const stageData = blueprintSummary?.[String(activeBlueprintStage)];
+      if (stageData) {
+        const availList = (stageData.available_lots || []).map(x => ({
+          code: `E${activeBlueprintStage}-L${x.code}`,
+          num: x.code,
+          area: x.area || (activeBlueprintStage === 1 ? 190 : activeBlueprintStage === 2 ? 152 : 114),
+          status: 'available'
+        }));
+        const soldList = (stageData.sold_codes || []).map(codeStr => ({
+          code: `E${activeBlueprintStage}-L${codeStr}`,
+          num: codeStr,
+          area: activeBlueprintStage === 1 ? 190 : activeBlueprintStage === 2 ? 152 : 114,
+          status: 'sold'
+        }));
+        stageLots = [...availList, ...soldList];
+      } else if (state?.lots) {
+        stageLots = state.lots.filter(l => l.stage === activeBlueprintStage).map(l => ({
+          id: l.id,
+          code: l.code,
+          num: l.lot_num || l.code,
+          area: l.area_m2,
+          status: l.status
+        }));
+      }
 
-      gridEl.innerHTML = state.lots.map(l => {
-        const badge = l.status === 'available'
-          ? '<span class="px-2 py-0.5 rounded-md bg-[#0F9F9A]/10 text-[#0F9F9A] text-[10px] font-bold">Disponible</span>'
-          : l.status === 'reserved'
-          ? '<span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">Separado $500k</span>'
-          : '<span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">Vendido</span>';
+      // Apply overrides from state.lots if user clicked to reserve/toggle a lot
+      if (state?.lots) {
+        stageLots.forEach(item => {
+          const override = state.lots.find(sl => sl.code === item.code || (sl.stage === activeBlueprintStage && String(sl.lot_num) === String(item.num)));
+          if (override) {
+            item.id = override.id;
+            item.status = override.status;
+            item.buyer = override.buyer;
+            item.features = override.features;
+          }
+        });
+      }
+
+      const filtered = stageLots.filter(item => {
+        if (statusFilter === 'available' && item.status !== 'available') return false;
+        if (statusFilter === 'sold' && item.status === 'available') return false;
+        if (q) {
+          const hay = `${item.code} lote ${item.num} ${item.area}m2`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if (countEl) {
+        const totalAvail = stageLots.filter(x => x.status === 'available').length;
+        countEl.textContent = `${filtered.length} mostrados · ${totalAvail} disponibles en Etapa ${activeBlueprintStage}`;
+      }
+
+      gridEl.innerHTML = filtered.slice(0, 140).map(item => {
+        const isAvail = item.status === 'available';
+        const isRes = item.status === 'reserved';
+        const priceCop = item.area >= 200 ? 42000000 : item.area >= 150 ? 32000000 : 27000000;
+        const badge = isAvail
+          ? '<span class="px-2 py-0.5 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[10px] font-bold">🟢 DISPONIBLE</span>'
+          : isRes
+          ? '<span class="px-2 py-0.5 rounded bg-[#FFF7E6] border border-[#FFD591] text-[#FA8C16] text-[10px] font-bold">🟡 SEPARADO</span>'
+          : '<span class="px-2 py-0.5 rounded bg-[#FFF1F0] border border-[#FFA39E] text-[#CF1322] text-[10px] font-bold">🔴 VENDIDO ●</span>';
+
         return `
-          <div onclick="toggleLotStatus(${l.id})" class="p-3.5 rounded-xl bg-white border border-slate-200 hover:border-[#6D28D9] shadow-2xs cursor-pointer transition space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-xs text-[#15213B] mono">${l.code} · ${l.dimensions}</span>
+          <div ${item.id ? `onclick="toggleLotStatus(${item.id})"` : ''}
+               class="p-3 rounded-md bg-white border ${isAvail ? 'border-[#E5E7EB] hover:border-[#1677FF]' : 'border-slate-200 opacity-80'} shadow-2xs transition ${item.id ? 'cursor-pointer' : ''}">
+            <div class="flex items-center justify-between gap-1">
+              <span class="font-bold text-xs text-slate-900">Lote #${item.num} <span class="text-slate-400 font-normal">(${item.code})</span></span>
               ${badge}
             </div>
-            <div class="text-sm font-black text-[#15213B] mono">${fmt(l.price_cop)}</div>
-            <div class="text-[11px] text-[#5C6B85]">${l.features}</div>
+            <div class="flex items-center justify-between text-[11px] text-slate-600 mt-1.5">
+              <span>📐 Área: <strong>${item.area} m²</strong></span>
+              <span class="font-bold text-[#1677FF]">${fmt(priceCop)}</span>
+            </div>
+            <div class="text-[10.5px] text-slate-500 mt-1 truncate">
+              ${item.buyer ? '👤 ' + item.buyer : (item.features || 'Separa con $500.000 · 18 meses 0%')}
+            </div>
           </div>
         `;
       }).join('');
@@ -1076,13 +1216,13 @@
       const el = document.getElementById('checkin-passes-list');
       if (!el) return;
       el.innerHTML = state.leads.slice(0, 8).map(l => `
-        <div class="p-4 bg-white flex flex-wrap items-center justify-between gap-3">
+        <div class="py-3 flex items-center justify-between">
           <div>
-            <div class="font-bold text-xs text-[#15213B]">${l.buyer_name} <span class="mono text-[#5C6B85] font-normal">(${l.pass_code})</span></div>
-            <div class="text-[11px] text-[#5C6B85]">Asesor: ${l.asesor_id} · Etapa actual: <strong>${l.status_label}</strong></div>
+            <div class="font-semibold text-xs text-slate-800">${l.buyer_name} <span class="text-slate-400">(${l.pass_code})</span></div>
+            <div class="text-[11px] text-slate-500">Asesor: ${l.asesor_id} · Estado: ${l.status_label}</div>
           </div>
-          <button onclick="checkinPass('${l.pass_code}')" class="px-3.5 py-1.5 rounded-xl ${l.gps_unlocked ? 'bg-[#0F9F9A]/10 text-[#0F9F9A]' : 'bg-[#6D28D9] text-white'} text-xs font-semibold cursor-pointer">
-            ${l.gps_unlocked ? '✓ Visitó Proyecto (QR Validado)' : 'Validar Llegada en Portería'}
+          <button onclick="checkinPass('${l.pass_code}')" class="px-3 py-1 rounded bg-[#1677FF] text-white text-xs cursor-pointer">
+            ${l.gps_unlocked ? '✓ Visitó Proyecto' : 'Validar QR'}
           </button>
         </div>
       `).join('');
@@ -1095,7 +1235,7 @@
         body: JSON.stringify({ passCode })
       });
       state = await res.json();
-      showAiToast('QR Validado en Portería → Prospecto movido a Visitó Proyecto');
+      showAiToast('QR validado → Movido a Visito Proyecto');
       renderAll();
     }
 
@@ -1103,7 +1243,7 @@
     function closeNewLeadModal() { document.getElementById('modal-new-lead').classList.add('hidden'); }
 
     async function createNewLead() {
-      const name = document.getElementById('nl-name').value.trim() || 'Nuevo Prospecto Campestre';
+      const name = document.getElementById('nl-name').value.trim() || 'Nuevo Contacto';
       const phone = document.getElementById('nl-phone').value.trim() || '+573158892014';
       const city = document.getElementById('nl-city').value.trim() || 'Bogotá D.C.';
       const asesor_id = document.getElementById('nl-advisor').value;
@@ -1118,7 +1258,7 @@
       state = await res.json();
       selectedLeadId = state.leads[0].id;
       closeNewLeadModal();
-      showAiToast('Prospecto creado y atendido por Valentina IA en <2s');
+      showAiToast('Contacto creado y clasificado por Valentina IA');
       renderAll();
     }
 
@@ -1126,7 +1266,7 @@
     function closeNewProjectModal() { document.getElementById('modal-new-project').classList.add('hidden'); }
 
     async function createNewProject() {
-      const name = document.getElementById('np-name').value.trim() || 'Nuevo Proyecto Campestre';
+      const name = document.getElementById('np-name').value.trim() || 'Nuevo Proyecto';
       const short_name = document.getElementById('np-short').value.trim() || name.split(' ')[0];
       const location = document.getElementById('np-loc').value.trim() || 'Meta, Colombia';
       const res = await fetch('/api/new-project', {

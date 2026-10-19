@@ -9,7 +9,7 @@ const DB_PATH = path.join(__dirname, 'storage', 'local_db.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const initialDb = {
-    schema_version: 4,
+    schema_version: 5,
     projects: [
         {
             id: 'la-estrella',
@@ -18,11 +18,21 @@ const initialDb = {
             location: 'Villavicencio - Meta, Vereda Las Mercedes (a 10m Vía Villavicencio–Acacías)',
             office_address: 'Calle 19 # 40-89, Barrio Camoa (Frente al CC Primavera Urbana)',
             ai_agent_name: 'Valentina Ríos',
-            commission_pct: 40.0,
             daily_ad_budget_cop: 30000,
             total_hectares: 35,
             delivery_months: '8 a 9 meses',
             price_range: '$27M · $32M · $42M',
+            blueprint_summary: {
+                updated_at: '18 Octubre 2026',
+                total_lots: 1530,
+                available_lots: 569,
+                sold_lots: 961,
+                stages: [
+                    { stage: 1, name: 'Etapa 1 · Lago Central & Vía Nacional', total: 432, available: 102, sold: 330, typical_area: '190 m² (y especiales 200–780 m²)', pdf: '/assets/la-estrella/plano-etapa-1.pdf', png: '/assets/la-estrella/plano-etapa-1.png' },
+                    { stage: 2, name: 'Etapa 2 · Zona Plana Central', total: 525, available: 298, sold: 227, typical_area: '152 m² (y esquineros 191–405 m²)', pdf: '/assets/la-estrella/plano-etapa-2.pdf', png: '/assets/la-estrella/plano-etapa-2.png' },
+                    { stage: 3, name: 'Etapa 3 · Caño Corcobado & Reserva', total: 573, available: 169, sold: 404, typical_area: '114 m² y 152 m² (borde ambiental)', pdf: '/assets/la-estrella/plano-etapa-3.pdf', png: '/assets/la-estrella/plano-etapa-3.png' }
+                ]
+            },
             stats: {
                 total_leads: 2737,
                 lead_nuevo: 1627,
@@ -44,7 +54,6 @@ const initialDb = {
             location: 'Acacías - Meta, Kilómetro 4 Vía Guamal',
             office_address: 'Calle 19 # 40-89, Barrio Camoa, Villavicencio',
             ai_agent_name: 'Valentina Ríos',
-            commission_pct: 40.0,
             daily_ad_budget_cop: 25000,
             total_hectares: 18,
             delivery_months: '10 meses',
@@ -70,7 +79,6 @@ const initialDb = {
             location: 'Restrepo - Meta, Vereda Caney Alto',
             office_address: 'Calle 19 # 40-89, Barrio Camoa, Villavicencio',
             ai_agent_name: 'Valentina Ríos',
-            commission_pct: 35.0,
             daily_ad_budget_cop: 20000,
             total_hectares: 22,
             delivery_months: '12 meses',
@@ -91,20 +99,35 @@ const initialDb = {
         }
     ],
     lots: [
-        { id: 1, project_id: 'la-estrella', stage: 1, code: 'E1-L01', area_m2: 120, dimensions: '6x20 m', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'sold', buyer: 'marygarciaria50', features: 'Esquinero · Portería', x: 18, y: 68 },
-        { id: 2, project_id: 'la-estrella', stage: 1, code: 'E1-L02', area_m2: 120, dimensions: '6x20 m', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'available', buyer: null, features: 'Frente a Vía Afirmado', x: 28, y: 65 },
-        { id: 3, project_id: 'la-estrella', stage: 1, code: 'E1-L03', area_m2: 160, dimensions: '8x20 m', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'reserved', buyer: 'Adelaida Ortiz', features: 'Top Seller · Cerca Portería', x: 38, y: 62 },
-        { id: 4, project_id: 'la-estrella', stage: 1, code: 'E1-L04', area_m2: 160, dimensions: '8x20 m', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Vista a la Cordillera', x: 48, y: 59 },
-        { id: 5, project_id: 'la-estrella', stage: 1, code: 'E1-L05', area_m2: 200, dimensions: '10x20 m', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Doble Frente · Arborizado', x: 58, y: 56 },
-        { id: 6, project_id: 'la-estrella', stage: 1, code: 'E1-L06', area_m2: 120, dimensions: '6x20 m', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'reserved', buyer: 'JORGE FARIAS', features: 'A 20m Vía Principal', x: 68, y: 53 },
-        { id: 7, project_id: 'la-estrella', stage: 2, code: 'E2-L07', area_m2: 160, dimensions: '8x20 m', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Zona Plana Central', x: 25, y: 48 },
-        { id: 8, project_id: 'la-estrella', stage: 2, code: 'E2-L08', area_m2: 160, dimensions: '8x20 m', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'sold', buyer: 'Elias Urrego', features: 'Vía Interna 8m', x: 37, y: 45 },
-        { id: 9, project_id: 'la-estrella', stage: 2, code: 'E2-L09', area_m2: 200, dimensions: '10x20 m', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Especial Casa Quinta', x: 49, y: 42 },
-        { id: 10, project_id: 'la-estrella', stage: 2, code: 'E2-L10', area_m2: 200, dimensions: '10x20 m', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Vista Panorámica Piedemonte', x: 61, y: 39 },
-        { id: 11, project_id: 'la-estrella', stage: 3, code: 'E3-L11', area_m2: 120, dimensions: '6x20 m', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'available', buyer: null, features: 'Cerca a Sendero Natural', x: 30, y: 31 },
-        { id: 12, project_id: 'la-estrella', stage: 3, code: 'E3-L12', area_m2: 160, dimensions: '8x20 m', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Brisa de Montaña', x: 44, y: 29 },
-        { id: 13, project_id: 'la-estrella', stage: 3, code: 'E3-L13', area_m2: 200, dimensions: '10x20 m', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Lote VIP Mayor Valorización', x: 58, y: 27 },
-        { id: 14, project_id: 'la-estrella', stage: 3, code: 'E3-L14', area_m2: 200, dimensions: '10x20 m', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'sold', buyer: 'marygarciaria50 (Lote 2)', features: 'Esquinero Reserva Forestal', x: 70, y: 25 },
+        // ETAPA 1 (Plano Octubre 18 de 2026: Lotes típicos 190m² y especiales frente al Lago / Vía Nacional)
+        { id: 1, project_id: 'la-estrella', stage: 1, code: 'E1-L74', lot_num: '74', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 1 · Vía Interna 7m (Disponible en Plano)', x: 42, y: 28 },
+        { id: 2, project_id: 'la-estrella', stage: 1, code: 'E1-L79', lot_num: '79', area_m2: 220.22, dimensions: '220.22 m² (Esquinero E1)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 1 · Esquinero Vía Acceso (Disponible en Plano)', x: 54, y: 34 },
+        { id: 3, project_id: 'la-estrella', stage: 1, code: 'E1-L80', lot_num: '80', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 1 · Manzana Central (Disponible en Plano)', x: 51, y: 36 },
+        { id: 4, project_id: 'la-estrella', stage: 1, code: 'E1-L111', lot_num: '111', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 1 · Cerca a Lago Central (Disponible)', x: 35, y: 31 },
+        { id: 5, project_id: 'la-estrella', stage: 1, code: 'E1-L121', lot_num: '121', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 1 · Corredor Central (Disponible)', x: 48, y: 39 },
+        { id: 6, project_id: 'la-estrella', stage: 1, code: 'E1-L203', lot_num: '203', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 1 · Vista al Lago (Disponible)', x: 24, y: 33 },
+        { id: 7, project_id: 'la-estrella', stage: 1, code: 'E1-L240', lot_num: '240', area_m2: 321.12, dimensions: '321.12 m² (Especial Lago)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 1 · Frente al Lago Principal (Disponible)', x: 64, y: 58 },
+        { id: 8, project_id: 'la-estrella', stage: 1, code: 'E1-L01', lot_num: '1', area_m2: 172.74, dimensions: '172.74 m² (Portería)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'sold', buyer: 'marygarciaria50', features: 'Etapa 1 · Portería Norte (Vendido ●)', x: 28, y: 21 },
+        { id: 9, project_id: 'la-estrella', stage: 1, code: 'E1-L03', lot_num: '3', area_m2: 190, dimensions: '190 m² (Etapa 1)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'reserved', buyer: 'Adelaida Ortiz', features: 'Etapa 1 · Vía Acceso (Separado)', x: 31, y: 23 },
+
+        // ETAPA 2 (Plano Octubre 18 de 2026: Lotes típicos 152m² - 298 Disponibles)
+        { id: 10, project_id: 'la-estrella', stage: 2, code: 'E2-L61', lot_num: '61', area_m2: 320.99, dimensions: '320.99 m² (Especial E2)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 2 · Esquinero Vía Principal (Disponible)', x: 76, y: 59 },
+        { id: 11, project_id: 'la-estrella', stage: 2, code: 'E2-L161', lot_num: '161', area_m2: 152, dimensions: '152 m² (Etapa 2)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 2 · Manzana Media Vía 7m (Disponible)', x: 18, y: 39 },
+        { id: 12, project_id: 'la-estrella', stage: 2, code: 'E2-L170', lot_num: '170', area_m2: 152, dimensions: '152 m² (Etapa 2)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 2 · Zona Plana Central (Disponible)', x: 28, y: 45 },
+        { id: 13, project_id: 'la-estrella', stage: 2, code: 'E2-L212', lot_num: '212', area_m2: 239.82, dimensions: '239.82 m² (Cabecera E2)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 2 · Cabecera Amplia (Disponible)', x: 11, y: 39 },
+        { id: 14, project_id: 'la-estrella', stage: 2, code: 'E2-L268', lot_num: '268', area_m2: 248.46, dimensions: '248.46 m² (Especial E2)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 2 · Doble Frente Vía 7m (Disponible)', x: 10, y: 44 },
+        { id: 15, project_id: 'la-estrella', stage: 2, code: 'E2-L322', lot_num: '322', area_m2: 242.55, dimensions: '242.55 m² (Especial E2)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 2 · Lote Esquinero (Disponible)', x: 11, y: 49 },
+        { id: 16, project_id: 'la-estrella', stage: 2, code: 'E2-L490', lot_num: '490', area_m2: 152, dimensions: '152 m² (Etapa 2)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 2 · Franja Sur Despejada (Disponible)', x: 12, y: 65 },
+        { id: 17, project_id: 'la-estrella', stage: 2, code: 'E2-L08', lot_num: '8', area_m2: 152, dimensions: '152 m² (Etapa 2)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'sold', buyer: 'Elias Urrego', features: 'Etapa 2 · Vía de Acceso (Vendido ●)', x: 20, y: 36 },
+
+        // ETAPA 3 (Plano Octubre 18 de 2026: Lotes típicos 114m² y 152m² junto a Caño Corcobado - 169 Disponibles)
+        { id: 18, project_id: 'la-estrella', stage: 3, code: 'E3-L26', lot_num: '26', area_m2: 308.32, dimensions: '308.32 m² (Esquinero E3)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 3 · Esquinero Vía Acceso (Disponible)', x: 25, y: 63 },
+        { id: 19, project_id: 'la-estrella', stage: 3, code: 'E3-L110', lot_num: '110', area_m2: 114, dimensions: '114 m² (Etapa 3)', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'available', buyer: null, features: 'Etapa 3 · Lote Campestre 114m² (Disponible)', x: 31, y: 58 },
+        { id: 20, project_id: 'la-estrella', stage: 3, code: 'E3-L122', lot_num: '122', area_m2: 114, dimensions: '114 m² (Etapa 3)', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'available', buyer: null, features: 'Etapa 3 · Manzana Central 114m² (Disponible)', x: 42, y: 63 },
+        { id: 21, project_id: 'la-estrella', stage: 3, code: 'E3-L202', lot_num: '202', area_m2: 152, dimensions: '152 m² (Etapa 3)', price_cop: 32000000, separation_cop: 500000, initial_40_cop: 12800000, monthly_18_cop: 1066667, status: 'available', buyer: null, features: 'Etapa 3 · Sector Oriental 152m² (Disponible)', x: 68, y: 78 },
+        { id: 22, project_id: 'la-estrella', stage: 3, code: 'E3-L222', lot_num: '222', area_m2: 245, dimensions: '245 m² (Especial E3)', price_cop: 42000000, separation_cop: 500000, initial_40_cop: 16800000, monthly_18_cop: 1400000, status: 'available', buyer: null, features: 'Etapa 3 · Frente Vía Interna 7m (Disponible)', x: 26, y: 56 },
+        { id: 23, project_id: 'la-estrella', stage: 3, code: 'E3-L308', lot_num: '308', area_m2: 114, dimensions: '114 m² (Etapa 3)', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'available', buyer: null, features: 'Etapa 3 · Cerca Cesión Ambiental Caño Corcobado', x: 34, y: 50 },
+        { id: 24, project_id: 'la-estrella', stage: 3, code: 'E3-L523', lot_num: '523', area_m2: 114, dimensions: '114 m² (Etapa 3)', price_cop: 27000000, separation_cop: 500000, initial_40_cop: 10800000, monthly_18_cop: 900000, status: 'sold', buyer: 'marygarciaria50 (Lote 2)', features: 'Etapa 3 · Mirador Caño Corcobado (Vendido ●)', x: 28, y: 36 },
     ],
     // ALL 10 REAL KANBAN COLUMNS FROM USER'S PANCAKE CRM SCREENSHOTS:
     // 1. lead_nuevo | 2. calificado | 3. cita_agendada | 4. no_asistio | 5. archivo_inactividad
@@ -421,7 +444,7 @@ const initialDb = {
                 { id: 1201, sender: 'buyer', text: 'Ya dejé los $500.000 de separación del lote.', time: '29 Ago', batched: false }
             ]
         },
-        // Col 9: Venta Cerrada / Comisión (From 2nd screenshot: marygarciaria50 & Elias Urrego!)
+        // Col 9: Venta Cerrada (From 2nd screenshot: marygarciaria50 & Elias Urrego!)
         {
             id: 13,
             project_id: 'la-estrella',
@@ -431,20 +454,20 @@ const initialDb = {
             masked_phone: '+57321***7311',
             city: 'Bogotá D.C.',
             purpose: 'PARA INVERTIR',
-            preferred_area: 200,
+            preferred_area: 190,
             lot_code: 'E1-L01',
             kanban_stage: 'venta_cerrada',
-            status_label: 'Venta Cerrada / Comisi...',
+            status_label: 'Venta Cerrada',
             asesor_id: 'david@nodia.com',
             fecha_cita: '30/03/2026 02:00 PM',
             nota: 'Separa 2x Lote 31/03/2026 · Promesa firmada y 40% inicial pagado.',
             pass_code: 'EST-2026-7311',
             gps_unlocked: true,
             ai_active: false,
-            last_auto_tag: 'Promesa + 40% Inicial completado → Venta Cerrada / Comisión 40% Causada',
+            last_auto_tag: 'Promesa + 40% Inicial completado → Venta Cerrada',
             messages: [
                 { id: 1301, sender: 'buyer', text: 'Ya firmamos promesa de compraventa y completamos el 40% inicial de los 2 lotes.', time: '31 Mar', batched: false },
-                { id: 1302, sender: 'ai', text: '¡Bienvenida oficialmente a la familia *Proyecto La Estrella*, Mary! 🌟 Tu compra de 2 lotes está en firme y tu comisión de socio (40%) ha sido liquidada.', time: '31 Mar', meta: 'Valentina IA · Auto-Tag → Venta Cerrada / Comisión' }
+                { id: 1302, sender: 'ai', text: '¡Bienvenida oficialmente a la familia *Proyecto La Estrella*, Mary! 🌟 Tu compra de 2 lotes está en firme y respaldada en nuestra oficina de Barrio Camoa.', time: '31 Mar', meta: 'Valentina IA · Auto-Tag → Venta Cerrada' }
             ]
         },
         {
@@ -456,17 +479,17 @@ const initialDb = {
             masked_phone: '+57310***2384',
             city: 'Villavicencio',
             purpose: 'PARA VIVIR',
-            preferred_area: 160,
+            preferred_area: 152,
             lot_code: 'E2-L08',
             kanban_stage: 'venta_cerrada',
-            status_label: 'Venta Cerrada / Comisi...',
+            status_label: 'Venta Cerrada',
             asesor_id: 'david@nodia.com',
             fecha_cita: '31/03/2026 12:00 AM',
             nota: 'separo lote 31/03/2026 · Venta cerrada.',
             pass_code: 'EST-2026-2384',
             gps_unlocked: true,
             ai_active: false,
-            last_auto_tag: 'Venta Cerrada / Comisión 40%',
+            last_auto_tag: 'Venta Cerrada',
             messages: [
                 { id: 1401, sender: 'buyer', text: 'Promesa firmada en oficina Camoa.', time: '31 Mar', batched: false }
             ]
@@ -482,7 +505,7 @@ const initialDb = {
             city: 'Bogotá D.C.',
             purpose: 'PARA INVERTIR',
             preferred_area: 120,
-            lot_code: 'E1-L02',
+            lot_code: 'E1-L74',
             kanban_stage: 'perdido',
             status_label: 'Perdido',
             asesor_id: 'david@nodia.com',
@@ -506,7 +529,7 @@ const initialDb = {
             city: 'Bogotá D.C.',
             purpose: 'PARA RECREACIÓN',
             preferred_area: 120,
-            lot_code: 'E1-L02',
+            lot_code: 'E1-L74',
             kanban_stage: 'perdido',
             status_label: 'Perdido',
             asesor_id: 'david@nodia.com',
@@ -532,7 +555,7 @@ const STAGE_META = {
     visito_proyecto: { title: 'Visito Proyecto', color: 'bg-blue-600 text-white' },
     en_negociacion: { title: 'En Negociacion', color: 'bg-orange-600 text-white' },
     separo_lote: { title: 'Separo Lote', color: 'bg-emerald-600 text-white' },
-    venta_cerrada: { title: 'Venta Cerrada / Comisi...', color: 'bg-teal-600 text-white' },
+    venta_cerrada: { title: 'Venta Cerrada', color: 'bg-teal-600 text-white' },
     perdido: { title: 'Perdido', color: 'bg-slate-800 text-slate-300' },
 };
 
@@ -549,7 +572,7 @@ let infraStatus = {
 async function syncToInfra(data) {
     try {
         if (redisClient) {
-            await redisClient.set('leadcampestre:state:v4', JSON.stringify(data), 'EX', 86400);
+            await redisClient.set('leadcampestre:state:v5', JSON.stringify(data), 'EX', 86400);
             await redisClient.set('leadcampestre:heartbeat', new Date().toISOString(), 'EX', 3600);
             infraStatus.redis = 'connected (Redis 7)';
         }
@@ -558,22 +581,22 @@ async function syncToInfra(data) {
                 `INSERT INTO leadcampestre_state (id, schema_version, payload, updated_at)
                  VALUES (1, $1, $2::jsonb, NOW())
                  ON CONFLICT (id) DO UPDATE SET schema_version = EXCLUDED.schema_version, payload = EXCLUDED.payload, updated_at = NOW()`,
-                [data.schema_version || 4, JSON.stringify(data)]
+                [data.schema_version || 5, JSON.stringify(data)]
             );
             for (const p of (data.projects || [])) {
                 await pgPool.query(
                     `INSERT INTO projects (id, name, short_name, location, commission_pct, data, updated_at)
                      VALUES ($1, $2, $3, $4, $5, $6::jsonb, NOW())
                      ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, short_name = EXCLUDED.short_name, location = EXCLUDED.location, commission_pct = EXCLUDED.commission_pct, data = EXCLUDED.data, updated_at = NOW()`,
-                    [p.id, p.name, p.short_name, p.location, p.commission_pct || 40, JSON.stringify(p)]
+                    [p.id, p.name, p.short_name, p.location, 0, JSON.stringify(p)]
                 );
             }
             for (const l of (data.lots || [])) {
                 await pgPool.query(
                     `INSERT INTO lots (id, project_id, code, area_m2, price_cop, status, buyer, data)
                      VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
-                     ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status, buyer = EXCLUDED.buyer, data = EXCLUDED.data`,
-                    [l.id, l.project_id, l.code, l.area_m2, l.price_cop, l.status, l.buyer, JSON.stringify(l)]
+                     ON CONFLICT (id) DO UPDATE SET code = EXCLUDED.code, area_m2 = EXCLUDED.area_m2, price_cop = EXCLUDED.price_cop, status = EXCLUDED.status, buyer = EXCLUDED.buyer, data = EXCLUDED.data`,
+                    [l.id, l.project_id, l.code, Math.round(l.area_m2 || 152), l.price_cop, l.status, l.buyer, JSON.stringify(l)]
                 );
             }
             for (const lead of (data.leads || [])) {
@@ -607,7 +630,7 @@ async function initInfra() {
             await pgPool.query(`
                 CREATE TABLE IF NOT EXISTS leadcampestre_state (
                     id INT PRIMARY KEY,
-                    schema_version INT NOT NULL DEFAULT 4,
+                    schema_version INT NOT NULL DEFAULT 5,
                     payload JSONB NOT NULL,
                     updated_at TIMESTAMPTZ DEFAULT NOW()
                 );
@@ -616,7 +639,7 @@ async function initInfra() {
                     name TEXT NOT NULL,
                     short_name TEXT,
                     location TEXT,
-                    commission_pct NUMERIC DEFAULT 40,
+                    commission_pct NUMERIC DEFAULT 0,
                     data JSONB,
                     updated_at TIMESTAMPTZ DEFAULT NOW()
                 );
@@ -646,7 +669,7 @@ async function initInfra() {
                 );
             `);
             const res = await pgPool.query('SELECT payload, schema_version FROM leadcampestre_state WHERE id = 1');
-            if (res.rows.length > 0 && res.rows[0].schema_version === 4) {
+            if (res.rows.length > 0 && res.rows[0].schema_version === 5) {
                 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
                 fs.writeFileSync(DB_PATH, JSON.stringify(res.rows[0].payload, null, 2), 'utf8');
                 infraStatus.postgres = 'connected (PostgreSQL 17)';
@@ -685,12 +708,12 @@ function loadDb() {
     try {
         if (fs.existsSync(DB_PATH)) {
             const parsed = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-            if (parsed.schema_version === 4) {
+            if (parsed.schema_version === 5) {
                 return parsed;
             }
         }
     } catch (e) {
-        console.error('Resetting DB to schema v4:', e);
+        console.error('Resetting DB to schema v5:', e);
     }
     fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
     fs.writeFileSync(DB_PATH, JSON.stringify(initialDb, null, 2), 'utf8');
@@ -718,12 +741,30 @@ function autoClassifyAndReply(messageText, lead) {
     if (['PARA VIVIR', 'PARA INVERTIR', 'PARA RECREACIÓN', 'PARA RECREACION'].includes(upper)) {
         lead.purpose = upper;
         return {
-            text: `Perfecto ${lead.buyer_name.split(' ')[0]} 🌟 Esta zona en *Villavicencio (Vereda Las Mercedes, a 10m de la vía nacional)* tiene alta valorización.\n\n*Tamaños e Inversión:*\n• *6x20 (120m²):* $27.000.000\n• *8x20 (160m²):* $32.000.000\n• *10x20 (200m²):* $42.000.000\n\nSeparas con *$500.000*, 40% inicial y 60% a *18 meses sin interés*.\n¿A qué hora te queda bien que te llame?`,
+            text: `Perfecto ${lead.buyer_name.split(' ')[0]} 🌟 Esta zona en *Villavicencio (Vereda Las Mercedes, a 10m de la vía nacional)* tiene alta valorización.\n\n*Disponibilidad Oficial (Planos Octubre 18 de 2026):*\n• *Etapa 3 (114m² y 152m² · Caño Corcobado):* desde $27.000.000 (169 disponibles)\n• *Etapa 2 (152m² · Zona Plana Central):* $32.000.000 (298 disponibles)\n• *Etapa 1 (190m² y Especiales Lago):* $32M a $42M (102 disponibles)\n\nSeparas con *$500.000*, 40% inicial y 60% a *18 meses sin interés*.\n¿A qué hora te queda bien que te llame?`,
             meta: 'Router 0 Tokens · Auto-Tag: Lead Nuevo',
             tokens: 0,
             auto_stage: lead.kanban_stage,
-            media: '/assets/la-estrella/frame_6.jpg',
-            media_caption: 'Vista aérea real Etapa 1 y 2 · Proyecto La Estrella'
+            media: '/assets/la-estrella/plano-etapa-1.png',
+            media_caption: 'Plano Oficial Actualizado Etapa 1 · Proyecto La Estrella'
+        };
+    }
+
+    // 1B. Consulta por Planos o Disponibilidad por Etapa (Etapa 1, 2 o 3)
+    if (lower.includes('plano') || lower.includes('disponible') || lower.includes('etapa 1') || lower.includes('etapa 2') || lower.includes('etapa 3')) {
+        if (lead.kanban_stage === 'lead_nuevo') {
+            lead.kanban_stage = 'calificado';
+            lead.status_label = STAGE_META.calificado.title;
+            lead.last_auto_tag = '🤖 Valentina IA envió planos actualizados → Calificado';
+        }
+        const stageNum = lower.includes('etapa 2') ? 2 : lower.includes('etapa 3') ? 3 : 1;
+        return {
+            text: `¡Claro que sí ${lead.buyer_name.split(' ')[0]}! Te comparto el *Plano Oficial Actualizado (Corte 18 Octubre 2026)* de **Etapa ${stageNum}** 🗺️:\n\n• **Etapa 1 (Lotes 190m² · Lago Central):** 102 lotes disponibles (ej. L74, L79, L80, L111, L203, L240)\n• **Etapa 2 (Lotes 152m² · Zona Plana):** 298 lotes disponibles (ej. L61, L161, L170, L212, L268, L490)\n• **Etapa 3 (Lotes 114m² y 152m² · Caño Corcobado):** 169 lotes disponibles (ej. L26, L110, L122, L202, L308)\n\n*(Los lotes en blanco están disponibles; los de punto rojo ● ya fueron vendidos).* ¿Cuál etapa te gustaría reservar con *$500.000*?`,
+            meta: `Valentina IA · Plano Oficial Etapa ${stageNum} Enviado`,
+            tokens: 48,
+            auto_stage: lead.kanban_stage,
+            media: `/assets/la-estrella/plano-etapa-${stageNum}.png`,
+            media_caption: `Plano Actualizado La Estrella Etapa ${stageNum} (Oct 18, 2026)`
         };
     }
 
@@ -731,11 +772,11 @@ function autoClassifyAndReply(messageText, lead) {
     if (lower.includes('firme promesa') || lower.includes('firmamos promesa') || lower.includes('pague el 40%') || lower.includes('pagué el 40%') || lower.includes('complete la inicial') || lower.includes('completé la inicial')) {
         lead.kanban_stage = 'venta_cerrada';
         lead.status_label = STAGE_META.venta_cerrada.title;
-        lead.nota = 'Promesa firmada y 40% de cuota inicial completada. Comisión 40% causada.';
-        lead.last_auto_tag = '🤖 Valentina IA movió automáticamente a: Venta Cerrada / Comisión';
+        lead.nota = 'Promesa firmada y 40% de cuota inicial completada.';
+        lead.last_auto_tag = '🤖 Valentina IA movió automáticamente a: Venta Cerrada';
         return {
             text: `¡Felicitaciones por tu lote en *Proyecto La Estrella*, ${lead.buyer_name.split(' ')[0]}! 🥂🎉\n\nTu promesa de compraventa y tu *40% de cuota inicial* han quedado registrados con tu código QR *${lead.pass_code}*. ¡Bienvenido como propietario!`,
-            meta: 'Valentina IA · Auto-Tag → Venta Cerrada / Comisión',
+            meta: 'Valentina IA · Auto-Tag → Venta Cerrada',
             tokens: 48,
             auto_stage: 'venta_cerrada'
         };
@@ -911,6 +952,8 @@ const MIME_TYPES = {
     '.png': 'image/png',
     '.webp': 'image/webp',
     '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.json': 'application/json',
 };
 
 const server = http.createServer((req, res) => {
@@ -1096,7 +1139,7 @@ const server = http.createServer((req, res) => {
                         sender: 'ai',
                         text: combinedText,
                         time: nowTime,
-                        meta: 'Socio Master 40% (Manual)'
+                        meta: 'Asesor Comercial (Manual)'
                     });
                 }
                 saveDb(db);
