@@ -1184,6 +1184,7 @@ const server = http.createServer((req, res) => {
                 preferred_area = 152,
                 lot_code = 'E2-L61',
                 stage_label = 'Etapa 2 · Lote 152m² ($32M)',
+                appointment_day = 'Este Sábado 10:00 AM',
                 payment_plan = 'Cuento con inicial del 40% y busco financiar a 18 meses sin interés'
             } = JSON.parse(body || '{}');
             const db = loadDb();
@@ -1199,23 +1200,23 @@ const server = http.createServer((req, res) => {
                 buyer_phone: cleanPhone,
                 masked_phone: cleanPhone.slice(0, 6) + '***' + cleanPhone.slice(-4),
                 city,
-                purpose: 'PRE-FILTRADO WEB (SIN BOT)',
+                purpose: 'CITA AGENDADA EN WEB (OFICINA / LOTE)',
                 preferred_area: Number(preferred_area) || 152,
                 lot_code,
-                kanban_stage: 'calificado',
-                status_label: STAGE_META.calificado.title,
+                kanban_stage: 'cita_agendada',
+                status_label: STAGE_META.cita_agendada.title,
                 asesor_id,
-                fecha_cita: 'Pendiente confirmar por Asesor Humano',
-                nota: `✅ Pre-filtrado en Web (/la-estrella): ${stage_label} · ${payment_plan}. Solicita atención 100% humana (Bot apagado).`,
+                fecha_cita: appointment_day,
+                nota: `📅 Cita agendada en Web (/la-estrella) para ${appointment_day}: ${stage_label} · ${payment_plan}. Atención 100% humana (Sin Bot).`,
                 pass_code: 'EST-2026-' + suffix,
                 gps_unlocked: false,
                 ai_active: false, // 100% Humano — Sin Bot como pidió el coordinador
-                last_auto_tag: '🌐 Pre-Filtro Web Superado → Asignado a Asesor Humano (Sin Bot)',
+                last_auto_tag: `📅 Cita Web (${appointment_day}) → Asignado a Asesor Humano`,
                 messages: [
                     {
                         id: Date.now() + 1,
                         sender: 'buyer',
-                        text: `Hola, soy *${name}* de *${city}*. Ya vi los planos actualizados de Octubre 18 y los precios en la página web.\n\n📐 *Me interesa:* ${stage_label} (Lote ref: *${lot_code}*)\n💳 *Presupuesto confirmado:* ${payment_plan}\n\nQuiero hablar directamente con un asesor humano.`,
+                        text: `Hola, soy *${name}* de *${city}*. Ya revisé los planos actualizados hoy en la página web.\n\n📐 *Lote de interés:* ${stage_label} (Ref: *${lot_code}*)\n📅 *Cita solicitada:* ${appointment_day}\n🏢 *Modalidad:* ${payment_plan}\n\nPor favor confírmame la cita y envíame mi Pasaporte QR para el ingreso a Oficina o Terreno.`,
                         time: nowTime,
                         batched: false
                     }
