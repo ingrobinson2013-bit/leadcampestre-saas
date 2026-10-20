@@ -1035,7 +1035,7 @@ const server = http.createServer((req, res) => {
             const { leadId, field, value } = JSON.parse(body || '{}');
             const db = loadDb();
             const lead = db.leads.find(l => l.id === Number(leadId));
-            if (lead && ['asesor_id', 'fecha_cita', 'nota'].includes(field)) {
+            if (lead && ['asesor_id', 'fecha_cita', 'nota', 'lot_code', 'preferred_area', 'city'].includes(field)) {
                 lead[field] = value;
                 saveDb(db);
             }
@@ -1106,7 +1106,7 @@ const server = http.createServer((req, res) => {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
-            const { leadId, sender, messages } = JSON.parse(body || '{}');
+            const { leadId, sender, messages, media, media_caption } = JSON.parse(body || '{}');
             const db = loadDb();
             const lead = db.leads.find(l => l.id === Number(leadId));
             if (lead && Array.isArray(messages) && messages.length > 0) {
@@ -1139,7 +1139,9 @@ const server = http.createServer((req, res) => {
                         sender: 'ai',
                         text: combinedText,
                         time: nowTime,
-                        meta: 'Asesor Comercial (Manual)'
+                        meta: 'Asesor Comercial (Manual)',
+                        media: media || null,
+                        media_caption: media_caption || null
                     });
                 }
                 saveDb(db);

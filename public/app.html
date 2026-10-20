@@ -32,6 +32,25 @@
     .field-box:hover {
       background-color: #EBEDF0;
     }
+    /* Authentic WhatsApp Web 2026 Chat Wallpaper & Bubbles */
+    .wa-wallpaper {
+      background-color: #EFEAE2;
+      background-image: radial-gradient(#d4cfc6 1px, transparent 1px), radial-gradient(#dcd7ce 1px, #EFEAE2 1px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+    .wa-bubble-in {
+      background-color: #FFFFFF;
+      border-radius: 0px 8px 8px 8px;
+      box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+      position: relative;
+    }
+    .wa-bubble-out {
+      background-color: #D9FDD3;
+      border-radius: 8px 0px 8px 8px;
+      box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+      position: relative;
+    }
   </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden select-none">
@@ -287,60 +306,119 @@
       </main>
 
       <!-- =================================================================
-           VIEW 2: INBOX WHATSAPP & AUTOMATIZACIÓN IA
+           VIEW 2: WHATSAPP BUSINESS CRM MODERNO PARA VENTA DE LOTES (3 COLUMNAS)
            ================================================================= -->
-      <main id="tab-inbox" class="hidden flex-1 p-5 bg-[#F0F2F5] overflow-y-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[calc(100vh-96px)]">
-          <div class="lg:col-span-4 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden">
-            <div class="p-3.5 border-b border-[#E5E7EB] flex items-center justify-between bg-[#FAFAFA]">
-              <div>
-                <h2 class="font-bold text-xs text-slate-800">Conversaciones WhatsApp</h2>
-                <p class="text-[11px] text-slate-500">Valentina IA etiqueta y mueve el Kanban sola</p>
+      <main id="tab-inbox" class="hidden flex-1 flex min-h-0 overflow-hidden bg-white">
+        
+        <!-- COLUMNA 1: LISTA DE CHATS ESTILO WHATSAPP WEB (340px) -->
+        <div class="w-[340px] border-r border-[#D1D7DB] bg-white flex flex-col shrink-0 h-full">
+          <!-- WhatsApp Left Header -->
+          <div class="h-[58px] px-3.5 bg-[#F0F2F5] border-b border-[#D1D7DB] flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center shadow-2xs">
+                <i data-lucide="message-circle" class="w-5 h-5 fill-current"></i>
               </div>
-              <button onclick="setTab('kanban')" class="text-xs text-[#1677FF] font-semibold hover:underline cursor-pointer">&larr; Volver al Kanban</button>
+              <div>
+                <div class="font-bold text-[13px] text-[#111B21] leading-tight">WhatsApp Venta de Lotes</div>
+                <div class="text-[11px] text-[#00a884] font-semibold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#00a884]"></span> Valentina Ríos IA Activa
+                </div>
+              </div>
             </div>
-            <div id="leads-list" class="flex-1 overflow-y-auto divide-y divide-[#E5E7EB]"></div>
+            <button onclick="setTab('kanban')" class="px-2.5 py-1 rounded-md bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer transition">
+              &larr; Kanban
+            </button>
           </div>
 
-          <div class="lg:col-span-8 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden">
-            <div id="chat-header" class="p-3.5 border-b border-[#E5E7EB] bg-[#FAFAFA] flex flex-wrap items-center justify-between gap-2"></div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F3F5F8]"></div>
-
-            <div class="p-3.5 border-t border-[#E5E7EB] bg-white space-y-2.5">
-              <div class="flex flex-wrap items-center gap-1.5">
-                <span class="text-[11px] font-semibold text-slate-500 mr-1">Simular mensaje del cliente:</span>
-                <button onclick="queueFragment('Tengo los 12 millones de cuota inicial para el lote de 8x20')" class="px-2 py-1 rounded bg-[#FFFBE6] border border-[#FFE58F] text-[#D48806] text-[11px] font-medium cursor-pointer">
-                  1. Presupuesto &rarr; Calificado
-                </button>
-                <button onclick="queueFragment('Quiero agendar cita este sábado a las 10am')" class="px-2 py-1 rounded bg-[#F9F0FF] border border-[#D3ADF7] text-[#722ED1] text-[11px] font-medium cursor-pointer">
-                  2. Cita &rarr; Cita Agendada
-                </button>
-                <button onclick="queueFragment('Ya estamos en el terreno con David viendo el lote')" class="px-2 py-1 rounded bg-[#E6F4FF] border border-[#91CAFF] text-[#0958D9] text-[11px] font-medium cursor-pointer">
-                  3. En terreno &rarr; Visito Proyecto
-                </button>
-                <button onclick="queueFragment('Estamos haciendo cuentas con mis cesantías para negociar')" class="px-2 py-1 rounded bg-[#FFF2E8] border border-[#FFBB96] text-[#D4380D] text-[11px] font-medium cursor-pointer">
-                  4. Cuentas &rarr; En Negociacion
-                </button>
-                <button onclick="queueFragment('Ya hice la transferencia de 500 mil para separar el lote')" class="px-2 py-1 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[11px] font-medium cursor-pointer">
-                  5. $500k &rarr; Separo Lote
-                </button>
-                <button onclick="queueFragment('¿Me envías el plano actualizado para ver qué lotes tienen disponibles en Etapa 1, 2 y 3?')" class="px-2 py-1 rounded bg-[#E6F4FF] border border-[#91CAFF] text-[#1677FF] text-[11px] font-semibold cursor-pointer">
-                  🗺️ Pedir Planos Actualizados
-                </button>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <div class="flex gap-2">
-                  <input id="buyer-input" type="text" placeholder="Escribe como comprador en WhatsApp..." class="flex-1 bg-white border border-[#D9D9D9] focus:border-[#1677FF] rounded-md px-3 py-1.5 text-xs focus:outline-none" onkeydown="if(event.key==='Enter') sendBuyerMessage()">
-                  <button onclick="sendBuyerMessage()" class="px-3.5 py-1.5 rounded-md bg-[#1677FF] hover:bg-[#0958D9] text-white font-medium text-xs cursor-pointer">Enviar Cliente</button>
-                </div>
-                <div class="flex gap-2">
-                  <input id="advisor-input" type="text" placeholder="Responder manualmente como asesor..." class="flex-1 bg-white border border-[#D9D9D9] focus:border-slate-700 rounded-md px-3 py-1.5 text-xs focus:outline-none" onkeydown="if(event.key==='Enter') sendAdvisorMessage()">
-                  <button onclick="sendAdvisorMessage()" class="px-3.5 py-1.5 rounded-md bg-slate-800 text-white font-medium text-xs cursor-pointer">Intervenir</button>
-                </div>
-              </div>
+          <!-- WhatsApp Search & Filter Chips -->
+          <div class="p-2.5 border-b border-[#E9EDEF] space-y-2 bg-white shrink-0">
+            <div class="relative flex items-center">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-[#54656F] absolute left-3"></i>
+              <input id="wa-chat-search" oninput="renderInbox()" type="text" placeholder="Buscar un chat o lote (ej. Heidy, 160m²)..."
+                     class="w-full bg-[#F0F2F5] rounded-lg pl-8 pr-3 py-1.5 text-xs text-[#111B21] placeholder-[#54656F] focus:outline-none">
             </div>
+            <div class="flex items-center gap-1 overflow-x-auto pb-0.5">
+              <button onclick="setWaFilter('all')" id="wa-flt-all" class="px-2.5 py-1 rounded-full bg-[#E7FCE3] text-[#008069] font-semibold text-[11px] cursor-pointer shrink-0">Todos</button>
+              <button onclick="setWaFilter('calificado')" id="wa-flt-calificado" class="px-2.5 py-1 rounded-full bg-[#F0F2F5] text-[#54656F] hover:bg-slate-200 font-medium text-[11px] cursor-pointer shrink-0">Calificados</button>
+              <button onclick="setWaFilter('cita_agendada')" id="wa-flt-cita_agendada" class="px-2.5 py-1 rounded-full bg-[#F0F2F5] text-[#54656F] hover:bg-slate-200 font-medium text-[11px] cursor-pointer shrink-0">Citas</button>
+              <button onclick="setWaFilter('separo_lote')" id="wa-flt-separo_lote" class="px-2.5 py-1 rounded-full bg-[#F0F2F5] text-[#54656F] hover:bg-slate-200 font-medium text-[11px] cursor-pointer shrink-0">Separaron Lote</button>
+            </div>
+          </div>
+
+          <!-- Contacts List -->
+          <div id="leads-list" class="flex-1 overflow-y-auto divide-y divide-[#F0F2F5]"></div>
+        </div>
+
+        <!-- COLUMNA 2: VENTANA CENTRAL DE CONVERSACIÓN WHATSAPP REAL (flex-1) -->
+        <div class="flex-1 flex flex-col min-w-0 h-full bg-[#EFEAE2]">
+          <!-- Top WhatsApp Contact Header -->
+          <div id="chat-header" class="h-[58px] px-4 bg-[#F0F2F5] border-b border-[#D1D7DB] flex items-center justify-between gap-2 shrink-0"></div>
+
+          <!-- Messages Wallpaper Area -->
+          <div id="chat-messages" class="flex-1 overflow-y-auto px-6 py-4 space-y-2.5 wa-wallpaper"></div>
+
+          <!-- Quick Simulator & Media Bar (Compact PropTech Toolbar) -->
+          <div class="px-3.5 py-2 bg-[#F8F9FA] border-t border-[#D1D7DB] flex flex-wrap items-center justify-between gap-2 shrink-0">
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="text-[10.5px] font-bold text-[#54656F] uppercase mr-1">Simular Cliente:</span>
+              <button onclick="queueFragment('Tengo los 12 millones de cuota inicial para el lote de 152m²')" class="px-2 py-0.5 rounded-full bg-[#FFFBE6] border border-[#FFE58F] text-[#D48806] text-[11px] font-medium hover:shadow-2xs cursor-pointer">
+                💬 Presupuesto &rarr; Calificado
+              </button>
+              <button onclick="queueFragment('Quiero agendar cita este sábado a las 10am para ver el lote')" class="px-2 py-0.5 rounded-full bg-[#F9F0FF] border border-[#D3ADF7] text-[#722ED1] text-[11px] font-medium hover:shadow-2xs cursor-pointer">
+                📅 Agendar Cita
+              </button>
+              <button onclick="queueFragment('Ya estamos en el terreno con David viendo los lotes')" class="px-2 py-0.5 rounded-full bg-[#E6F4FF] border border-[#91CAFF] text-[#0958D9] text-[11px] font-medium hover:shadow-2xs cursor-pointer">
+                📍 En Terreno
+              </button>
+              <button onclick="queueFragment('Estamos haciendo cuentas con mis cesantías para negociar la inicial')" class="px-2 py-0.5 rounded-full bg-[#FFF2E8] border border-[#FFBB96] text-[#D4380D] text-[11px] font-medium hover:shadow-2xs cursor-pointer">
+                🤝 Negociar
+              </button>
+              <button onclick="queueFragment('Ya hice la transferencia de 500 mil para separar el lote hoy')" class="px-2 py-0.5 rounded-full bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[11px] font-medium hover:shadow-2xs cursor-pointer">
+                💰 Separar $500k
+              </button>
+              <button onclick="queueFragment('¿Me envías el plano actualizado para ver qué lotes tienen disponibles en Etapa 1, 2 y 3?')" class="px-2 py-0.5 rounded-full bg-[#E7FCE3] border border-[#00a884]/40 text-[#008069] text-[11px] font-semibold hover:shadow-2xs cursor-pointer">
+                🗺️ Pedir Planos
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1">
+              <span class="text-[10.5px] font-bold text-[#54656F] uppercase mr-0.5">Enviar Plano:</span>
+              <button onclick="sendBlueprintToChat(1)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 1</button>
+              <button onclick="sendBlueprintToChat(2)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 2</button>
+              <button onclick="sendBlueprintToChat(3)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 3</button>
+            </div>
+          </div>
+
+          <!-- Authentic WhatsApp Bottom Composer Bar -->
+          <div class="px-3.5 py-2.5 bg-[#F0F2F5] border-t border-[#D1D7DB] flex items-center gap-2 shrink-0">
+            <!-- Mode Toggle: Buyer vs Advisor -->
+            <div class="inline-flex rounded-lg bg-white border border-[#D1D7DB] p-0.5 shrink-0">
+              <button onclick="setWaSenderMode('buyer')" id="wa-mode-buyer" class="px-2.5 py-1 rounded-md bg-[#00a884] text-white text-[11px] font-semibold cursor-pointer transition">
+                👤 Cliente (Probar IA)
+              </button>
+              <button onclick="setWaSenderMode('advisor')" id="wa-mode-advisor" class="px-2.5 py-1 rounded-md text-[#54656F] hover:text-[#111B21] text-[11px] font-medium cursor-pointer transition">
+                🧑‍💼 Asesor
+              </button>
+            </div>
+
+            <!-- Single Clean WhatsApp Input -->
+            <div class="flex-1 relative flex items-center">
+              <input id="buyer-input" type="text" placeholder="Escribe un mensaje en WhatsApp como comprador (Valentina IA responderá y moverá el Kanban)..."
+                     class="w-full bg-white rounded-lg px-3.5 py-2 text-xs text-[#111B21] placeholder-[#54656F] focus:outline-none shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
+                     onkeydown="if(event.key==='Enter') handleUnifiedWaSend()">
+              <input id="advisor-input" type="hidden">
+            </div>
+
+            <!-- WhatsApp Green Send Button -->
+            <button onclick="handleUnifiedWaSend()" class="w-9 h-9 rounded-full bg-[#00a884] hover:bg-[#008069] text-white flex items-center justify-center shadow-xs cursor-pointer transition shrink-0" title="Enviar a WhatsApp">
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
           </div>
         </div>
+
+        <!-- COLUMNA 3: EXPEDIENTE INMOBILIARIO DEL LOTE & COTIZADOR EN VIVO (330px) -->
+        <aside id="wa-deal-panel" class="w-[330px] border-l border-[#D1D7DB] bg-white flex flex-col overflow-y-auto shrink-0 h-full"></aside>
+
       </main>
 
       <!-- =================================================================
@@ -623,6 +701,25 @@
     </div>
   </div>
 
+  <!-- MODAL: LIGHTBOX HD PARA PLANOS Y FOTOS DE WHATSAPP -->
+  <div id="modal-lightbox" class="hidden fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+    <div class="max-w-5xl w-full bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]" onclick="event.stopPropagation()">
+      <div class="px-4 py-3 bg-[#111B21] text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="map" class="w-4 h-4 text-[#00a884]"></i>
+          <span id="lightbox-caption" class="font-bold text-xs">Plano Oficial Actualizado · Proyecto La Estrella</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="lightbox-open-tab" href="/assets/la-estrella/plano-etapa-1.png" target="_blank" class="px-2.5 py-1 rounded bg-[#00a884] text-white text-[11px] font-semibold">Abrir en Pestaña Nueva</a>
+          <button onclick="closeLightbox()" class="p-1 text-slate-300 hover:text-white cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <div class="flex-1 overflow-auto bg-slate-900 p-4 flex items-center justify-center">
+        <img id="lightbox-img" src="/assets/la-estrella/plano-etapa-1.png" class="max-w-full max-h-[80vh] object-contain rounded shadow-lg">
+      </div>
+    </div>
+  </div>
+
   <script>
     let state = null;
     let blueprintSummary = null;
@@ -632,6 +729,8 @@
     let selectedLeadId = 1;
     let currentTab = 'kanban';
     let crmView = 'kanban';
+    let waFilter = 'all';
+    let waSenderMode = 'buyer';
 
     // Exact Pancake CRM (React + Ant Design) 10 Column Colors from User's Screenshots
     const KANBAN_COLS = [
@@ -952,26 +1051,141 @@
       renderInbox();
     }
 
+    function setWaFilter(flt) {
+      waFilter = flt;
+      ['all', 'calificado', 'cita_agendada', 'separo_lote'].forEach(k => {
+        const btn = document.getElementById('wa-flt-' + k);
+        if (!btn) return;
+        btn.className = k === flt
+          ? 'px-2.5 py-1 rounded-full bg-[#E7FCE3] text-[#008069] font-semibold text-[11px] cursor-pointer shrink-0'
+          : 'px-2.5 py-1 rounded-full bg-[#F0F2F5] text-[#54656F] hover:bg-slate-200 font-medium text-[11px] cursor-pointer shrink-0';
+      });
+      renderInbox();
+    }
+
+    function setWaSenderMode(mode) {
+      waSenderMode = mode;
+      const bBtn = document.getElementById('wa-mode-buyer');
+      const aBtn = document.getElementById('wa-mode-advisor');
+      const inp = document.getElementById('buyer-input');
+      if (bBtn && aBtn && inp) {
+        if (mode === 'buyer') {
+          bBtn.className = 'px-2.5 py-1 rounded-md bg-[#00a884] text-white text-[11px] font-semibold cursor-pointer transition';
+          aBtn.className = 'px-2.5 py-1 rounded-md text-[#54656F] hover:text-[#111B21] text-[11px] font-medium cursor-pointer transition';
+          inp.placeholder = 'Escribe un mensaje en WhatsApp como comprador (Valentina IA responderá y moverá el Kanban)...';
+        } else {
+          aBtn.className = 'px-2.5 py-1 rounded-md bg-[#111B21] text-white text-[11px] font-semibold cursor-pointer transition';
+          bBtn.className = 'px-2.5 py-1 rounded-md text-[#54656F] hover:text-[#111B21] text-[11px] font-medium cursor-pointer transition';
+          inp.placeholder = 'Escribe como Asesor Comercial (Intervención manual directa en WhatsApp)...';
+        }
+        inp.focus();
+      }
+    }
+
+    async function handleUnifiedWaSend() {
+      const inp = document.getElementById('buyer-input');
+      if (!inp || !inp.value.trim()) return;
+      if (waSenderMode === 'advisor') {
+        document.getElementById('advisor-input').value = inp.value;
+        inp.value = '';
+        await sendAdvisorMessage();
+      } else {
+        await sendBuyerMessage();
+      }
+    }
+
+    function openLightbox(src, caption) {
+      const modal = document.getElementById('modal-lightbox');
+      const img = document.getElementById('lightbox-img');
+      const cap = document.getElementById('lightbox-caption');
+      const link = document.getElementById('lightbox-open-tab');
+      if (img) img.src = src;
+      if (cap) cap.textContent = caption || 'Plano Oficial Actualizado · Proyecto La Estrella';
+      if (link) link.href = src;
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeLightbox() {
+      document.getElementById('modal-lightbox')?.classList.add('hidden');
+    }
+
+    function formatWaText(raw) {
+      if (!raw) return '';
+      return raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*([^*]+)\*/g, '<strong class="font-bold text-[#111B21]">$1</strong>');
+    }
+
+    function getAvatarInitials(name) {
+      const clean = (name || 'LC').replace(/[^\p{L}\p{N}\s]/gu, '').trim();
+      const parts = clean.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return (clean.slice(0, 2) || 'LC').toUpperCase();
+    }
+
     function renderInbox() {
-      const leads = getFilteredLeads();
+      let leads = getFilteredLeads();
+      const waSearch = (document.getElementById('wa-chat-search')?.value || '').toLowerCase().trim();
+      if (waFilter !== 'all') {
+        leads = leads.filter(l => l.kanban_stage === waFilter);
+      }
+      if (waSearch) {
+        leads = leads.filter(l => (l.buyer_name + ' ' + l.buyer_phone + ' ' + (l.lot_code || '') + ' ' + (l.nota || '')).toLowerCase().includes(waSearch));
+      }
+
       const listEl = document.getElementById('leads-list');
       if (!leads.find(l => l.id === selectedLeadId) && leads.length > 0) {
         selectedLeadId = leads[0].id;
       }
       const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      const fmt = n => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
 
-      listEl.innerHTML = leads.map(l => {
-        const isSel = l.id === activeLead.id;
+      const avatarColors = ['bg-[#00a884]', 'bg-[#1677FF]', 'bg-[#722ED1]', 'bg-[#FA8C16]', 'bg-[#08979C]', 'bg-[#EB2F96]'];
+
+      // 1. RENDER LEFT WHATSAPP CHAT LIST
+      listEl.innerHTML = leads.map((l, idx) => {
+        const isSel = activeLead && l.id === activeLead.id;
         const col = KANBAN_COLS.find(c => c.key === l.kanban_stage) || KANBAN_COLS[0];
+        const lastMsg = (l.messages && l.messages.length > 0) ? l.messages[l.messages.length - 1] : null;
+        const lastTime = lastMsg?.time || l.fecha_cita?.split(' ')[0] || 'Hoy';
+        const lastPreview = lastMsg ? lastMsg.text.replace(/\n+/g, ' ').replace(/\*/g, '') : (l.nota || 'Prospecto de lote campestre');
+        const avBg = avatarColors[l.id % avatarColors.length];
+
         return `
-          <div onclick="selectedLeadId=${l.id}; renderInbox();" class="p-3 cursor-pointer transition ${isSel ? 'bg-[#E6F4FF] border-l-4 border-[#1677FF]' : 'hover:bg-slate-50'}">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-semibold text-xs text-slate-800 truncate">${l.buyer_name}</span>
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-medium ${col.pillBg}">${col.title}</span>
+          <div onclick="selectedLeadId=${l.id}; renderInbox();"
+               class="px-3 py-2.5 cursor-pointer transition flex items-start gap-3 ${isSel ? 'bg-[#F0F2F5]' : 'hover:bg-[#F5F6F6]'}">
+            <!-- Avatar -->
+            <div class="relative shrink-0 mt-0.5">
+              <div class="w-11 h-11 rounded-full ${avBg} text-white font-bold text-xs flex items-center justify-center shadow-2xs">
+                ${getAvatarInitials(l.buyer_name)}
+              </div>
+              <span class="w-3.5 h-3.5 rounded-full bg-[#25D366] border-2 border-white absolute -bottom-0.5 -right-0.5 flex items-center justify-center text-[8px] text-white font-bold">✓</span>
             </div>
-            <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
-              <span>${l.buyer_phone}</span>
-              <span class="px-1.5 py-0.2 rounded bg-[#EEDCC6] text-[#5C4028] text-[10px]">${l.project_label}</span>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-1">
+                <span class="font-semibold text-[13.5px] text-[#111B21] truncate">${l.buyer_name}</span>
+                <span class="text-[10.5px] ${isSel ? 'text-[#00a884] font-semibold' : 'text-[#667781]'} shrink-0">${lastTime}</span>
+              </div>
+
+              <!-- Message Preview with Double Blue Checkmarks -->
+              <div class="flex items-center gap-1 text-[11.5px] text-[#667781] truncate mt-0.5">
+                <span class="text-[#53BDEB] font-bold text-[11px] shrink-0">✓✓</span>
+                <span class="truncate">${lastPreview}</span>
+              </div>
+
+              <!-- Stage Pill + Lot Tag -->
+              <div class="flex items-center justify-between gap-1.5 mt-1.5">
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${col.pillBg} leading-none">${col.title}</span>
+                <div class="flex items-center gap-1">
+                  <span class="px-1.5 py-0.5 rounded bg-[#E7FCE3] text-[#008069] font-semibold text-[10px] leading-none">📐 ${l.lot_code || 'E1-L74'} (${l.preferred_area || 190}m²)</span>
+                  <span class="px-1.5 py-0.5 rounded bg-[#EEDCC6] text-[#5C4028] text-[9.5px] font-medium leading-none">${l.project_label}</span>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -982,44 +1196,281 @@
       const stageOptions = KANBAN_COLS.map(c =>
         `<option value="${c.key}" class="bg-white text-slate-800" ${c.key === activeLead.kanban_stage ? 'selected' : ''}>${c.title}</option>`
       ).join('');
+      const activeAvBg = avatarColors[activeLead.id % avatarColors.length];
 
+      // 2. RENDER TOP WHATSAPP CONVERSATION HEADER
       document.getElementById('chat-header').innerHTML = `
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-sm text-slate-800">${activeLead.buyer_name}</span>
-            <span class="text-xs text-slate-500">${activeLead.buyer_phone}</span>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-full ${activeAvBg} text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+            ${getAvatarInitials(activeLead.buyer_name)}
           </div>
-          <div class="text-[11px] text-[#1677FF] font-medium mt-0.5">${activeLead.last_auto_tag || 'Valentina IA activa'}</div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-[14px] text-[#111B21] truncate">${activeLead.buyer_name}</span>
+              <span class="text-xs text-[#54656F] font-medium">${activeLead.buyer_phone}</span>
+              <span class="px-2 py-0.5 rounded-full bg-white border border-[#D1D7DB] text-[10px] font-semibold text-[#111B21]">📍 ${activeLead.city || 'Villavicencio'}</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] text-[#008069] font-medium truncate">
+              <span class="w-2 h-2 rounded-full ${activeLead.ai_active ? 'bg-[#00a884]' : 'bg-amber-500'}"></span>
+              <span class="truncate">${activeLead.last_auto_tag || '🤖 Valentina Ríos IA respondiendo en automático'}</span>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-500">Estado:</span>
-          <select onchange="changeLeadStage(${activeLead.id}, this.value)" class="px-2.5 py-1 rounded text-xs font-medium ${col.pillBg} cursor-pointer">
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="toggleLeadAi(${activeLead.id})"
+                  class="px-2.5 py-1 rounded-md border text-[11px] font-semibold cursor-pointer transition ${activeLead.ai_active ? 'bg-[#E7FCE3] border-[#00a884]/40 text-[#008069]' : 'bg-amber-50 border-amber-300 text-amber-800'}">
+            ${activeLead.ai_active ? '🤖 Bot IA: ON' : '✋ Bot IA: Pausado'}
+          </button>
+
+          <a href="/quote/${activeLead.pass_code}" target="_blank"
+             class="px-2.5 py-1 rounded-md bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] flex items-center gap-1 cursor-pointer">
+            <span>📄 Cotización QR</span>
+          </a>
+
+          <select onchange="changeLeadStage(${activeLead.id}, this.value)"
+                  class="px-2.5 py-1 rounded-md text-xs font-semibold ${col.pillBg} cursor-pointer shadow-2xs focus:outline-none">
             ${stageOptions}
           </select>
         </div>
       `;
 
+      // 3. RENDER CENTER WHATSAPP MESSAGES STREAM
       const msgContainer = document.getElementById('chat-messages');
-      msgContainer.innerHTML = (activeLead.messages || []).map(m => {
+      const leadLot = state.lots.find(x => x.code === activeLead.lot_code) || state.lots[0];
+      const stageNumFromLot = leadLot?.stage || (activeLead.lot_code?.startsWith('E2') ? 2 : activeLead.lot_code?.startsWith('E3') ? 3 : 1);
+
+      const metaBanner = `
+        <div class="flex justify-center mb-3">
+          <div class="max-w-lg bg-[#FFF5C4] border border-[#F5E290] text-[#54656F] px-3.5 py-1.5 rounded-lg shadow-2xs text-[11px] text-center">
+            🔒 <strong>Anuncio Meta Ads (Click-to-WhatsApp):</strong> Interés en <strong>${activeLead.purpose || 'Lote Campestre'}</strong> · Proyecto La Estrella (Vereda Las Mercedes, a 10m vía Villavicencio–Acacías).
+          </div>
+        </div>
+      `;
+
+      msgContainer.innerHTML = metaBanner + (activeLead.messages || []).map((m, mIdx) => {
         const isBuyer = m.sender === 'buyer';
         return `
           <div class="flex ${isBuyer ? 'justify-start' : 'justify-end'}">
-            <div class="max-w-[75%] rounded-lg p-3 shadow-2xs ${isBuyer ? 'bg-white border border-[#E5E7EB] text-slate-800' : 'bg-[#E6F4FF] border border-[#91CAFF] text-slate-900'}">
-              <div class="flex items-center justify-between gap-4 mb-1 text-[10px] text-slate-500">
-                <span class="font-bold ${isBuyer ? 'text-slate-700' : 'text-[#1677FF]'}">${isBuyer ? activeLead.buyer_name : '🤖 Valentina Ríos IA'}</span>
-                <span>${m.time || ''}</span>
+            <div class="max-w-[76%] px-3.5 py-2 ${isBuyer ? 'wa-bubble-in text-[#111B21]' : 'wa-bubble-out text-[#111B21]'}">
+              
+              <!-- Sender Header -->
+              <div class="flex items-center justify-between gap-4 mb-1">
+                <span class="text-[11px] font-bold ${isBuyer ? 'text-[#008069]' : 'text-[#008069]'}">
+                  ${isBuyer ? ('👤 ' + activeLead.buyer_name) : '🤖 Valentina Ríos · Asesora IA La Estrella'}
+                </span>
+                ${mIdx === 0 && isBuyer ? '<span class="px-1.5 py-0.2 rounded bg-[#E7FCE3] text-[#008069] text-[9.5px] font-bold">Meta Ads Lead</span>' : ''}
               </div>
-              <div class="text-xs leading-relaxed whitespace-pre-line">${m.text}</div>
-              ${m.media ? `<img src="${m.media}" class="mt-2 rounded max-h-44 w-full object-cover">` : ''}
-              ${m.meta ? `<div class="mt-1.5 pt-1 border-t border-slate-200/70 text-[10px] font-medium text-[#1677FF]">${m.meta}</div>` : ''}
+
+              <!-- Optional Media / Blueprint Preview -->
+              ${m.media ? `
+                <div onclick="openLightbox('${m.media}', '${(m.media_caption || 'Plano Proyecto La Estrella').replace(/'/g, '')}')"
+                     class="my-1.5 rounded-lg overflow-hidden border border-black/10 bg-white cursor-pointer group relative">
+                  <img src="${m.media}" class="max-h-56 w-full object-cover group-hover:scale-[1.01] transition">
+                  <div class="px-2.5 py-1.5 bg-black/70 text-white text-[11px] flex items-center justify-between">
+                    <span class="truncate">🗺️ ${m.media_caption || 'Plano Oficial Proyecto La Estrella'}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-[#00a884] text-white text-[10px] font-bold shrink-0">🔍 Ampliar HD</span>
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- Formatted WhatsApp Message Text -->
+              <div class="text-[12.5px] leading-[1.45] whitespace-pre-line">${formatWaText(m.text)}</div>
+
+              <!-- Footer: AI Auto-Tag Pill + Timestamp + Double Blue Ticks -->
+              <div class="mt-1.5 pt-1 border-t border-black/5 flex items-center justify-between gap-3 text-[10.5px] text-[#667781]">
+                <span class="font-semibold text-[#008069] truncate">${m.meta || (isBuyer ? 'WhatsApp Cloud API' : 'Valentina Ríos IA')}</span>
+                <span class="flex items-center gap-1 shrink-0">
+                  <span>${m.time || '11:20 AM'}</span>
+                  ${!isBuyer ? '<span class="text-[#53BDEB] font-bold text-xs leading-none">✓✓</span>' : ''}
+                </span>
+              </div>
             </div>
           </div>
         `;
       }).join('');
       msgContainer.scrollTop = msgContainer.scrollHeight;
+
+      // 4. RENDER RIGHT COLUMN: EXPEDIENTE INMOBILIARIO DEL LOTE & COTIZADOR EN VIVO
+      const dealPanel = document.getElementById('wa-deal-panel');
+      if (dealPanel) {
+        const lotPrice = leadLot ? leadLot.price_cop : 32000000;
+        const lotInit40 = Math.round(lotPrice * 0.4);
+        const lotMonth18 = Math.round((lotPrice * 0.6) / 18);
+        const lotOptions = (state.lots || []).map(l =>
+          `<option value="${l.code}" ${l.code === activeLead.lot_code ? 'selected' : ''}>${l.code} · ${l.area_m2}m² (${fmt(l.price_cop)}) - ${l.status === 'available' ? '🟢 Disp' : '🔴 Ocupado'}</option>`
+        ).join('');
+
+        dealPanel.innerHTML = `
+          <!-- Header del Expediente -->
+          <div class="h-[58px] px-4 bg-[#F0F2F5] border-b border-[#D1D7DB] flex items-center justify-between shrink-0">
+            <div>
+              <div class="font-bold text-xs text-[#111B21]">Expediente de Lote & Cierre</div>
+              <div class="text-[11px] text-[#54656F]">Pasaporte QR: <strong class="text-[#008069]">${activeLead.pass_code}</strong></div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10.5px] font-bold ${col.pillBg}">${col.title}</span>
+          </div>
+
+          <div class="p-3.5 space-y-3.5 text-xs">
+            
+            <!-- Card 1: Lote Asignado & Plano de la Etapa -->
+            <div class="p-3 rounded-lg bg-[#F8FAFC] border border-[#E5E7EB] space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-[#111B21] flex items-center gap-1.5">📐 Lote de Interés</span>
+                <button onclick="setTab('lots'); selectBlueprintStage(${stageNumFromLot});" class="text-[11px] font-semibold text-[#1677FF] hover:underline cursor-pointer">
+                  Ver en Plano E${stageNumFromLot} &rarr;
+                </button>
+              </div>
+
+              <select onchange="assignLotToLead(${activeLead.id}, this.value)"
+                      class="w-full bg-white border border-[#D1D7DB] focus:border-[#00a884] rounded-md px-2.5 py-1.5 text-xs font-semibold text-[#111B21] cursor-pointer">
+                ${lotOptions}
+              </select>
+
+              <!-- Mini Blueprint Preview Card -->
+              <div onclick="openLightbox('/assets/la-estrella/plano-etapa-${stageNumFromLot}.png', 'Plano Actualizado La Estrella Etapa ${stageNumFromLot} (Octubre 18 de 2026)')"
+                   class="relative rounded-md overflow-hidden border border-[#D1D7DB] h-28 bg-white cursor-pointer group">
+                <img src="/assets/la-estrella/plano-etapa-${stageNumFromLot}.png" class="w-full h-full object-cover group-hover:scale-105 transition">
+                <div class="absolute inset-x-0 bottom-0 bg-black/75 text-white px-2.5 py-1 flex items-center justify-between text-[10.5px]">
+                  <span>🗺️ Plano Etapa ${stageNumFromLot} (Oct 18)</span>
+                  <span class="text-[#25D366] font-bold">🔍 Ver HD</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-1.5 pt-1">
+                <button onclick="sendBlueprintToChat(${stageNumFromLot})"
+                        class="px-2.5 py-1.5 rounded-md bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[#111B21] font-semibold text-[11px] cursor-pointer">
+                  🗺️ Enviar Plano E${stageNumFromLot}
+                </button>
+                <button onclick="changeLeadStage(${activeLead.id}, 'separo_lote')"
+                        class="px-2.5 py-1.5 rounded-md bg-[#00a884] hover:bg-[#008069] text-white font-semibold text-[11px] cursor-pointer">
+                  🔒 Separar ($500k)
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 2: Liquidación Financiera Directa (18 Meses Sin Interés) -->
+            <div class="p-3 rounded-lg bg-[#F6FFED] border border-[#B7EB8F] space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-[#111B21]">💰 Financiación Directa (0% Interés)</span>
+                <span class="text-[10px] font-bold text-[#389E0D] bg-white px-1.5 py-0.5 rounded border border-[#B7EB8F]">18 Meses</span>
+              </div>
+              <div class="space-y-1 text-[11.5px]">
+                <div class="flex justify-between text-slate-600"><span>Valor Lote (${leadLot?.area_m2 || 152} m²):</span><strong class="text-slate-900">${fmt(lotPrice)}</strong></div>
+                <div class="flex justify-between text-slate-600"><span>1. Separación Hoy:</span><strong class="text-[#389E0D]">$500.000 COP</strong></div>
+                <div class="flex justify-between text-slate-600"><span>2. Inicial (40% · 30 días):</span><strong class="text-slate-900">${fmt(lotInit40)}</strong></div>
+                <div class="flex justify-between pt-1 border-t border-[#B7EB8F]"><span>3. 18 Cuotas Mensuales:</span><strong class="text-[#008069] text-xs">${fmt(lotMonth18)} /mes</strong></div>
+              </div>
+              <button onclick="sendQuoteToChat(${activeLead.id})"
+                      class="w-full mt-1 py-1.5 rounded-md bg-[#111B21] hover:bg-slate-800 text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>📲 Enviar Plan de Pagos al WhatsApp</span>
+              </button>
+            </div>
+
+            <!-- Card 3: Campos CRM Editables (Sincronizados con el Kanban) -->
+            <div class="p-3 rounded-lg bg-white border border-[#E5E7EB] space-y-2.5">
+              <div class="font-bold text-[#111B21] border-b border-slate-100 pb-1.5">Ficha Comercial (Sincronizada con Kanban)</div>
+              
+              <div>
+                <label class="text-[10.5px] font-semibold text-[#54656F]">Asesor Asignado (asesor_id)</label>
+                <select onchange="updateLeadField(${activeLead.id}, 'asesor_id', this.value)"
+                        class="w-full mt-0.5 bg-[#F4F5F7] border border-[#E5E7EB] rounded px-2 py-1 text-xs font-medium text-slate-800">
+                  <option value="david@nodia.com" ${activeLead.asesor_id === 'david@nodia.com' ? 'selected' : ''}>david@nodia.com (Terreno)</option>
+                  <option value="stella@nodia.com" ${activeLead.asesor_id === 'stella@nodia.com' ? 'selected' : ''}>stella@nodia.com (Oficina Camoa)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-[10.5px] font-semibold text-[#54656F]">Fecha Cita en Terreno (fecha_cita)</label>
+                <input type="text" value="${activeLead.fecha_cita || ''}" placeholder="Ej. Sábado 10:00 AM"
+                       onchange="updateLeadField(${activeLead.id}, 'fecha_cita', this.value)"
+                       class="w-full mt-0.5 bg-[#F4F5F7] border border-[#E5E7EB] rounded px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:border-[#00a884]">
+              </div>
+
+              <div>
+                <label class="text-[10.5px] font-semibold text-[#54656F]">Nota Comercial (Nota)</label>
+                <textarea rows="2" onchange="updateLeadField(${activeLead.id}, 'nota', this.value)"
+                          class="w-full mt-0.5 bg-[#F4F5F7] border border-[#E5E7EB] rounded px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:border-[#00a884]">${activeLead.nota || ''}</textarea>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    async function toggleLeadAi(leadId) {
+      const res = await fetch('/api/toggle-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId })
+      });
+      state = await res.json();
+      renderAll();
+    }
+
+    async function assignLotToLead(leadId, lotCode) {
+      const lot = state.lots.find(l => l.code === lotCode);
+      await fetch('/api/lead-field', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId, field: 'lot_code', value: lotCode })
+      });
+      if (lot) {
+        const res = await fetch('/api/lead-field', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadId, field: 'preferred_area', value: lot.area_m2 })
+        });
+        state = await res.json();
+      }
+      showAiToast('Lote ' + lotCode + ' vinculado al expediente del cliente');
+      renderAll();
+    }
+
+    async function sendBlueprintToChat(stageNum) {
+      const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      if (!activeLead) return;
+      const availMap = { 1: '102 lotes disponibles (190 m²)', 2: '298 lotes disponibles (152 m²)', 3: '169 lotes disponibles (114 m² y 152 m²)' };
+      const text = `🗺️ Hola ${activeLead.buyer_name.split(' ')[0]}, te comparto el *Plano Oficial Actualizado (Corte 18 Octubre 2026)* de la *Etapa ${stageNum}* en *Proyecto La Estrella*.\n\n• Disponibilidad actual: *${availMap[stageNum]}* (casillas en blanco ○ disponibles; puntos rojos ● vendidos).\n• Separas tu ubicación hoy mismo con *$500.000 COP*.`;
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: activeLead.id,
+          sender: 'advisor',
+          messages: [text],
+          media: `/assets/la-estrella/plano-etapa-${stageNum}.png`,
+          media_caption: `Plano Oficial La Estrella · Etapa ${stageNum} (Oct 18, 2026)`
+        })
+      });
+      state = await res.json();
+      showAiToast(`Plano Etapa ${stageNum} enviado al WhatsApp de ${activeLead.buyer_name}`);
+      renderAll();
+    }
+
+    async function sendQuoteToChat(leadId) {
+      const activeLead = state.leads.find(l => l.id === leadId) || state.leads[0];
+      if (!activeLead) return;
+      const lot = state.lots.find(x => x.code === activeLead.lot_code) || state.lots[0];
+      const fmt = n => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
+      const price = lot ? lot.price_cop : 32000000;
+      const init40 = Math.round(price * 0.4);
+      const month18 = Math.round((price * 0.6) / 18);
+      const text = `📄 *COTIZACIÓN OFICIAL · PROYECTO LA ESTRELLA*\n• *Cliente:* ${activeLead.buyer_name}\n• *Lote Seleccionado:* ${lot.code} (${lot.area_m2} m²)\n• *Valor Total:* ${fmt(price)}\n• *1. Separación Hoy:* $500.000 COP\n• *2. Cuota Inicial (40% a 30 días):* ${fmt(init40)}\n• *3. Saldo 60% (18 Cuotas 0% Interés):* ${fmt(month18)} /mes\n• *Pasaporte QR:* ${activeLead.pass_code}`;
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId: activeLead.id, sender: 'advisor', messages: [text] })
+      });
+      state = await res.json();
+      showAiToast(`Cotización del lote ${lot.code} enviada al WhatsApp`);
+      renderAll();
     }
 
     async function queueFragment(text) {
+      setWaSenderMode('buyer');
       document.getElementById('buyer-input').value = text;
       await sendBuyerMessage();
     }
