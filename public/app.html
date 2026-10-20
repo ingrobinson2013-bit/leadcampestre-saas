@@ -77,12 +77,16 @@
     </div>
 
     <!-- Right Action Icons & Avatar -->
-    <div class="flex items-center gap-3.5 text-slate-600">
+    <div class="flex items-center gap-3 text-slate-600">
+      <a href="/la-estrella" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8FDF2] hover:bg-[#d0f9e4] border border-[#00a884]/40 text-[11px] font-bold text-[#008069] transition shadow-2xs" title="Abrir Página Web Filtro Anti-Curiosos (Envía directo a Asesor Humano sin Bot)">
+        <span>🌐 Web Filtro (Sin Bot)</span>
+        <i data-lucide="external-link" class="w-3 h-3"></i>
+      </a>
       <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-[#E5E7EB] text-[11px] font-medium text-slate-600" title="PostgreSQL 17 + Redis 7 en VPS">
         <span class="w-2 h-2 rounded-full bg-[#52C41A]"></span>
         PG17 + Redis
       </span>
-      <button onclick="setTab('inbox')" class="p-1.5 hover:bg-slate-200/70 rounded-md transition relative cursor-pointer" title="Valentina IA Auto-Tagger">
+      <button onclick="setTab('inbox')" class="p-1.5 hover:bg-slate-200/70 rounded-md transition relative cursor-pointer" title="Inbox WhatsApp & Copiloto">
         <i data-lucide="bot" class="w-4 h-4 text-[#1677FF]"></i>
         <span class="w-2 h-2 rounded-full bg-[#52C41A] absolute top-1 right-1"></span>
       </button>
@@ -114,8 +118,13 @@
 
         <button onclick="setTab('inbox')" id="side-inbox" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
           <span class="flex items-center gap-2.5"><i data-lucide="message-square-Code" class="w-4 h-4 text-slate-500"></i> Inbox WhatsApp & IA</span>
-          <span class="px-1.5 py-0.5 rounded bg-[#E6F4FF] text-[#1677FF] font-semibold text-[10px]">Bot</span>
+          <span class="px-1.5 py-0.5 rounded bg-[#E6F4FF] text-[#1677FF] font-semibold text-[10px]">CRM</span>
         </button>
+
+        <a href="/la-estrella" target="_blank" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-[#008069] bg-[#E8FDF2]/70 hover:bg-[#E8FDF2] font-semibold transition cursor-pointer">
+          <span class="flex items-center gap-2.5"><i data-lucide="filter" class="w-4 h-4 text-[#00a884]"></i> Web Filtro (Sin Bot)</span>
+          <span class="px-1.5 py-0.5 rounded bg-[#00a884] text-white font-bold text-[9px]">LIVE</span>
+        </a>
 
         <button onclick="setTab('checkin')" id="side-checkin" class="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs text-slate-700 hover:bg-slate-100 transition cursor-pointer">
           <span class="flex items-center gap-2.5"><i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i> Citas & Portería QR</span>
@@ -1219,8 +1228,9 @@
 
         <div class="flex items-center gap-2 shrink-0">
           <button onclick="toggleLeadAi(${activeLead.id})"
-                  class="px-2.5 py-1 rounded-md border text-[11px] font-semibold cursor-pointer transition ${activeLead.ai_active ? 'bg-[#E7FCE3] border-[#00a884]/40 text-[#008069]' : 'bg-amber-50 border-amber-300 text-amber-800'}">
-            ${activeLead.ai_active ? '🤖 Bot IA: ON' : '✋ Bot IA: Pausado'}
+                  class="px-2.5 py-1 rounded-md border text-[11px] font-semibold cursor-pointer transition ${activeLead.ai_active ? 'bg-[#E7FCE3] border-[#00a884]/40 text-[#008069]' : 'bg-amber-50 border-amber-300 text-amber-800'}"
+                  title="Alternar entre Bot IA automático o Atención 100% Humana (Copiloto Silencioso)">
+            ${activeLead.ai_active ? '🤖 Bot IA: ON' : '🧑‍💼 100% Humano (Sin Bot)'}
           </button>
 
           <a href="/quote/${activeLead.pass_code}" target="_blank"
@@ -1243,13 +1253,14 @@
       const metaBanner = `
         <div class="flex justify-center mb-3">
           <div class="max-w-lg bg-[#FFF5C4] border border-[#F5E290] text-[#54656F] px-3.5 py-1.5 rounded-lg shadow-2xs text-[11px] text-center">
-            🔒 <strong>Anuncio Meta Ads (Click-to-WhatsApp):</strong> Interés en <strong>${activeLead.purpose || 'Lote Campestre'}</strong> · Proyecto La Estrella (Vereda Las Mercedes, a 10m vía Villavicencio–Acacías).
+            🔒 <strong>Origen del Cliente:</strong> Interés en <strong>${activeLead.purpose || 'Lote Campestre'}</strong> · Proyecto La Estrella (Vereda Las Mercedes, a 10m vía Villavicencio–Acacías).
           </div>
         </div>
       `;
 
       msgContainer.innerHTML = metaBanner + (activeLead.messages || []).map((m, mIdx) => {
         const isBuyer = m.sender === 'buyer';
+        const isHumanAdvisor = !isBuyer && m.meta && m.meta.toLowerCase().includes('asesor');
         return `
           <div class="flex ${isBuyer ? 'justify-start' : 'justify-end'}">
             <div class="max-w-[76%] px-3.5 py-2 ${isBuyer ? 'wa-bubble-in text-[#111B21]' : 'wa-bubble-out text-[#111B21]'}">
@@ -1257,9 +1268,9 @@
               <!-- Sender Header -->
               <div class="flex items-center justify-between gap-4 mb-1">
                 <span class="text-[11px] font-bold ${isBuyer ? 'text-[#008069]' : 'text-[#008069]'}">
-                  ${isBuyer ? ('👤 ' + activeLead.buyer_name) : '🤖 Valentina Ríos · Asesora IA La Estrella'}
+                  ${isBuyer ? ('👤 ' + activeLead.buyer_name) : (isHumanAdvisor ? ('🧑‍💼 Asesor Humano · ' + (activeLead.asesor_id || 'Sala de Ventas')) : '🤖 Valentina Ríos · Asesora IA La Estrella')}
                 </span>
-                ${mIdx === 0 && isBuyer ? '<span class="px-1.5 py-0.2 rounded bg-[#E7FCE3] text-[#008069] text-[9.5px] font-bold">Meta Ads Lead</span>' : ''}
+                ${mIdx === 0 && isBuyer ? `<span class="px-1.5 py-0.2 rounded bg-[#E7FCE3] text-[#008069] text-[9.5px] font-bold">${activeLead.purpose?.includes('WEB') ? '🌐 Pre-Filtrado Web' : 'Meta Ads Lead'}</span>` : ''}
               </div>
 
               <!-- Optional Media / Blueprint Preview -->

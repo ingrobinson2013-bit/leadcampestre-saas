@@ -1132,6 +1132,13 @@ const server = http.createServer((req, res) => {
                             media: aiReply.media || null,
                             media_caption: aiReply.media_caption || null
                         });
+                    } else {
+                        // Modo 100% Humano (Copiloto Silencioso): NO envía mensaje del bot, pero SÍ etiqueta y mueve el Kanban automáticamente
+                        const prevStage = lead.kanban_stage;
+                        autoClassifyAndReply(combinedText, lead);
+                        if (lead.kanban_stage !== prevStage) {
+                            lead.last_auto_tag = `🕵️ Copiloto Silencioso (Sin Bot) → ${STAGE_META[lead.kanban_stage]?.title || lead.status_label}`;
+                        }
                     }
                 } else {
                     lead.messages.push({
@@ -1139,15 +1146,85 @@ const server = http.createServer((req, res) => {
                         sender: 'ai',
                         text: combinedText,
                         time: nowTime,
-                        meta: 'Asesor Comercial (Manual)',
+                        meta: 'Asesor Comercial (Atención Personal)',
                         media: media || null,
                         media_caption: media_caption || null
                     });
+                    // También analiza lo que el asesor humano acuerda con el cliente para actualizar el Kanban en silencio
+                    const prevStage = lead.kanban_stage;
+                    autoClassifyAndReply(combinedText, lead);
+                    if (lead.kanban_stage !== prevStage) {
+                        lead.last_auto_tag = `🕵️ Copiloto Silencioso (Por Asesor) → ${STAGE_META[lead.kanban_stage]?.title || lead.status_label}`;
+                    }
                 }
                 saveDb(db);
             }
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(db));
+        });
+        return;
+    }
+
+    if (req.method === 'GET' && (url.pathname === '/la-estrella' || url.pathname === '/filtro' || url.pathname === '/landing')) {
+        const landingPath = path.join(PUBLIC_DIR, 'landing.html');
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        return res.end(fs.readFileSync(landingPath, 'utf8'));
+    }
+
+    if (req.method === 'POST' && url.pathname === '/api/landing-lead') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            const {
+                project_id = 'la-estrella',
+                name = 'Cliente Pre-Filtrado',
+                phone = '+573100000000',
+                city = 'Villavicencio',
+                asesor_id = 'david@nodia.com',
+                preferred_area = 152,
+                lot_code = 'E2-L61',
+                stage_label = 'Etapa 2 · Lote 152m² ($32M)',
+                payment_plan = 'Cuento con inicial del 40% y busco financiar a 18 meses sin interés'
+            } = JSON.parse(body || '{}');
+            const db = loadDb();
+            const proj = db.projects.find(p => p.id === project_id) || db.projects[0];
+            const nowTime = new Date().toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
+            const suffix = String(Math.floor(1000 + Math.random() * 9000));
+            const cleanPhone = phone.startsWith('+') ? phone : '+57' + phone.replace(/\D/g, '');
+            const newLead = {
+                id: Date.now(),
+                project_id: proj.id,
+                project_label: proj.short_name,
+                buyer_name: name,
+                buyer_phone: cleanPhone,
+                masked_phone: cleanPhone.slice(0, 6) + '***' + cleanPhone.slice(-4),
+                city,
+                purpose: 'PRE-FILTRADO WEB (SIN BOT)',
+                preferred_area: Number(preferred_area) || 152,
+                lot_code,
+                kanban_stage: 'calificado',
+                status_label: STAGE_META.calificado.title,
+                asesor_id,
+                fecha_cita: 'Pendiente confirmar por Asesor Humano',
+                nota: `✅ Pre-filtrado en Web (/la-estrella): ${stage_label} · ${payment_plan}. Solicita atención 100% humana (Bot apagado).`,
+                pass_code: 'EST-2026-' + suffix,
+                gps_unlocked: false,
+                ai_active: false, // 100% Humano — Sin Bot como pidió el coordinador
+                last_auto_tag: '🌐 Pre-Filtro Web Superado → Asignado a Asesor Humano (Sin Bot)',
+                messages: [
+                    {
+                        id: Date.now() + 1,
+                        sender: 'buyer',
+                        text: `Hola, soy *${name}* de *${city}*. Ya vi los planos actualizados de Octubre 18 y los precios en la página web.\n\n📐 *Me interesa:* ${stage_label} (Lote ref: *${lot_code}*)\n💳 *Presupuesto confirmado:* ${payment_plan}\n\nQuiero hablar directamente con un asesor humano.`,
+                        time: nowTime,
+                        batched: false
+                    }
+                ]
+            };
+            db.leads.unshift(newLead);
+            saveDb(db);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true, lead: newLead, db }));
         });
         return;
     }
