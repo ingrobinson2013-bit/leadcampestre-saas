@@ -577,7 +577,7 @@
             </div>
 
             <div id="bp-scroll" class="flex-1 overflow-auto bg-white p-3 relative">
-              <div id="bp-canvas" class="relative mx-auto" style="width: 100%; max-width: none; transition: width 0.25s ease;">
+              <div id="bp-canvas" class="relative block" style="width: 100%; max-width: none;">
                 <img id="bp-image" src="/assets/la-estrella/plano-etapa-1.png" alt="Plano Proyecto La Estrella"
                      class="w-full h-auto block rounded border border-slate-200 shadow-xs select-none">
                 <div id="bp-pins-layer" class="absolute inset-0 pointer-events-none"></div>
@@ -760,7 +760,7 @@
     async function fetchState() {
       const [res, bpRes] = await Promise.all([
         fetch('/api/state'),
-        fetch('/assets/la-estrella/blueprints_summary.json').catch(() => null)
+        fetch('/assets/la-estrella/blueprints_summary.json?v=20261020c').catch(() => null)
       ]);
       state = await res.json();
       if (bpRes && bpRes.ok) {
@@ -1585,22 +1585,26 @@
       if (!lotObj || lotObj.x_pct === undefined) return;
       const scrollBox = document.getElementById('bp-scroll');
       const canvas = document.getElementById('bp-canvas');
+      const img = document.getElementById('bp-image');
       const zoomLbl = document.getElementById('bp-zoom-label');
-      if (!scrollBox || !canvas) return;
-      if (blueprintZoom < 1.6) {
-        blueprintZoom = 1.6;
-        canvas.style.width = '160%';
-        if (zoomLbl) zoomLbl.textContent = '160%';
+      if (!scrollBox || !canvas || !img) return;
+      if (blueprintZoom < 2.2) {
+        blueprintZoom = 2.2;
+        canvas.style.width = '220%';
+        if (zoomLbl) zoomLbl.textContent = '220%';
       }
-      setTimeout(() => {
-        const targetX = (lotObj.x_pct / 100) * canvas.offsetWidth;
-        const targetY = (lotObj.y_pct / 100) * canvas.offsetHeight;
+      requestAnimationFrame(() => {
+        const w = canvas.offsetWidth || img.offsetWidth;
+        const h = canvas.offsetHeight || img.offsetHeight;
+        if (!w || !h) return;
+        const targetX = (lotObj.x_pct / 100.0) * w;
+        const targetY = (lotObj.y_pct / 100.0) * h;
         scrollBox.scrollTo({
-          left: Math.max(0, targetX - scrollBox.clientWidth / 2),
-          top: Math.max(0, targetY - scrollBox.clientHeight / 2),
+          left: Math.max(0, Math.round(targetX - scrollBox.clientWidth / 2.0)),
+          top: Math.max(0, Math.round(targetY - scrollBox.clientHeight / 2.0)),
           behavior: 'smooth'
         });
-      }, 60);
+      });
     }
 
     function renderCrmMapPins() {
@@ -1617,11 +1621,13 @@
           return `
             <div onclick="focusCrmLotOnMap('${x.code}')"
                  style="left:${x.x_pct}%; top:${x.y_pct}%;"
-                 class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto cursor-pointer">
-              <span class="absolute -inset-3 rounded-full bg-[#1677FF]/40 animate-ping"></span>
-              <div class="relative flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#064E3B] text-white border-2 border-[#FDE68A] shadow-xl whitespace-nowrap">
-                <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
-                <span class="text-[10px] font-black">📍 Lote #${x.code} (${area}m²)</span>
+                 class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
+              <div class="relative flex items-center justify-center">
+                <span class="absolute w-16 h-16 rounded-full border-4 border-emerald-400/80 animate-ping"></span>
+                <div class="w-12 h-12 rounded-full border-[4px] border-[#10B981] bg-emerald-400/15 shadow-[0_0_0_3px_#064E3B,0_8px_20px_rgba(0,0,0,0.35)]"></div>
+                <div class="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#064E3B] text-[#FDE68A] border-2 border-[#FDE68A] shadow-xl text-[10.5px] font-black whitespace-nowrap">
+                  📍 Lote #${x.code} (${area}m²)
+                </div>
               </div>
             </div>
           `;
@@ -1630,7 +1636,7 @@
           <button type="button" onclick="focusCrmLotOnMap('${x.code}')"
                   title="Ubicar Lote #${x.code} (${area} m²)"
                   style="left:${x.x_pct}%; top:${x.y_pct}%;"
-                  class="absolute -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#10B981]/85 hover:bg-[#1677FF] hover:scale-150 border border-white shadow-xs pointer-events-auto cursor-pointer transition"></button>
+                  class="absolute -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-emerald-600 bg-emerald-400/25 hover:bg-emerald-500/60 hover:scale-150 pointer-events-auto cursor-pointer transition"></button>
         `;
       }).join('');
     }

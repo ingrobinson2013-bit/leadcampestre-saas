@@ -582,7 +582,7 @@
 
           <!-- Visor del Plano en Blanco con Scroll y Pines de Lotes Disponibles -->
           <div id="public-bp-scroll" class="flex-1 overflow-auto bg-white p-3 relative">
-            <div id="public-bp-canvas" class="relative inline-block w-full transition-all duration-200" style="width: 100%; max-width: none;">
+            <div id="public-bp-canvas" class="relative block" style="width: 100%; max-width: none;">
               <img id="stage-blueprint-img" src="/assets/la-estrella/plano-etapa-2.png" alt="Plano Proyecto La Estrella" class="block w-full h-auto rounded-lg border border-stone-200 select-none" />
               <!-- Capa de puntos verdes de lotes disponibles + Pin del lote seleccionado -->
               <div id="public-bp-pins-layer" class="absolute inset-0 pointer-events-none"></div>
@@ -936,7 +936,7 @@
     let simLabel = 'Lote 152 m² (Etapa 2)';
 
     function zoomBlueprintPublic(delta) {
-      publicBpZoom = Math.max(1.0, Math.min(3.0, +(publicBpZoom + delta).toFixed(2)));
+      publicBpZoom = Math.max(1.0, Math.min(3.5, +(publicBpZoom + delta).toFixed(2)));
       const canvas = document.getElementById('public-bp-canvas');
       const lbl = document.getElementById('zoom-3d-label');
       if (canvas) canvas.style.width = Math.round(publicBpZoom * 100) + '%';
@@ -967,14 +967,15 @@
 
         if (isSelected) {
           html += `
-            <div id="active-map-pin" style="left: ${lot.x_pct}%; top: ${lot.y_pct}%;" class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto">
-              <span class="absolute -inset-4 rounded-full bg-emerald-500/40 animate-ping"></span>
-              <div class="relative flex flex-col items-center">
-                <div class="px-2.5 py-1 rounded-xl bg-[#0B3B28] text-[#F3D082] border-2 border-[#F3D082] shadow-2xl text-[11px] font-black whitespace-nowrap flex items-center gap-1 -mt-9">
+            <div id="active-map-pin" style="left: ${lot.x_pct}%; top: ${lot.y_pct}%;" class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
+              <div class="relative flex items-center justify-center">
+                <span class="absolute w-16 h-16 rounded-full border-4 border-emerald-400/80 animate-ping"></span>
+                <!-- Aro verde transparente centrado sobre el número del lote para leer el plano sin taparlo -->
+                <div class="w-12 h-12 rounded-full border-[4px] border-[#10B981] bg-emerald-400/15 shadow-[0_0_0_3px_#0B3B28,0_8px_20px_rgba(0,0,0,0.35)]"></div>
+                <div class="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#0B3B28] text-[#F3D082] border-2 border-[#F3D082] shadow-xl text-[11px] font-black whitespace-nowrap flex items-center gap-1">
                   <span>📍 Lote #${lot.code}</span>
                   <span class="text-white font-bold">(${lot.area}m²)</span>
                 </div>
-                <div class="w-5 h-5 rounded-full bg-emerald-500 border-3 border-white shadow-xl ring-4 ring-[#0B3B28]"></div>
               </div>
             </div>
           `;
@@ -984,7 +985,7 @@
                     onclick="pickLotFromExplorer(${activePublicStage}, '${fullCode}', '${lot.code}', ${lot.area}, false)"
                     title="Lote #${lot.code} (${lot.area} m²) - Disponible"
                     style="left: ${lot.x_pct}%; top: ${lot.y_pct}%;"
-                    class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-3 h-3 rounded-full bg-emerald-500/85 hover:bg-emerald-600 hover:scale-150 border border-white shadow-xs transition pointer-events-auto cursor-pointer">
+                    class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-3.5 h-3.5 rounded-full border-2 border-emerald-600 bg-emerald-400/25 hover:bg-emerald-500/60 hover:scale-150 transition pointer-events-auto cursor-pointer">
             </button>
           `;
         }
@@ -1005,27 +1006,37 @@
       const found = avail.find(x => `E${activePublicStage}-L${x.code}` === chosenSpecificLotCode);
       if (!found || found.x_pct == null || found.y_pct == null) return;
 
-      // Acercar ligeramente el plano para que se vea claro el lote seleccionado
-      if (publicBpZoom < 1.5) {
-        publicBpZoom = 1.6;
-        const canvas = document.getElementById('public-bp-canvas');
-        const lbl = document.getElementById('zoom-3d-label');
-        if (canvas) canvas.style.width = '160%';
-        if (lbl) lbl.textContent = '160%';
+      const scrollBox = document.getElementById('public-bp-scroll');
+      const canvas = document.getElementById('public-bp-canvas');
+      const img = document.getElementById('stage-blueprint-img');
+      const lbl = document.getElementById('zoom-3d-label');
+      if (!scrollBox || !canvas || !img) return;
+
+      // Hacer zoom a 220% inmediatamente para que el número del lote se lea con claridad en el plano
+      if (publicBpZoom < 2.2) {
+        publicBpZoom = 2.2;
+        canvas.style.width = '220%';
+        if (lbl) lbl.textContent = '220%';
       }
 
-      setTimeout(() => {
-        const scrollBox = document.getElementById('public-bp-scroll');
-        const canvas = document.getElementById('public-bp-canvas');
-        if (!scrollBox || !canvas) return;
-        const targetX = (canvas.scrollWidth * (found.x_pct / 100)) - (scrollBox.clientWidth / 2);
-        const targetY = (canvas.scrollHeight * (found.y_pct / 100)) - (scrollBox.clientHeight / 2);
+      const doScroll = () => {
+        const w = canvas.offsetWidth || img.offsetWidth;
+        const h = canvas.offsetHeight || img.offsetHeight;
+        if (!w || !h) return;
+        const targetX = (w * (found.x_pct / 100.0)) - (scrollBox.clientWidth / 2.0);
+        const targetY = (h * (found.y_pct / 100.0)) - (scrollBox.clientHeight / 2.0);
         scrollBox.scrollTo({
-          left: Math.max(0, targetX),
-          top: Math.max(0, targetY),
+          left: Math.max(0, Math.round(targetX)),
+          top: Math.max(0, Math.round(targetY)),
           behavior: 'smooth'
         });
-      }, 60);
+      };
+
+      if (img.complete && img.naturalWidth > 0) {
+        requestAnimationFrame(doScroll);
+      } else {
+        img.onload = () => requestAnimationFrame(doScroll);
+      }
     }
 
     function setSimLot(price, label) {
@@ -1376,11 +1387,12 @@
     // 2. Cargar los 1,530 lotes oficiales (569 disponibles) desde blueprints_summary.json
     (async function loadPublicLotsInventory() {
       try {
-        const res = await fetch('/assets/la-estrella/blueprints_summary.json');
+        const res = await fetch('/assets/la-estrella/blueprints_summary.json?v=20261020c');
         publicBlueprintData = await res.json();
         populateSpecificLotDropdown(activePublicStage);
         renderPublicLots();
         renderBlueprintMapPins();
+        centerOnSelectedLot();
       } catch (e) {
         console.error('Error cargando inventario de lotes:', e);
       }
