@@ -563,7 +563,7 @@
           <div class="lg:col-span-7 bg-white rounded-lg border border-[#E5E7EB] flex flex-col overflow-hidden h-[560px] shadow-2xs">
             <div class="px-4 py-2.5 border-b border-[#E5E7EB] bg-[#FAFAFA] flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2">
-                <span id="bp-viewer-title" class="font-bold text-xs text-slate-800">PLANO ACTUALIZADO LA ESTRELLA ETAPA 1 (OCTUBRE 18 DE 2026)</span>
+                <span id="bp-viewer-title" class="font-bold text-xs text-slate-800">PLANO ACTUALIZADO LA ESTRELLA ETAPA 1 (HOY EN VIVO)</span>
               </div>
               <div class="flex items-center gap-1.5">
                 <button onclick="zoomBlueprint(-0.25)" class="px-2 py-1 rounded border border-[#D9D9D9] bg-white hover:bg-slate-50 text-xs font-bold cursor-pointer" title="Alejar">-</button>
@@ -1550,7 +1550,8 @@
         img.style.width = '100%';
       }
       if (pdfLink) pdfLink.href = `/assets/la-estrella/plano-etapa-${stage}.pdf`;
-      if (title) title.textContent = `PLANO ACTUALIZADO LA ESTRELLA ETAPA ${stage} (OCTUBRE 18 DE 2026)`;
+      const todayUpper = new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+      if (title) title.textContent = `PLANO ACTUALIZADO LA ESTRELLA ETAPA ${stage} (HOY, ${todayUpper})`;
       const zoomLbl = document.getElementById('bp-zoom-label');
       if (zoomLbl) zoomLbl.textContent = '100%';
       renderLots();
@@ -1638,7 +1639,7 @@
       gridEl.innerHTML = filtered.slice(0, 140).map(item => {
         const isAvail = item.status === 'available';
         const isRes = item.status === 'reserved';
-        const priceCop = item.area >= 200 ? 42000000 : item.area >= 150 ? 32000000 : 27000000;
+        const priceCop = (activeBlueprintStage === 1 || item.area >= 180) ? 42000000 : item.area >= 140 ? 32000000 : 27000000;
         const badge = isAvail
           ? '<span class="px-2 py-0.5 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[10px] font-bold">🟢 DISPONIBLE</span>'
           : isRes
