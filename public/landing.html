@@ -258,7 +258,7 @@
       <!-- TARJETA 1: ETAPA 3 (114 m²) -->
       <div class="bg-white rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col">
         <div class="relative h-56 overflow-hidden">
-          <img src="/assets/la-estrella/frame_6.jpg" alt="Etapa 3 Lote 114m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <img src="/assets/la-estrella/reels/reel-10.jpg" alt="Etapa 3 Lote 114m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
           <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 3 · Caño Corcobado</span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">169 Disponibles de 573</span>
         </div>
@@ -291,7 +291,7 @@
           ⭐ El Favorito de las Familias · Mejor Relación Área / Precio
         </div>
         <div class="relative h-56 overflow-hidden">
-          <img src="/assets/la-estrella/frame_9.jpg" alt="Etapa 2 Lote 152m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <img src="/assets/la-estrella/reels/reel-02.jpg" alt="Etapa 2 Lote 152m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
           <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 2 · Zona Plana Central</span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">298 Disponibles de 525</span>
         </div>
@@ -321,7 +321,7 @@
       <!-- TARJETA 3: ETAPA 1 (190 m²) -->
       <div class="bg-white rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col">
         <div class="relative h-56 overflow-hidden">
-          <img src="/assets/la-estrella/frame_3.jpg" alt="Etapa 1 Lote 190m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <img src="/assets/la-estrella/reels/reel-07.jpg" alt="Etapa 1 Lote 190m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
           <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 1 · Lago & Vía Principal</span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-amber-600 text-white text-xs font-extrabold">¡Últimos 102 de 432!</span>
         </div>
@@ -630,6 +630,48 @@
 
       </div>
 
+      <!-- =================================================================
+           FILA 1B: LOS 12 VIDEOS NUEVOS EN DRON Y A PIE DE LOTE (CONECTADOS A CADA ETAPA)
+           ================================================================= -->
+      <div id="videos-terreno" class="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200 shadow-md space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0B3B28] text-[11px] font-extrabold uppercase tracking-wider">
+              <span>🎥 12 Videos Oficiales Recientes</span>
+              <span>·</span>
+              <span>Vías Afirmadas, Mojones y Lago Real</span>
+            </div>
+            <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 mt-1.5">
+              Conoce en Video el Terreno Real antes de Escoger tu Lote
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
+              Mira cómo están hoy las vías recebadas, los mojones blancos instalados por lote, la maquinaria trabajando y el acceso a 10 metros de la Vía Nacional pavimentada.
+            </p>
+          </div>
+
+          <!-- Filtros rápidos de los 12 videos por Etapa -->
+          <div class="flex flex-wrap gap-1.5 shrink-0">
+            <button type="button" onclick="filterReels('all')" id="reel-tab-all" class="px-3 py-2 rounded-xl bg-[#0B3B28] text-[#F3D082] text-xs font-extrabold cursor-pointer transition shadow-xs">
+              🎬 Todos (12)
+            </button>
+            <button type="button" onclick="filterReels(1)" id="reel-tab-1" class="px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-extrabold cursor-pointer transition">
+              🌊 Etapa 1 · Lago & Vía (4)
+            </button>
+            <button type="button" onclick="filterReels(2)" id="reel-tab-2" class="px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-extrabold cursor-pointer transition">
+              ⭐ Etapa 2 · Lotes & Mojones (4)
+            </button>
+            <button type="button" onclick="filterReels(3)" id="reel-tab-3" class="px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-extrabold cursor-pointer transition">
+              🚜 Etapa 3 · Obra & Montaña (4)
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de los 12 Videos Reales (Reproducción directa o en pantalla grande) -->
+        <div id="reels-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+          <!-- Se renderiza con los 12 videos nuevos (reel-01 a reel-12) -->
+        </div>
+      </div>
+
       <!-- FILA 2: FORMULARIO DE AGENDAMIENTO DE CITA CON EL LOTE SELECCIONADO Y DÍA AUTOMÁTICO -->
       <div id="cotizador" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-[#0B3B28]">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -879,6 +921,28 @@
     </div>
   </div>
 
+  <!-- MODAL REPRODUCTOR DE LOS 12 VIDEOS NUEVOS EN PANTALLA GRANDE -->
+  <div id="modal-reel" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden items-center justify-center p-4" onclick="closeReelModal(event)">
+    <div class="bg-stone-950 border border-stone-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col" onclick="event.stopPropagation()">
+      <div class="px-4 py-3 bg-stone-900 border-b border-stone-800 flex items-center justify-between gap-2">
+        <div class="truncate">
+          <span id="modal-reel-badge" class="text-[10px] font-extrabold uppercase text-[#F3D082] block">Etapa 2 · Video Real</span>
+          <h4 id="modal-reel-title" class="text-xs font-extrabold text-white truncate">Recorrido en Dron</h4>
+        </div>
+        <button type="button" onclick="closeReelModal()" class="w-8 h-8 rounded-full bg-stone-800 hover:bg-stone-700 text-white font-black text-sm flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+      <div class="relative bg-black flex items-center justify-center max-h-[70vh]">
+        <video id="modal-reel-video" controls playsinline autoplay loop class="max-h-[70vh] w-auto mx-auto"></video>
+      </div>
+      <div class="p-3.5 bg-stone-900 border-t border-stone-800 flex items-center justify-between gap-2">
+        <p id="modal-reel-desc" class="text-[11px] text-stone-300 leading-snug flex-1"></p>
+        <button type="button" id="modal-reel-cta" onclick="closeReelModal()" class="px-3 py-2 rounded-xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-[11px] shrink-0 cursor-pointer">
+          📍 Ver Lotes en Mapa
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL DE CONFIRMACIÓN Y REDIRECCIÓN DIRECTA A WHATSAPP HUMANO + CRM -->
   <div id="modal-success" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-stone-200">
@@ -902,6 +966,193 @@
   </div>
 
   <script>
+    // Los 12 Videos Oficiales Recientes cargados desde D:\NODIA\Proyecto Lotes La Estrella
+    const REELS_DATA = [
+      {
+        id: 'reel-02',
+        stage: 2,
+        stageBadge: '⭐ Etapa 2 · Zona Central',
+        duration: '34s',
+        title: 'Vista Cenital Dron: Manzanas, Vías y Lago',
+        desc: 'Trazado completo de las vías internas afirmadas, manzanas demarcadas y conexión al lago natural.'
+      },
+      {
+        id: 'reel-05',
+        stage: 2,
+        stageBadge: '⭐ Etapa 2 · Lotes 152m²',
+        duration: '20s',
+        title: 'Lotes Amojonados al Nivel del Terreno',
+        desc: 'Recorrido mostrando los mojones blancos instalados lote por lote sobre topografía 100% plana.'
+      },
+      {
+        id: 'reel-11',
+        stage: 2,
+        stageBadge: '⭐ Etapa 2 · Vías de 7m',
+        duration: '30s',
+        title: 'Recorrido por Calles Recebadas y Mojones',
+        desc: 'Vista real a pie de lote verificando el ancho de las vías internas y la demarcación de cada manzana.'
+      },
+      {
+        id: 'reel-04',
+        stage: 2,
+        stageBadge: '⭐ Etapa 2 · Avance de Obra',
+        duration: '20s',
+        title: 'Descarga de Material y Afirmado de Vías',
+        desc: 'Volqueta y retroexcavadora conformando las vías vehiculares internas junto al cerramiento.'
+      },
+      {
+        id: 'reel-07',
+        stage: 1,
+        stageBadge: '🌊 Etapa 1 · Lago Central',
+        duration: '15s',
+        title: 'Gran Vista Aérea del Lago Central e Isla',
+        desc: 'Panorámica del espejo de agua natural con isla central y las manzanas de Etapa 1 y Etapa 2.'
+      },
+      {
+        id: 'reel-03',
+        stage: 1,
+        stageBadge: '🌊 Etapa 1 · Lotes 190m²',
+        duration: '12s',
+        title: 'Vuelo Dron sobre Etapa 1 y Espejo de Agua',
+        desc: 'Vías principales conectando los lotes de 190 m² directamente hacia el reservorio natural.'
+      },
+      {
+        id: 'reel-08',
+        stage: 1,
+        stageBadge: '🛣️ Etapa 1 · Vía Nacional',
+        duration: '19s',
+        title: 'Acceso a 10m de la Vía Nacional Pavimentada',
+        desc: 'Ubicación exacta sobre la vía pavimentada Villavicencio – Acacías, sin trochas.'
+      },
+      {
+        id: 'reel-09',
+        stage: 1,
+        stageBadge: '🛣️ Etapa 1 · Portería',
+        duration: '19s',
+        title: 'Tráfico Real sobre Corredor Vial Nacional',
+        desc: 'Conectividad inmediata a 15 min de Villavicencio y 7 min de Acacías frente a la entrada.'
+      },
+      {
+        id: 'reel-10',
+        stage: 3,
+        stageBadge: '⛰️ Etapa 3 · Lotes 114m²',
+        duration: '23s',
+        title: 'Vuelo Rasante hacia la Cordillera Llanera',
+        desc: 'Paisaje verde, brisa de piedemonte y vías trazadas en la zona de lotes desde $27M.'
+      },
+      {
+        id: 'reel-06',
+        stage: 3,
+        stageBadge: '🏡 Etapa 3 · Vecindario',
+        duration: '20s',
+        title: 'Entorno de Quintas Campestres Consolidadas',
+        desc: 'Sector rodeado de casas quintas construidas y naturaleza que impulsa la valorización.'
+      },
+      {
+        id: 'reel-01',
+        stage: 3,
+        stageBadge: '🚜 Etapa 3 · Maquinaria',
+        duration: '9s',
+        title: 'Maquinaria Pesada Trabajando en Terreno',
+        desc: 'Retroexcavadora y bulldozer en obra adecuando las zonas del proyecto.'
+      },
+      {
+        id: 'reel-12',
+        stage: 3,
+        stageBadge: '⛰️ Etapa 3 · Vías Listas',
+        duration: '12s',
+        title: 'Acabado de Vías Internas y Vista a la Montaña',
+        desc: 'Detalle a nivel de calle del recebo compactado y los mojones con la cordillera al fondo.'
+      }
+    ];
+
+    let activeReelFilter = 'all';
+
+    function renderReels() {
+      const grid = document.getElementById('reels-grid');
+      if (!grid) return;
+      const list = activeReelFilter === 'all'
+        ? REELS_DATA
+        : REELS_DATA.filter(r => r.stage === Number(activeReelFilter));
+
+      grid.innerHTML = list.map(r => `
+        <div onclick="openReelModal('${r.id}')"
+             class="group relative rounded-2xl overflow-hidden bg-stone-900 border border-stone-200 shadow-sm hover:shadow-xl transition cursor-pointer flex flex-col">
+          <div class="relative aspect-[9/14] w-full overflow-hidden bg-stone-950">
+            <img src="/assets/la-estrella/reels/${r.id}.jpg" alt="${r.title}" loading="lazy"
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/30"></div>
+            <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-xs text-[#F3D082] text-[10px] font-extrabold">
+              ${r.stageBadge}
+            </span>
+            <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/70 text-white text-[10px] font-bold mono">
+              ▶ ${r.duration}
+            </span>
+            <!-- Botón central Play -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-[#25D366]/95 group-hover:bg-[#25D366] text-slate-950 flex items-center justify-center shadow-xl group-hover:scale-110 transition">
+                <svg class="w-5 h-5 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="absolute bottom-2.5 inset-x-2.5 text-white">
+              <div class="font-extrabold text-xs leading-snug line-clamp-2">${r.title}</div>
+              <div class="text-[10.5px] text-stone-300 mt-0.5 line-clamp-2">${r.desc}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterReels(stageOrAll) {
+      activeReelFilter = stageOrAll;
+      ['all', 1, 2, 3].forEach(k => {
+        const btn = document.getElementById('reel-tab-' + k);
+        if (!btn) return;
+        if (String(k) === String(stageOrAll)) {
+          btn.className = 'px-3 py-2 rounded-xl bg-[#0B3B28] text-[#F3D082] text-xs font-extrabold cursor-pointer transition shadow-xs';
+        } else {
+          btn.className = 'px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-extrabold cursor-pointer transition';
+        }
+      });
+      renderReels();
+    }
+
+    function openReelModal(reelId) {
+      const r = REELS_DATA.find(x => x.id === reelId);
+      if (!r) return;
+      const modal = document.getElementById('modal-reel');
+      const vid = document.getElementById('modal-reel-video');
+      document.getElementById('modal-reel-badge').textContent = `${r.stageBadge} · Video Oficial (${r.duration})`;
+      document.getElementById('modal-reel-title').textContent = r.title;
+      document.getElementById('modal-reel-desc').textContent = r.desc;
+      const ctaBtn = document.getElementById('modal-reel-cta');
+      if (ctaBtn) {
+        ctaBtn.onclick = () => {
+          closeReelModal();
+          switchStageTab(r.stage);
+          document.getElementById('planos').scrollIntoView({ behavior: 'smooth' });
+        };
+      }
+      vid.poster = `/assets/la-estrella/reels/${r.id}.jpg`;
+      vid.src = `/assets/la-estrella/reels/${r.id}.mp4`;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      vid.play().catch(() => {});
+    }
+
+    function closeReelModal() {
+      const modal = document.getElementById('modal-reel');
+      const vid = document.getElementById('modal-reel-video');
+      if (vid) {
+        vid.pause();
+        vid.removeAttribute('src');
+      }
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
     const STAGE_CONFIG = {
       1: {
         img: '/assets/la-estrella/plano-etapa-1.png',
@@ -1384,7 +1635,8 @@
       }
     })();
 
-    // 2. Cargar los 1,530 lotes oficiales (569 disponibles) desde blueprints_summary.json
+    // 2. Renderizar los 12 videos nuevos y cargar los 1,530 lotes oficiales (569 disponibles)
+    renderReels();
     (async function loadPublicLotsInventory() {
       try {
         const res = await fetch('/assets/la-estrella/blueprints_summary.json?v=20261020c');
