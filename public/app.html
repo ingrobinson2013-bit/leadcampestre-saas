@@ -576,10 +576,12 @@
               </div>
             </div>
 
-            <div class="flex-1 overflow-auto bg-white p-3 flex items-start justify-center relative">
-              <img id="bp-image" src="/assets/la-estrella/plano-etapa-1.png" alt="Plano Proyecto La Estrella"
-                   style="width: 100%; max-width: none; transition: width 0.15s ease;"
-                   class="rounded border border-slate-200 shadow-xs">
+            <div id="bp-scroll" class="flex-1 overflow-auto bg-white p-3 relative">
+              <div id="bp-canvas" class="relative mx-auto" style="width: 100%; max-width: none; transition: width 0.25s ease;">
+                <img id="bp-image" src="/assets/la-estrella/plano-etapa-1.png" alt="Plano Proyecto La Estrella"
+                     class="w-full h-auto block rounded border border-slate-200 shadow-xs select-none">
+                <div id="bp-pins-layer" class="absolute inset-0 pointer-events-none"></div>
+              </div>
             </div>
           </div>
 
@@ -1532,9 +1534,12 @@
       document.getElementById('calc-month').textContent = fmt((price * 0.6) / 18) + ' /mes';
     }
 
+    let selectedCrmLotCode = '';
+
     function selectBlueprintStage(stage) {
       activeBlueprintStage = stage;
       blueprintZoom = 1.0;
+      selectedCrmLotCode = '';
       [1, 2, 3].forEach(s => {
         const btn = document.getElementById('stage-btn-' + s);
         if (!btn) return;
@@ -1543,12 +1548,11 @@
           : 'p-3.5 rounded-lg border border-[#E5E7EB] bg-white hover:border-[#1677FF] text-left transition cursor-pointer flex items-center justify-between';
       });
       const img = document.getElementById('bp-image');
+      const canvas = document.getElementById('bp-canvas');
       const pdfLink = document.getElementById('bp-pdf-link');
       const title = document.getElementById('bp-viewer-title');
-      if (img) {
-        img.src = `/assets/la-estrella/plano-etapa-${stage}.png`;
-        img.style.width = '100%';
-      }
+      if (img) img.src = `/assets/la-estrella/plano-etapa-${stage}.png`;
+      if (canvas) canvas.style.width = '100%';
       if (pdfLink) pdfLink.href = `/assets/la-estrella/plano-etapa-${stage}.pdf`;
       const todayUpper = new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
       if (title) title.textContent = `PLANO ACTUALIZADO LA ESTRELLA ETAPA ${stage} (HOY, ${todayUpper})`;
@@ -1559,18 +1563,76 @@
 
     function zoomBlueprint(delta) {
       blueprintZoom = Math.min(3.5, Math.max(0.5, blueprintZoom + delta));
-      const img = document.getElementById('bp-image');
+      const canvas = document.getElementById('bp-canvas');
       const zoomLbl = document.getElementById('bp-zoom-label');
-      if (img) img.style.width = Math.round(blueprintZoom * 100) + '%';
+      if (canvas) canvas.style.width = Math.round(blueprintZoom * 100) + '%';
       if (zoomLbl) zoomLbl.textContent = Math.round(blueprintZoom * 100) + '%';
     }
 
     function resetBlueprintZoom() {
       blueprintZoom = 1.0;
-      const img = document.getElementById('bp-image');
+      const canvas = document.getElementById('bp-canvas');
       const zoomLbl = document.getElementById('bp-zoom-label');
-      if (img) img.style.width = '100%';
+      if (canvas) canvas.style.width = '100%';
       if (zoomLbl) zoomLbl.textContent = '100%';
+    }
+
+    function focusCrmLotOnMap(code) {
+      selectedCrmLotCode = String(code);
+      renderLots();
+      const stageData = blueprintSummary?.[String(activeBlueprintStage)];
+      const lotObj = (stageData?.available_lots || []).find(x => String(x.code) === String(code));
+      if (!lotObj || lotObj.x_pct === undefined) return;
+      const scrollBox = document.getElementById('bp-scroll');
+      const canvas = document.getElementById('bp-canvas');
+      const zoomLbl = document.getElementById('bp-zoom-label');
+      if (!scrollBox || !canvas) return;
+      if (blueprintZoom < 1.6) {
+        blueprintZoom = 1.6;
+        canvas.style.width = '160%';
+        if (zoomLbl) zoomLbl.textContent = '160%';
+      }
+      setTimeout(() => {
+        const targetX = (lotObj.x_pct / 100) * canvas.offsetWidth;
+        const targetY = (lotObj.y_pct / 100) * canvas.offsetHeight;
+        scrollBox.scrollTo({
+          left: Math.max(0, targetX - scrollBox.clientWidth / 2),
+          top: Math.max(0, targetY - scrollBox.clientHeight / 2),
+          behavior: 'smooth'
+        });
+      }, 60);
+    }
+
+    function renderCrmMapPins() {
+      const layer = document.getElementById('bp-pins-layer');
+      if (!layer) return;
+      const stageData = blueprintSummary?.[String(activeBlueprintStage)];
+      if (!stageData) { layer.innerHTML = ''; return; }
+      const avail = stageData.available_lots || [];
+      layer.innerHTML = avail.map(x => {
+        if (x.x_pct === undefined || x.y_pct === undefined) return '';
+        const isSel = String(x.code) === String(selectedCrmLotCode);
+        const area = x.area || (activeBlueprintStage === 1 ? 190 : activeBlueprintStage === 2 ? 152 : 114);
+        if (isSel) {
+          return `
+            <div onclick="focusCrmLotOnMap('${x.code}')"
+                 style="left:${x.x_pct}%; top:${x.y_pct}%;"
+                 class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto cursor-pointer">
+              <span class="absolute -inset-3 rounded-full bg-[#1677FF]/40 animate-ping"></span>
+              <div class="relative flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#064E3B] text-white border-2 border-[#FDE68A] shadow-xl whitespace-nowrap">
+                <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                <span class="text-[10px] font-black">📍 Lote #${x.code} (${area}m²)</span>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <button type="button" onclick="focusCrmLotOnMap('${x.code}')"
+                  title="Ubicar Lote #${x.code} (${area} m²)"
+                  style="left:${x.x_pct}%; top:${x.y_pct}%;"
+                  class="absolute -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#10B981]/85 hover:bg-[#1677FF] hover:scale-150 border border-white shadow-xs pointer-events-auto cursor-pointer transition"></button>
+        `;
+      }).join('');
     }
 
     function renderLots() {
@@ -1639,16 +1701,17 @@
       gridEl.innerHTML = filtered.slice(0, 140).map(item => {
         const isAvail = item.status === 'available';
         const isRes = item.status === 'reserved';
+        const isSelected = String(item.num) === String(selectedCrmLotCode);
         const priceCop = (activeBlueprintStage === 1 || item.area >= 180) ? 42000000 : item.area >= 140 ? 32000000 : 27000000;
         const badge = isAvail
-          ? '<span class="px-2 py-0.5 rounded bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D] text-[10px] font-bold">🟢 DISPONIBLE</span>'
+          ? `<span class="px-2 py-0.5 rounded ${isSelected ? 'bg-[#064E3B] text-white' : 'bg-[#F6FFED] border border-[#B7EB8F] text-[#389E0D]'} text-[10px] font-bold">${isSelected ? '📍 EN MAPA' : '🟢 DISPONIBLE'}</span>`
           : isRes
           ? '<span class="px-2 py-0.5 rounded bg-[#FFF7E6] border border-[#FFD591] text-[#FA8C16] text-[10px] font-bold">🟡 SEPARADO</span>'
           : '<span class="px-2 py-0.5 rounded bg-[#FFF1F0] border border-[#FFA39E] text-[#CF1322] text-[10px] font-bold">🔴 VENDIDO ●</span>';
 
         return `
-          <div ${item.id ? `onclick="toggleLotStatus(${item.id})"` : ''}
-               class="p-3 rounded-md bg-white border ${isAvail ? 'border-[#E5E7EB] hover:border-[#1677FF]' : 'border-slate-200 opacity-80'} shadow-2xs transition ${item.id ? 'cursor-pointer' : ''}">
+          <div onclick="${isAvail ? `focusCrmLotOnMap('${item.num}')` : (item.id ? `toggleLotStatus(${item.id})` : '')}"
+               class="p-3 rounded-md border ${isSelected ? 'border-2 border-[#1677FF] bg-[#E6F4FF]/40 ring-2 ring-[#1677FF]/15' : isAvail ? 'bg-white border-[#E5E7EB] hover:border-[#1677FF]' : 'bg-white border-slate-200 opacity-80'} shadow-2xs transition cursor-pointer">
             <div class="flex items-center justify-between gap-1">
               <span class="font-bold text-xs text-slate-900">Lote #${item.num} <span class="text-slate-400 font-normal">(${item.code})</span></span>
               ${badge}
@@ -1657,12 +1720,15 @@
               <span>📐 Área: <strong>${item.area} m²</strong></span>
               <span class="font-bold text-[#1677FF]">${fmt(priceCop)}</span>
             </div>
-            <div class="text-[10.5px] text-slate-500 mt-1 truncate">
-              ${item.buyer ? '👤 ' + item.buyer : (item.features || 'Separa con $500.000 · 18 meses 0%')}
+            <div class="flex items-center justify-between text-[10.5px] text-slate-500 mt-1">
+              <span class="truncate">${isAvail ? '📍 Clic para ubicar en el plano' : (item.buyer ? '👤 ' + item.buyer : 'Vendido')}</span>
+              ${item.id ? `<button onclick="event.stopPropagation(); toggleLotStatus(${item.id})" class="text-[10px] text-[#1677FF] hover:underline font-semibold ml-1 cursor-pointer">Cambiar estado</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
+
+      renderCrmMapPins();
     }
 
     async function toggleLotStatus(lotId) {

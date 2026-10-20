@@ -498,14 +498,14 @@
   <section id="planos" class="py-14 bg-stone-100/90 border-y border-stone-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
 
-      <!-- CABECERA DEL EXPLORADOR 3D Y LOTES DISPONIBLES -->
+      <!-- CABECERA DEL EXPLORADOR DE PLANOS Y LOTES DISPONIBLES -->
       <div class="text-center max-w-3xl mx-auto">
-        <span class="px-3 py-1 rounded-full bg-emerald-100 text-[#0B3B28] text-xs font-extrabold uppercase tracking-wider">🌍 Recorrido 3D Interactivo + Inventario Oficial (<span class="live-today-date">Actualizado Hoy</span>)</span>
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-[#0B3B28] text-xs font-extrabold uppercase tracking-wider">🗺️ Planos e Inventario Oficial (<span class="live-today-date">Actualizado Hoy</span>)</span>
         <h2 class="serif-title text-3xl sm:text-4xl font-bold text-stone-900 mt-3">
-          Explora el Proyecto en 3D y Escoge tu # de Lote Disponible
+          Selecciona un Lote Disponible y Ubícalo en el Mapa
         </h2>
         <p class="text-xs sm:text-sm text-stone-600 mt-2">
-          Haz clic en los puntos de cámara del <strong>Mapa 3D</strong> para ver cada zona en dron real, revisa los lotes con punto blanco (<strong>○ Disponibles</strong>) y haz clic en el número de lote que te guste para agendar tu cita.
+          Haz clic en cualquier lote <strong>🟢 DISPONIBLE</strong> del listado (o directamente sobre los puntos verdes del plano) para que el mapa te muestre <strong>su ubicación exacta</strong> y quede pre-seleccionado para tu cita.
         </p>
       </div>
 
@@ -554,123 +554,60 @@
         </button>
       </div>
 
-      <!-- FILA 1: VISOR 3D INTERACTIVO (7 COLS) + BUSCADOR DE LOTES DISPONIBLES EN VIVO (5 COLS) -->
+      <!-- FILA 1: PLANO LIMPIO CON LOCALIZADOR DE LOTES (7 COLS) + BUSCADOR DE LOTES DISPONIBLES (5 COLS) -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
-        <!-- IZQUIERDA (7 cols): RECORRIDO 3D INTERACTIVO + PLANO CON ZOOM -->
-        <div class="lg:col-span-7 bg-white rounded-3xl border border-stone-200 shadow-md overflow-hidden flex flex-col">
-          <!-- Barra de Controles 3D / 2D -->
+        <!-- IZQUIERDA (7 cols): PLANO LIMPIO EN ALTA RESOLUCIÓN CON MARCADOR AUTOMÁTICO DEL LOTE SELECCIONADO -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-stone-200 shadow-md overflow-hidden flex flex-col h-[580px]">
+          <!-- Barra superior limpia estilo plano técnico -->
           <div class="px-4 py-3 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 bg-stone-200/80 p-1 rounded-xl">
-              <button type="button" id="btn-mode-3d" onclick="setExplorerMode('3d')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-[#0B3B28] text-[#F3D082] shadow-xs cursor-pointer transition">
-                🌍 Recorrido 3D Interactivo
-              </button>
-              <button type="button" id="btn-mode-2d" onclick="setExplorerMode('2d')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold text-stone-700 hover:bg-white cursor-pointer transition">
-                📐 Plano 2D + Lupa
-              </button>
+            <div class="flex items-center gap-2">
+              <span id="stage-blueprint-caption" class="font-extrabold text-xs text-stone-800">
+                PLANO ACTUALIZADO LA ESTRELLA ETAPA 2
+              </span>
+              <span id="map-selected-indicator" class="px-2.5 py-0.5 rounded-full bg-emerald-100 border border-emerald-400 text-[#0B3B28] text-[11px] font-black">
+                📍 Mostrando: Lote #61 (E2-L61)
+              </span>
             </div>
 
             <div class="flex items-center gap-1.5">
-              <button type="button" onclick="rotate3D(-12)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Girar Izquierda">↺ Girar</button>
-              <button type="button" onclick="rotate3D(12)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Girar Derecha">↻</button>
-              <button type="button" onclick="zoom3D(-0.2)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Alejar">−</button>
-              <button type="button" onclick="reset3DView()" id="zoom-3d-label" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-[11px] font-extrabold text-[#0B3B28] cursor-pointer">100%</button>
-              <button type="button" onclick="zoom3D(0.2)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Acercar">+</button>
-              <a id="stage-blueprint-pdf" href="/assets/la-estrella/plano-etapa-2.pdf" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-black transition">
-                📄 PDF ↗
+              <button type="button" onclick="zoomBlueprintPublic(-0.3)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Alejar">−</button>
+              <button type="button" onclick="resetBlueprintPublicZoom()" id="zoom-3d-label" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-[11px] font-extrabold text-[#0B3B28] cursor-pointer">100%</button>
+              <button type="button" onclick="zoomBlueprintPublic(0.3)" class="px-2.5 py-1 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 text-xs font-bold text-stone-800 cursor-pointer" title="Acercar">+</button>
+              <a id="stage-blueprint-pdf" href="/assets/la-estrella/plano-etapa-2.pdf" target="_blank" class="ml-1 px-3 py-1 rounded-lg bg-[#0B3B28] hover:bg-emerald-900 text-[#F3D082] text-[11px] font-extrabold transition">
+                📄 Abrir PDF Original ↗
               </a>
             </div>
           </div>
 
-          <!-- ESCENARIO 3D / 2D -->
-          <div class="scene-3d-viewport relative flex-1 min-h-[430px] sm:min-h-[470px] flex items-center justify-center p-4 select-none">
-            <!-- Indicador superior flotante -->
-            <div class="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-2 pointer-events-none">
-              <span id="stage-blueprint-caption" class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-emerald-300 text-[11px] font-extrabold border border-white/15">
-                Etapa 2 · Zona Plana Central (152 m²) · 298 Lotes Disponibles
-              </span>
-              <span class="px-2.5 py-1 rounded-full bg-amber-400/95 text-slate-950 text-[10px] font-black">
-                👆 Toca las cámaras en el mapa 3D
-              </span>
-            </div>
-
-            <!-- Placa 3D del Plano con Pines Interactivos -->
-            <div id="terrain-3d-board" class="terrain-3d-plane relative bg-white rounded-2xl p-2 max-w-[92%] max-h-[400px]" style="transform: rotateX(34deg) rotateZ(-6deg) scale(1);">
-              <img id="stage-blueprint-img" src="/assets/la-estrella/plano-etapa-2.png" alt="Plano Proyecto La Estrella" class="w-full h-[360px] sm:h-[385px] object-contain rounded-xl cursor-zoom-in" onclick="openImgModal(this.src, document.getElementById('stage-blueprint-caption').textContent)" />
-
-              <!-- PIN 3D 1: Portería Principal (A 10m Vía Nacional) -->
-              <button type="button" onclick="open3DHotspot('porteria')" style="top: 18%; left: 22%;" class="pin-3d absolute z-20 px-2.5 py-1 rounded-full bg-[#0B3B28] text-[#F3D082] border-2 border-[#F3D082] shadow-xl text-[10px] font-black flex items-center gap-1 cursor-pointer">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>🚧 Portería Vía Nacional</span>
-              </button>
-
-              <!-- PIN 3D 2: Lago Central (Etapa 1) -->
-              <button type="button" onclick="open3DHotspot('lago')" style="top: 62%; left: 28%;" class="pin-3d absolute z-20 px-2.5 py-1 rounded-full bg-sky-700 text-white border-2 border-white shadow-xl text-[10px] font-black flex items-center gap-1 cursor-pointer">
-                <span>🌊 Lago Central (E1)</span>
-              </button>
-
-              <!-- PIN 3D 3: Zona Plana Central (Etapa 2) -->
-              <button type="button" onclick="open3DHotspot('plana')" style="top: 45%; left: 56%;" class="pin-3d absolute z-20 px-2.5 py-1 rounded-full bg-emerald-600 text-white border-2 border-amber-300 shadow-xl text-[10px] font-black flex items-center gap-1 cursor-pointer">
-                <span>🏡 Zona Plana 152m² (E2)</span>
-              </button>
-
-              <!-- PIN 3D 4: Reserva Caño Corcobado (Etapa 3) -->
-              <button type="button" onclick="open3DHotspot('corcobado')" style="top: 74%; left: 72%;" class="pin-3d absolute z-20 px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 border-2 border-white shadow-xl text-[10px] font-black flex items-center gap-1 cursor-pointer">
-                <span>🌿 Caño Corcobado 114m² (E3)</span>
-              </button>
-
-              <!-- PIN 3D 5: Vuelo Dron 360 -->
-              <button type="button" onclick="open3DHotspot('dron')" style="top: 24%; left: 76%;" class="pin-3d absolute z-20 px-2.5 py-1 rounded-full bg-rose-600 text-white border-2 border-white shadow-xl text-[10px] font-black flex items-center gap-1 cursor-pointer">
-                <span>🚁 Vuelo Dron 360°</span>
-              </button>
-            </div>
-
-            <!-- POPUP DE CÁMARA 3D EN EL TERRENO (Se abre al tocar cualquier Pin 3D) -->
-            <div id="hotspot-3d-card" class="hidden absolute inset-x-4 bottom-4 z-30 bg-stone-950/95 backdrop-blur-md border border-[#F3D082]/50 rounded-2xl p-3.5 text-white shadow-2xl">
-              <div class="flex flex-col sm:flex-row items-center gap-3.5">
-                <div id="hotspot-media-box" class="w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black shrink-0 border border-white/15">
-                  <img id="hotspot-img" src="/assets/la-estrella/frame_9.jpg" class="w-full h-full object-cover" />
-                </div>
-                <div class="flex-1 space-y-1.5 text-left">
-                  <div class="flex items-center justify-between gap-2">
-                    <span id="hotspot-badge" class="px-2 py-0.5 rounded bg-[#F3D082] text-slate-950 text-[10px] font-black uppercase">Cámara en Terreno</span>
-                    <button type="button" onclick="close3DHotspot()" class="text-stone-400 hover:text-white text-xs font-bold cursor-pointer">✕ Cerrar vista</button>
-                  </div>
-                  <h4 id="hotspot-title" class="text-sm font-extrabold text-white">Zona Plana Central · Etapa 2</h4>
-                  <p id="hotspot-desc" class="text-[11px] text-stone-300 leading-snug">Topografía 100% plana de 8m x 19m (152 m²), lista para construir casa campestre con piscina.</p>
-                  <div class="pt-1 flex flex-wrap items-center gap-2">
-                    <button type="button" id="hotspot-cta-btn" onclick="close3DHotspot()" class="px-3 py-1.5 rounded-lg bg-[#25D366] text-slate-950 text-[11px] font-black cursor-pointer">
-                      Ver Lotes Disponibles en este Sector →
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <!-- Visor del Plano en Blanco con Scroll y Pines de Lotes Disponibles -->
+          <div id="public-bp-scroll" class="flex-1 overflow-auto bg-white p-3 relative">
+            <div id="public-bp-canvas" class="relative inline-block w-full transition-all duration-200" style="width: 100%; max-width: none;">
+              <img id="stage-blueprint-img" src="/assets/la-estrella/plano-etapa-2.png" alt="Plano Proyecto La Estrella" class="block w-full h-auto rounded-lg border border-stone-200 select-none" />
+              <!-- Capa de puntos verdes de lotes disponibles + Pin del lote seleccionado -->
+              <div id="public-bp-pins-layer" class="absolute inset-0 pointer-events-none"></div>
             </div>
           </div>
 
-          <!-- Barra inferior de puntos rápidos del Recorrido 3D -->
-          <div class="px-4 py-2.5 bg-[#082619] text-white flex flex-wrap items-center justify-between gap-2 text-[11px]">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-amber-300 font-bold">🎥 Cámaras 3D:</span>
-              <button type="button" onclick="open3DHotspot('porteria')" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 cursor-pointer">1. Portería</button>
-              <button type="button" onclick="open3DHotspot('lago')" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 cursor-pointer">2. Lago E1</button>
-              <button type="button" onclick="open3DHotspot('plana')" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 cursor-pointer">3. Zona Plana E2</button>
-              <button type="button" onclick="open3DHotspot('corcobado')" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 cursor-pointer">4. Caño Corcobado E3</button>
-              <button type="button" onclick="open3DHotspot('dron')" class="px-2 py-1 rounded bg-rose-600/80 hover:bg-rose-600 font-bold cursor-pointer">🚁 Video Dron</button>
+          <!-- Pie del plano con leyenda clara -->
+          <div class="px-4 py-2.5 bg-stone-50 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-600">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow-xs inline-block"></span> <strong>Puntos Verdes:</strong> Lotes Disponibles (clic para seleccionar)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span> <strong>Punto Rojo:</strong> Vendido</span>
             </div>
-            <button type="button" onclick="openImgModal(document.getElementById('stage-blueprint-img').src, document.getElementById('stage-blueprint-caption').textContent)" class="text-[#F3D082] hover:underline font-extrabold cursor-pointer">
-              🔍 Ver Plano en Pantalla Completa
+            <button type="button" onclick="centerOnSelectedLot()" class="text-[#0B3B28] hover:underline font-extrabold cursor-pointer">
+              🎯 Centrar en el Lote Seleccionado
             </button>
           </div>
         </div>
 
         <!-- DERECHA (5 cols): BUSCADOR INTERACTIVO DE LOTES DISPONIBLES POR ETAPA (LOS 569 LOTES DISPONIBLES REALES) -->
-        <div class="lg:col-span-5 bg-white rounded-3xl border border-stone-200 shadow-md overflow-hidden flex flex-col h-[565px]">
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-stone-200 shadow-md overflow-hidden flex flex-col h-[580px]">
           <div class="p-4 border-b border-stone-200 bg-stone-50 space-y-2.5">
             <div class="flex items-center justify-between gap-2">
               <div>
                 <h3 class="font-extrabold text-sm text-stone-900">Buscador de Lotes por Etapa</h3>
-                <p class="text-[11px] text-stone-500">Haz clic en cualquier lote <strong>🟢 DISPONIBLE</strong> para elegirlo</p>
+                <p class="text-[11px] text-stone-500">Haz clic en cualquier lote <strong>🟢 DISPONIBLE</strong> para verlo en el mapa</p>
               </div>
               <span id="public-lots-count" class="px-2.5 py-1 rounded-full bg-emerald-100 text-[#0B3B28] text-[11px] font-extrabold">298 disponibles</span>
             </div>
@@ -710,7 +647,7 @@
             </div>
 
             <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-              Ya sea que hayas escogido un número de lote específico en el buscador de arriba (ej. <strong>Lote #61</strong> o <strong>Lote #112</strong>) o prefieras elegirlo en persona, agenda tu cita para recibir tu <strong>Pasaporte QR de ingreso</strong>.
+              Al seleccionar un lote disponible arriba en el mapa o en el listado (ej. <strong>Lote #61</strong> o <strong>Lote #74</strong>), queda guardado automáticamente aquí abajo para que lo revises en tu cita con tu <strong>Pasaporte QR</strong>.
             </p>
 
             <div class="rounded-2xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-950 space-y-1.5">
@@ -722,8 +659,8 @@
 
             <div class="rounded-2xl bg-[#FAF8F5] border border-stone-200 p-4 text-xs space-y-1.5">
               <div class="flex justify-between text-stone-600">
-                <span>Lote elegido para ver en la cita:</span>
-                <strong id="calc-selected-lot-badge" class="text-[#0B3B28] font-black mono">Etapa 2 · Lote #61 (152m²)</strong>
+                <span>Lote elegido en el mapa:</span>
+                <strong id="calc-selected-lot-badge" class="text-[#0B3B28] font-black mono">Etapa 2 · E2-L61 (152m²)</strong>
               </div>
               <div class="flex justify-between text-stone-600">
                 <span>Separación tras tu visita:</span>
@@ -784,7 +721,7 @@
                 <!-- SELECTOR EN VIVO DEL # DE LOTE DISPONIBLE DE ESA ETAPA -->
                 <div class="mt-2.5 bg-emerald-50/70 border border-emerald-600/40 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <label for="filter-specific-lot" class="text-[11px] font-extrabold text-[#0B3B28]">
-                    🎯 # de Lote Disponible en Plano:
+                    🎯 # de Lote Disponible en el Mapa:
                   </label>
                   <select id="filter-specific-lot" onchange="onSelectSpecificLotDropdown(this.value)" class="flex-1 rounded-lg bg-white border border-emerald-600/50 px-3 py-1.5 text-xs font-extrabold text-stone-900 focus:outline-none">
                     <!-- Se llena automáticamente con los lotes disponibles de la etapa elegida -->
@@ -969,63 +906,17 @@
       1: {
         img: '/assets/la-estrella/plano-etapa-1.png',
         pdf: '/assets/la-estrella/plano-etapa-1.pdf',
-        caption: 'Etapa 1 · Lago Central & Vía Nacional (190 m²) · 102 Lotes Disponibles de 432',
-        defaultRotZ: -8
+        caption: 'PLANO ACTUALIZADO LA ESTRELLA ETAPA 1'
       },
       2: {
         img: '/assets/la-estrella/plano-etapa-2.png',
         pdf: '/assets/la-estrella/plano-etapa-2.pdf',
-        caption: 'Etapa 2 · Zona Plana Central (152 m²) · 298 Lotes Disponibles de 525',
-        defaultRotZ: -5
+        caption: 'PLANO ACTUALIZADO LA ESTRELLA ETAPA 2'
       },
       3: {
         img: '/assets/la-estrella/plano-etapa-3.png',
         pdf: '/assets/la-estrella/plano-etapa-3.pdf',
-        caption: 'Etapa 3 · Caño Corcobado (114 m² y 152 m²) · 169 Lotes Disponibles de 573',
-        defaultRotZ: 6
-      }
-    };
-
-    const HOTSPOTS_3D = {
-      porteria: {
-        stage: 1,
-        badge: '📍 Acceso Principal · A 10m de la Vía Nacional',
-        title: 'Portería Monumental en Obra Física',
-        desc: 'Entrada directa a solo 10 metros de la Vía Nacional pavimentada Villavicencio–Acacías. Sin trochas y con control de acceso para propietarios.',
-        img: '/assets/la-estrella/ad1.1.png',
-        video: false
-      },
-      lago: {
-        stage: 1,
-        badge: '🌊 Etapa 1 · Lotes de 190 m² ($42M)',
-        title: 'Sector Lago Central & Vía Principal (102 Disponibles)',
-        desc: 'Lotes amplios de 10m × 19m alrededor del gran espejo de agua central. Ideales para quintas campestres de alta valorización.',
-        img: '/assets/la-estrella/frame_3.jpg',
-        video: false
-      },
-      plana: {
-        stage: 2,
-        badge: '🏡 Etapa 2 · Lotes de 152 m² ($32M)',
-        title: 'Zona Plana Central · La Favorita de las Familias (298 Disponibles)',
-        desc: 'Topografía 100% plana de 8m × 19m lista para construir casa de 2 niveles, piscina y zona BBQ con cuotas de $1.066.667 sin interés.',
-        img: '/assets/la-estrella/frame_9.jpg',
-        video: false
-      },
-      corcobado: {
-        stage: 3,
-        badge: '🌿 Etapa 3 · Lotes de 114 m² ($27M)',
-        title: 'Reserva Ecológica Caño Corcobado (169 Disponibles)',
-        desc: 'Lotes campestres desde $27.000.000 rodeados de naturaleza y senderos ecológicos, con cuotas de solo $900.000 al mes sin intereses.',
-        img: '/assets/la-estrella/frame_6.jpg',
-        video: false
-      },
-      dron: {
-        stage: 2,
-        badge: '🚁 Vuelo Real en Dron · 35 Hectáreas',
-        title: 'Recorrido Aéreo Completo por Proyecto La Estrella',
-        desc: 'Mira el trazado real de las vías internas, la cercanía a la Vía Nacional a Acacías y el entorno campestre en la Vereda Las Mercedes.',
-        img: '/assets/la-estrella/frame_9.jpg',
-        video: '/assets/la-estrella/hero-video.mp4'
+        caption: 'PLANO ACTUALIZADO LA ESTRELLA ETAPA 3'
       }
     };
 
@@ -1039,83 +930,102 @@
     let publicBlueprintData = null;
     let chosenSpecificLotCode = 'E2-L61';
     let chosenSpecificLotArea = 152;
-    let explorerMode = '3d';
-    let rotX = 34;
-    let rotZ = -5;
-    let scale3D = 1.0;
+    let publicBpZoom = 1.0;
 
     let simPrice = 32000000;
     let simLabel = 'Lote 152 m² (Etapa 2)';
 
-    function apply3DTransform() {
-      const board = document.getElementById('terrain-3d-board');
-      if (!board) return;
-      if (explorerMode === '3d') {
-        board.style.transform = `rotateX(${rotX}deg) rotateZ(${rotZ}deg) scale(${scale3D})`;
-      } else {
-        board.style.transform = `rotateX(0deg) rotateZ(0deg) scale(${scale3D})`;
-      }
+    function zoomBlueprintPublic(delta) {
+      publicBpZoom = Math.max(1.0, Math.min(3.0, +(publicBpZoom + delta).toFixed(2)));
+      const canvas = document.getElementById('public-bp-canvas');
       const lbl = document.getElementById('zoom-3d-label');
-      if (lbl) lbl.textContent = Math.round(scale3D * 100) + '%';
+      if (canvas) canvas.style.width = Math.round(publicBpZoom * 100) + '%';
+      if (lbl) lbl.textContent = Math.round(publicBpZoom * 100) + '%';
     }
 
-    function setExplorerMode(mode) {
-      explorerMode = mode;
-      const b3d = document.getElementById('btn-mode-3d');
-      const b2d = document.getElementById('btn-mode-2d');
-      if (mode === '3d') {
-        rotX = 34;
-        b3d.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-[#0B3B28] text-[#F3D082] shadow-xs cursor-pointer transition';
-        b2d.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold text-stone-700 hover:bg-white cursor-pointer transition';
-      } else {
-        rotX = 0;
-        rotZ = 0;
-        b2d.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold bg-[#0B3B28] text-[#F3D082] shadow-xs cursor-pointer transition';
-        b3d.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold text-stone-700 hover:bg-white cursor-pointer transition';
+    function resetBlueprintPublicZoom() {
+      publicBpZoom = 1.0;
+      const canvas = document.getElementById('public-bp-canvas');
+      const lbl = document.getElementById('zoom-3d-label');
+      if (canvas) canvas.style.width = '100%';
+      if (lbl) lbl.textContent = '100%';
+    }
+
+    function renderBlueprintMapPins() {
+      const layer = document.getElementById('public-bp-pins-layer');
+      if (!layer || !publicBlueprintData) return;
+      const stageData = publicBlueprintData[String(activePublicStage)];
+      if (!stageData) return;
+
+      const avail = stageData.available_lots || [];
+      let html = '';
+
+      avail.forEach(lot => {
+        if (lot.x_pct == null || lot.y_pct == null) return;
+        const fullCode = `E${activePublicStage}-L${lot.code}`;
+        const isSelected = fullCode === chosenSpecificLotCode;
+
+        if (isSelected) {
+          html += `
+            <div id="active-map-pin" style="left: ${lot.x_pct}%; top: ${lot.y_pct}%;" class="absolute -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto">
+              <span class="absolute -inset-4 rounded-full bg-emerald-500/40 animate-ping"></span>
+              <div class="relative flex flex-col items-center">
+                <div class="px-2.5 py-1 rounded-xl bg-[#0B3B28] text-[#F3D082] border-2 border-[#F3D082] shadow-2xl text-[11px] font-black whitespace-nowrap flex items-center gap-1 -mt-9">
+                  <span>📍 Lote #${lot.code}</span>
+                  <span class="text-white font-bold">(${lot.area}m²)</span>
+                </div>
+                <div class="w-5 h-5 rounded-full bg-emerald-500 border-3 border-white shadow-xl ring-4 ring-[#0B3B28]"></div>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <button type="button"
+                    onclick="pickLotFromExplorer(${activePublicStage}, '${fullCode}', '${lot.code}', ${lot.area}, false)"
+                    title="Lote #${lot.code} (${lot.area} m²) - Disponible"
+                    style="left: ${lot.x_pct}%; top: ${lot.y_pct}%;"
+                    class="absolute -translate-x-1/2 -translate-y-1/2 z-10 w-3 h-3 rounded-full bg-emerald-500/85 hover:bg-emerald-600 hover:scale-150 border border-white shadow-xs transition pointer-events-auto cursor-pointer">
+            </button>
+          `;
+        }
+      });
+
+      layer.innerHTML = html;
+      const ind = document.getElementById('map-selected-indicator');
+      if (ind) {
+        ind.textContent = `📍 Mostrando en mapa: ${chosenSpecificLotCode} (${chosenSpecificLotArea}m²)`;
       }
-      apply3DTransform();
     }
 
-    function rotate3D(deltaZ) {
-      explorerMode = '3d';
-      rotX = 34;
-      rotZ = Math.max(-35, Math.min(35, rotZ + deltaZ));
-      apply3DTransform();
-    }
+    function centerOnSelectedLot() {
+      if (!publicBlueprintData) return;
+      const stageData = publicBlueprintData[String(activePublicStage)];
+      if (!stageData) return;
+      const avail = stageData.available_lots || [];
+      const found = avail.find(x => `E${activePublicStage}-L${x.code}` === chosenSpecificLotCode);
+      if (!found || found.x_pct == null || found.y_pct == null) return;
 
-    function zoom3D(delta) {
-      scale3D = Math.max(0.75, Math.min(2.2, scale3D + delta));
-      apply3DTransform();
-    }
-
-    function reset3DView() {
-      scale3D = 1.0;
-      rotX = explorerMode === '3d' ? 34 : 0;
-      rotZ = explorerMode === '3d' ? (STAGE_CONFIG[activePublicStage]?.defaultRotZ || -5) : 0;
-      apply3DTransform();
-    }
-
-    function open3DHotspot(key) {
-      const h = HOTSPOTS_3D[key];
-      if (!h) return;
-      if (h.stage && h.stage !== activePublicStage) {
-        switchStageTab(h.stage);
+      // Acercar ligeramente el plano para que se vea claro el lote seleccionado
+      if (publicBpZoom < 1.5) {
+        publicBpZoom = 1.6;
+        const canvas = document.getElementById('public-bp-canvas');
+        const lbl = document.getElementById('zoom-3d-label');
+        if (canvas) canvas.style.width = '160%';
+        if (lbl) lbl.textContent = '160%';
       }
-      const card = document.getElementById('hotspot-3d-card');
-      const mediaBox = document.getElementById('hotspot-media-box');
-      document.getElementById('hotspot-badge').textContent = h.badge;
-      document.getElementById('hotspot-title').textContent = h.title;
-      document.getElementById('hotspot-desc').textContent = h.desc;
-      if (h.video) {
-        mediaBox.innerHTML = `<video src="${h.video}" autoplay muted loop playsinline controls class="w-full h-full object-cover"></video>`;
-      } else {
-        mediaBox.innerHTML = `<img src="${h.img}" class="w-full h-full object-cover cursor-pointer" onclick="openImgModal('${h.img}', '${h.title}')" />`;
-      }
-      card.classList.remove('hidden');
-    }
 
-    function close3DHotspot() {
-      document.getElementById('hotspot-3d-card')?.classList.add('hidden');
+      setTimeout(() => {
+        const scrollBox = document.getElementById('public-bp-scroll');
+        const canvas = document.getElementById('public-bp-canvas');
+        if (!scrollBox || !canvas) return;
+        const targetX = (canvas.scrollWidth * (found.x_pct / 100)) - (scrollBox.clientWidth / 2);
+        const targetY = (canvas.scrollHeight * (found.y_pct / 100)) - (scrollBox.clientHeight / 2);
+        scrollBox.scrollTo({
+          left: Math.max(0, targetX),
+          top: Math.max(0, targetY),
+          behavior: 'smooth'
+        });
+      }, 60);
     }
 
     function setSimLot(price, label) {
@@ -1163,8 +1073,6 @@
       document.getElementById('stage-blueprint-img').src = cfg.img;
       document.getElementById('stage-blueprint-pdf').href = cfg.pdf;
       document.getElementById('stage-blueprint-caption').textContent = cfg.caption;
-      rotZ = cfg.defaultRotZ || -5;
-      apply3DTransform();
 
       [1, 2, 3].forEach(n => {
         const btn = document.getElementById('tab-stage-' + n);
@@ -1176,8 +1084,9 @@
         }
       });
 
-      renderPublicLots();
       populateSpecificLotDropdown(stageNum);
+      renderPublicLots();
+      renderBlueprintMapPins();
     }
 
     function renderPublicLots() {
@@ -1225,12 +1134,12 @@
         const isAvail = item.status === 'available';
         const isSelected = item.code === chosenSpecificLotCode;
         return `
-          <div onclick="${isAvail ? `pickLotFromExplorer(${activePublicStage}, '${item.code}', '${item.num}', ${item.area})` : ''}"
+          <div onclick="${isAvail ? `pickLotFromExplorer(${activePublicStage}, '${item.code}', '${item.num}', ${item.area}, false)` : ''}"
                class="p-3 rounded-2xl border transition ${isSelected ? 'border-2 border-[#0B3B28] bg-emerald-50 shadow-md' : isAvail ? 'border-stone-200 bg-white hover:border-[#0B3B28] cursor-pointer shadow-2xs' : 'border-stone-200 bg-stone-100 opacity-65'}">
             <div class="flex items-center justify-between gap-1">
               <span class="font-extrabold text-xs text-stone-900">Lote #${item.num} <span class="text-stone-400 font-normal">(${item.code})</span></span>
               ${isAvail
-                ? `<span class="px-2 py-0.5 rounded-md ${isSelected ? 'bg-[#0B3B28] text-[#F3D082]' : 'bg-emerald-100 text-emerald-800'} text-[10px] font-extrabold">${isSelected ? '✓ ELEGIDO' : '🟢 DISPONIBLE'}</span>`
+                ? `<span class="px-2 py-0.5 rounded-md ${isSelected ? 'bg-[#0B3B28] text-[#F3D082]' : 'bg-emerald-100 text-emerald-800'} text-[10px] font-extrabold">${isSelected ? '📍 EN MAPA' : '🟢 DISPONIBLE'}</span>`
                 : '<span class="px-2 py-0.5 rounded-md bg-red-100 text-red-700 text-[10px] font-bold">🔴 VENDIDO ●</span>'}
             </div>
             <div class="flex items-center justify-between text-[11px] text-stone-600 mt-1.5">
@@ -1240,7 +1149,7 @@
             ${isAvail ? `
               <div class="mt-2 pt-1.5 border-t border-stone-100 flex items-center justify-between text-[10px]">
                 <span class="text-stone-500">Separa con $500k</span>
-                <span class="font-extrabold text-emerald-700">${isSelected ? '✓ Listo en tu cita' : 'Elegir este lote →'}</span>
+                <span class="font-extrabold text-emerald-700">${isSelected ? '✓ Seleccionado' : '📍 Ubicar en mapa →'}</span>
               </div>
             ` : ''}
           </div>
@@ -1267,6 +1176,8 @@
         chosenSpecificLotCode = avail[0] ? `E${stageNum}-L${avail[0].code}` : defaultCode;
         chosenSpecificLotArea = avail[0]?.area || (stageNum === 1 ? 190 : stageNum === 2 ? 152 : 114);
         sel.value = chosenSpecificLotCode;
+      } else {
+        sel.value = chosenSpecificLotCode;
       }
       updateSelectedLotBadge();
     }
@@ -1280,6 +1191,8 @@
       }
       updateSelectedLotBadge();
       renderPublicLots();
+      renderBlueprintMapPins();
+      centerOnSelectedLot();
     }
 
     function updateSelectedLotBadge() {
@@ -1289,14 +1202,18 @@
       }
     }
 
-    function pickLotFromExplorer(stageNum, fullCode, lotNum, area) {
+    function pickLotFromExplorer(stageNum, fullCode, lotNum, area, scrollToForm = false) {
       chosenSpecificLotCode = fullCode;
       chosenSpecificLotArea = area;
       const radioVal = stageNum === 1 ? 'etapa1_190' : stageNum === 2 ? 'etapa2_152' : 'etapa3_114';
       const radio = document.querySelector(`input[name="stage_option"][value="${radioVal}"]`);
       if (radio) radio.checked = true;
       updateFilterCalc(fullCode);
-      document.getElementById('cotizador').scrollIntoView({ behavior: 'smooth' });
+      renderBlueprintMapPins();
+      centerOnSelectedLot();
+      if (scrollToForm) {
+        document.getElementById('cotizador').scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     function selectLotAndScroll(val) {
@@ -1461,8 +1378,9 @@
       try {
         const res = await fetch('/assets/la-estrella/blueprints_summary.json');
         publicBlueprintData = await res.json();
-        renderPublicLots();
         populateSpecificLotDropdown(activePublicStage);
+        renderPublicLots();
+        renderBlueprintMapPins();
       } catch (e) {
         console.error('Error cargando inventario de lotes:', e);
       }
