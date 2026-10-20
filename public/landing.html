@@ -1,331 +1,518 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Proyecto Campestre La Estrella · Villavicencio | Funnel Oficial de Confianza & Planos Oct 2026</title>
+  <title>Proyecto Campestre La Estrella · Villavicencio | Lotes Campestres desde $27M Sin Intereses</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #06110c; color: #f8fafc; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF8F5;
+      color: #1C2520;
+    }
+    .serif-title { font-family: 'Playfair Display', Georgia, serif; }
     .mono { font-family: 'JetBrains Mono', monospace; }
-    .glass { background: rgba(12, 26, 19, 0.88); backdrop-filter: blur(16px); border: 1px solid rgba(16, 185, 129, 0.24); }
-    .step-active { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.14) !important; }
+    .hero-gradient {
+      background: linear-gradient(180deg, rgba(10, 28, 19, 0.55) 0%, rgba(10, 28, 19, 0.35) 45%, rgba(10, 28, 19, 0.85) 100%);
+    }
+    .lot-card-active {
+      border-color: #0D6847 !important;
+      background-color: #F0FDF6 !important;
+      box-shadow: 0 12px 28px -8px rgba(13, 104, 71, 0.18);
+    }
   </style>
 </head>
-<body class="min-h-screen antialiased selection:bg-emerald-500 selection:text-white">
+<body class="antialiased selection:bg-[#0D6847] selection:text-white">
 
   <!-- =====================================================================
-       1. BARRA SUPERIOR DE SEGURIDAD Y RESPALDO FÍSICO (Rompe el miedo a estafa/hurto en 3 segundos)
+       1. TOP NAVBAR EDITORIAL (Limpia, Luminosa, estilo Constructora Premium)
        ===================================================================== -->
-  <div class="bg-emerald-950 border-b border-emerald-700/50 px-4 py-2.5 text-xs sticky top-0 z-40 shadow-lg">
-    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex flex-wrap items-center gap-3 text-emerald-100 font-semibold">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-extrabold text-[11px]">
-          🛡️ PROYECTO VERIFICADO EN VILLAVICENCIO
-        </span>
-        <span>🏢 <strong>Oficina Física:</strong> Calle 19 # 40-89, Barrio Camoa</span>
-        <span class="hidden md:inline text-emerald-500">•</span>
-        <span class="hidden sm:inline">🛣️ <strong>Terreno Seguro:</strong> A solo 10 metros de la Vía Nacional Villavicencio–Acacías</span>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="/" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-amber-400/40 text-amber-300 font-bold text-[11px] transition">
-          ← Volver al CRM (Vista Coordinador)
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <!-- Marca Constructora -->
+      <a href="#inicio" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#0B3B28] text-[#E5C17B] flex items-center justify-center font-black text-lg shadow-sm">
+          ★
+        </div>
+        <div>
+          <div class="font-extrabold text-base tracking-tight text-[#0B3B28] leading-none">LA ESTRELLA</div>
+          <div class="text-[11px] font-semibold text-stone-500 tracking-wide uppercase mt-0.5">Proyecto Campestre · Villavicencio</div>
+        </div>
+      </a>
+
+      <!-- Enlaces Rápidos -->
+      <nav class="hidden md:flex items-center gap-7 text-xs font-bold text-stone-600">
+        <a href="#lotes" class="hover:text-[#0B3B28] transition">Precios y Tamaños</a>
+        <a href="#planos" class="hover:text-[#0B3B28] transition">Planos Octubre 2026</a>
+        <a href="#avance-obra" class="hover:text-[#0B3B28] transition">Avance de Obra en Dron</a>
+        <a href="#sede-camoa" class="hover:text-[#0B3B28] transition">Oficina Barrio Camoa</a>
+      </nav>
+
+      <!-- CTA Derecha -->
+      <div class="flex items-center gap-2.5">
+        <a href="/" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-[11px] transition">
+          🖥️ Vista CRM
+        </a>
+        <a href="#cotizador" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#128C7E] hover:bg-[#0E7266] text-white font-extrabold text-xs shadow-md transition">
+          <span>💬 Hablar con un Asesor</span>
         </a>
       </div>
     </div>
-  </div>
+  </header>
 
   <!-- =====================================================================
-       2. ESCUDO ANTI-MIEDO (Ataca de frente las 2 objeciones reales: Estafa y Hurto/Inseguridad)
+       2. HERO CINEMATOGRÁFICO CON VIDEO DRON REAL EN AUTOPLAY + FOTO LUMINOSA
        ===================================================================== -->
-  <section class="max-w-6xl mx-auto px-4 pt-6">
-    <div class="rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-900/40 to-emerald-950/60 border border-amber-400/40 p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-      <div class="flex items-start gap-3.5">
-        <div class="w-11 h-11 rounded-2xl bg-amber-400/20 border border-amber-400/50 flex items-center justify-center text-2xl shrink-0">
-          🤝
-        </div>
-        <div>
-          <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Garantía de Transparencia y Seguridad Total · Cero Bots</div>
-          <p class="text-xs md:text-sm text-slate-200 mt-0.5 leading-relaxed">
-            Sabemos que hoy en día hay mucha desconfianza en redes. Por eso en <strong>Proyecto La Estrella</strong>:
-            <span class="text-emerald-300 font-bold">1) Nunca pedimos dinero por WhatsApp sin que antes conozcas nuestra oficina en Barrio Camoa o el terreno</span>,
-            <span class="text-emerald-300 font-bold">2) El proyecto queda pegado a la pavimentada nacional (no en trochas aisladas)</span>, y
-            <span class="text-emerald-300 font-bold">3) Te atiende directamente una persona real con nombre y cédula, no un robot.</span>
+  <section id="inicio" class="relative min-h-[580px] lg:min-h-[640px] flex items-center overflow-hidden bg-[#0B3B28]">
+    <!-- Imagen de respaldo real + Video Dron Real en vivo -->
+    <img src="/assets/la-estrella/frame_9.jpg" alt="Vista Aérea Proyecto La Estrella" class="absolute inset-0 w-full h-full object-cover" />
+    <video autoplay muted loop playsinline poster="/assets/la-estrella/frame_9.jpg" class="absolute inset-0 w-full h-full object-cover">
+      <source src="/assets/la-estrella/hero-video.mp4" type="video/mp4" />
+    </video>
+    <div class="absolute inset-0 hero-gradient"></div>
+
+    <!-- Contenido Hero -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14 lg:py-20 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Texto Aspiracional Izquierda (7 cols) -->
+        <div class="lg:col-span-7 text-white space-y-5">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-amber-200 text-xs font-bold">
+            <span>📍 Vereda Las Mercedes · A 10 metros de la Vía Nacional Villavicencio–Acacías</span>
+          </div>
+
+          <h1 class="serif-title text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white">
+            Invierte en Tierra Real al Pie de la Montaña en <span class="text-[#F3D082] italic">Villavicencio</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-stone-100 max-w-2xl leading-relaxed font-normal">
+            Lotes campestres desde <strong>$27.000.000</strong> sobre un desarrollo de <strong>35 hectáreas</strong> con portería privada y vías demarcadas. Separa tu ubicación con <strong>$500.000</strong> y financia el saldo a <strong>18 meses con 0% de interés</strong> directo con nosotros.
           </p>
+
+          <!-- Botones Hero -->
+          <div class="flex flex-wrap items-center gap-3.5 pt-2">
+            <a href="#cotizador" class="px-6 py-4 rounded-2xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-sm shadow-xl flex items-center gap-2.5 transition transform hover:-translate-y-0.5">
+              <span>📲 Cotizar mi Lote con un Asesor Real</span>
+            </a>
+            <a href="#planos" class="px-6 py-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/30 text-white font-bold text-sm transition">
+              📐 Ver Planos Disponibles (Oct 2026)
+            </a>
+          </div>
+
+          <!-- Píldoras de Respaldo Real -->
+          <div class="grid grid-cols-3 gap-3 pt-4 max-w-xl">
+            <div class="bg-black/35 backdrop-blur-md border border-white/15 rounded-2xl p-3">
+              <div class="text-xl sm:text-2xl font-black text-[#F3D082] mono">$500.000</div>
+              <div class="text-[11px] text-stone-200 font-medium">Separación en Oficina Camoa</div>
+            </div>
+            <div class="bg-black/35 backdrop-blur-md border border-white/15 rounded-2xl p-3">
+              <div class="text-xl sm:text-2xl font-black text-white mono">18 Meses</div>
+              <div class="text-[11px] text-stone-200 font-medium">Financiación 0% Interés</div>
+            </div>
+            <div class="bg-black/35 backdrop-blur-md border border-white/15 rounded-2xl p-3">
+              <div class="text-xl sm:text-2xl font-black text-emerald-300 mono">569 Lotes</div>
+              <div class="text-[11px] text-stone-200 font-medium">Disponibles en 3 Etapas</div>
+            </div>
+          </div>
         </div>
+
+        <!-- Tarjeta Flotante Derecha: Video Vertical Real en Dron (5 cols) -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="bg-white p-3 rounded-[2rem] shadow-2xl border border-stone-200 max-w-xs w-full">
+            <div class="relative rounded-2xl overflow-hidden aspect-[9/13] bg-stone-900">
+              <video src="/assets/la-estrella/hero-video.mp4" poster="/assets/la-estrella/ad2.1.png" autoplay muted loop playsinline controls class="w-full h-full object-cover"></video>
+              <div class="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
+                <span class="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold">🚁 Toma Real desde el Aire</span>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold">Obra en Curso</span>
+              </div>
+            </div>
+            <div class="px-2 pt-3 pb-1 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-extrabold text-stone-900">Portería y Vías ya Demarcadas</div>
+                <div class="text-[11px] text-stone-500">Visitas guiadas todos los días</div>
+              </div>
+              <a href="#cotizador" class="px-3 py-1.5 rounded-xl bg-[#0B3B28] text-white text-[11px] font-bold">Agendar →</a>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <a href="#funnel-box" class="shrink-0 px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md transition">
-        Ir al Filtro Seguro ↓
-      </a>
     </div>
   </section>
 
   <!-- =====================================================================
-       3. HERO PRINCIPAL + FUNNEL INTERACTIVO DE 3 PASOS
+       3. FRANJA DE CONFIANZA Y RESPALDO EN VILLAVICENCIO
        ===================================================================== -->
-  <main class="max-w-6xl mx-auto px-4 py-6 md:py-10">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-      <!-- COLUMNA IZQUIERDA (7 cols): PRUEBA REAL (VIDEO DRON + PLANOS OCT 18 + GARANTÍAS LEGALES) -->
-      <div class="lg:col-span-7 space-y-6">
-
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-extrabold uppercase tracking-wider mb-3">
-            🌴 35 Hectáreas Reales en Vereda Las Mercedes · Villavicencio
-          </div>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-[1.12] text-white">
-            Conoce el Terreno, Revisa los <span class="text-emerald-400">Planos Reales</span> y Habla con un <span class="underline decoration-amber-400">Humano</span>
-          </h1>
-          <p class="text-slate-300 text-sm md:text-base mt-3 leading-relaxed">
-            Lotes campestres desde <strong>$27.000.000</strong> hasta <strong>$42.000.000</strong>. Separas con <strong>$500.000 COP</strong> directamente en nuestra oficina del <strong>Barrio Camoa</strong> tras verificar documentos, y financias el 60% a <strong>18 meses con 0% de interés</strong>.
-          </p>
-        </div>
-
-        <!-- VIDEO DRON REAL + FOTOS REALES DE OBRA -->
-        <div class="glass rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl">
-          <div class="relative bg-black aspect-video">
-            <video src="/assets/la-estrella/hero_drone.mp4" poster="/assets/la-estrella/frame_1.jpg" controls playsinline preload="metadata" class="w-full h-full object-cover"></video>
-            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/75 border border-white/15 text-[11px] font-bold text-emerald-300 pointer-events-none">
-              🚁 Video Real en Dron · A 10m de la Vía Nacional Villavicencio–Acacías
-            </div>
-          </div>
-          <div class="p-4 bg-slate-950/90 grid grid-cols-3 gap-3">
-            <div class="rounded-xl overflow-hidden border border-white/10 relative h-24 cursor-pointer" onclick="openImgModal('/assets/la-estrella/frame_3.jpg', 'Portería Física en Construcción')">
-              <img src="/assets/la-estrella/frame_3.jpg" class="w-full h-full object-cover hover:scale-105 transition" />
-              <span class="absolute bottom-1 left-1.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-bold text-white">🏗️ Portería en Obra</span>
-            </div>
-            <div class="rounded-xl overflow-hidden border border-white/10 relative h-24 cursor-pointer" onclick="openImgModal('/assets/la-estrella/frame_6.jpg', 'Vías Internas y Lotes Demarcados')">
-              <img src="/assets/la-estrella/frame_6.jpg" class="w-full h-full object-cover hover:scale-105 transition" />
-              <span class="absolute bottom-1 left-1.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-bold text-white">🚜 Vías y Maquinaria</span>
-            </div>
-            <div class="rounded-xl overflow-hidden border border-white/10 relative h-24 cursor-pointer" onclick="openImgModal('/assets/la-estrella/frame_9.jpg', 'Acceso Directo Pavimentada Vía Acacías')">
-              <img src="/assets/la-estrella/frame_9.jpg" class="w-full h-full object-cover hover:scale-105 transition" />
-              <span class="absolute bottom-1 left-1.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-bold text-white">🛣️ Acceso Pavimentado</span>
-            </div>
+  <section id="sede-camoa" class="bg-white border-b border-stone-200 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-[#0B3B28] flex items-center justify-center text-lg shrink-0">🏢</div>
+          <div>
+            <div class="text-xs font-extrabold text-stone-900">Oficina Física en Barrio Camoa</div>
+            <p class="text-xs text-stone-500 mt-0.5">Calle 19 # 40-89, Villavicencio. Revisa documentos y firma directamente en nuestra sede.</p>
           </div>
         </div>
-
-        <!-- LAS 3 RAZONES POR LAS QUE NO HAY RIESGO (Anti-Estafa & Anti-Hurto) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="glass rounded-2xl p-4 border-l-4 border-l-emerald-400">
-            <div class="text-xs font-black text-emerald-300 uppercase">1. Sede Física en Ciudad</div>
-            <div class="text-sm font-bold text-white mt-1">Oficina Barrio Camoa</div>
-            <p class="text-xs text-slate-400 mt-1">Calle 19 # 40-89, Villavicencio. Puedes ir primero a nuestra oficina en la ciudad, revisar certificados y firmar con Stella.</p>
-          </div>
-          <div class="glass rounded-2xl p-4 border-l-4 border-l-amber-400">
-            <div class="text-xs font-black text-amber-300 uppercase">2. Ubicación Segura</div>
-            <div class="text-sm font-bold text-white mt-1">A 10m Vía Nacional</div>
-            <p class="text-xs text-slate-400 mt-1">No tienes que meterte por trochas lejanas. El proyecto está a 10 metros sobre la doble calzada/vía nacional a Acacías.</p>
-          </div>
-          <div class="glass rounded-2xl p-4 border-l-4 border-l-sky-400">
-            <div class="text-xs font-black text-sky-300 uppercase">3. Tradición Legal</div>
-            <div class="text-sm font-bold text-white mt-1">Escritura Pública</div>
-            <p class="text-xs text-slate-400 mt-1">Escritura pública por porcentaje sobre 35 hectáreas + entrega con redes y servicios en 8 a 9 meses.</p>
+        <div class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-center text-lg shrink-0">🛣️</div>
+          <div>
+            <div class="text-xs font-extrabold text-stone-900">A 10m de la Vía Nacional</div>
+            <p class="text-xs text-stone-500 mt-0.5">Acceso inmediato sobre la pavimentada Villavicencio–Acacías, sin trochas lejanas.</p>
           </div>
         </div>
-
-        <!-- VISOR INTERACTIVO DE PLANOS ACTUALIZADOS (OCTUBRE 18 DE 2026) -->
-        <div class="glass rounded-3xl p-5 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">Inventario Transparente</span>
-              <h2 class="text-base md:text-lg font-extrabold text-white">
-                🗺️ Planos Oficiales Actualizados (Octubre 18 de 2026)
-              </h2>
-              <p class="text-xs text-slate-400">Haz clic sobre el plano para ampliarlo o cambia de etapa. Punto rojo (●) = Vendido · Blanco = Disponible.</p>
-            </div>
-            <div class="flex gap-1.5">
-              <button type="button" onclick="switchStageTab(1)" id="tab-stage-1" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition cursor-pointer">Etapa 1 (190m²)</button>
-              <button type="button" onclick="switchStageTab(2)" id="tab-stage-2" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">Etapa 2 (152m²)</button>
-              <button type="button" onclick="switchStageTab(3)" id="tab-stage-3" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">Etapa 3 (114m²)</button>
-            </div>
-          </div>
-
-          <div class="relative rounded-2xl overflow-hidden border border-emerald-500/30 bg-white">
-            <img id="stage-blueprint-img" src="/assets/la-estrella/plano-etapa-2.png" alt="Plano Oficial" class="w-full h-72 md:h-80 object-contain bg-white cursor-zoom-in" onclick="openImgModal(this.src, document.getElementById('stage-blueprint-caption').textContent)" />
-            <div class="bg-slate-900/95 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span id="stage-blueprint-caption" class="font-bold text-emerald-300">Etapa 2 · Zona Plana Central (152 m²) · 298 Lotes Disponibles de 525</span>
-              <a id="stage-blueprint-pdf" href="/assets/la-estrella/plano-etapa-2.pdf" target="_blank" class="text-amber-300 hover:underline font-bold">📄 Descargar PDF Vectorial ↗</a>
-            </div>
+        <div class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 text-sky-800 flex items-center justify-center text-lg shrink-0">📑</div>
+          <div>
+            <div class="text-xs font-extrabold text-stone-900">Crédito Directo Sin Bancos</div>
+            <p class="text-xs text-stone-500 mt-0.5">40% de cuota inicial (30 días) y 60% a 18 cuotas mensuales fijas con 0% de interés.</p>
           </div>
         </div>
+        <div class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center justify-center text-lg shrink-0">🧑‍💼</div>
+          <div>
+            <div class="text-xs font-extrabold text-stone-900">Atención 100% Personal</div>
+            <p class="text-xs text-stone-500 mt-0.5">Hablas por WhatsApp o teléfono con nuestros asesores humanos en Villavicencio, sin robots.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- =====================================================================
+       4. CATÁLOGO VISUAL DE LOTES POR ETAPA (Tarjetas que venden solas)
+       ===================================================================== -->
+  <section id="lotes" class="py-14 max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span class="px-3 py-1 rounded-full bg-emerald-100 text-[#0B3B28] text-xs font-extrabold uppercase tracking-wider">Precios Oficiales de Lanzamiento</span>
+      <h2 class="serif-title text-3xl sm:text-4xl font-bold text-stone-900 mt-3">
+        Elige el Lote Ideal para tu Familia o Inversión
+      </h2>
+      <p class="text-sm sm:text-base text-stone-600 mt-2">
+        Todos los lotes se separan con <strong>$500.000 COP</strong>, cuentan con plazo de 30 días para el 40% inicial y financiación directa a <strong>18 meses sin intereses</strong>.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
+      
+      <!-- TARJETA 1: ETAPA 3 (114 m²) -->
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col">
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/la-estrella/frame_6.jpg" alt="Etapa 3 Lote 114m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 3 · Caño Corcobado</span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">169 Disponibles</span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-baseline">
+              <h3 class="text-xl font-extrabold text-stone-900">Lote Campestre 114 m²</h3>
+              <span class="text-xs font-bold text-stone-500">6m × 19m</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-3xl font-black text-[#0B3B28] mono">$27.000.000</span>
+              <span class="text-xs text-stone-500 font-semibold">COP</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-stone-100 space-y-2 text-xs text-stone-600">
+              <div class="flex justify-between"><span>• Separación hoy:</span><strong class="text-stone-900 mono">$500.000</strong></div>
+              <div class="flex justify-between"><span>• Inicial 40% (a 30 días):</span><strong class="text-stone-900 mono">$10.800.000</strong></div>
+              <div class="flex justify-between text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded-lg"><span>• 18 Cuotas sin interés:</span><strong class="mono">$900.000 /mes</strong></div>
+            </div>
+          </div>
+          <button onclick="selectLotAndScroll('etapa3_114')" class="w-full py-3.5 rounded-xl bg-stone-900 hover:bg-[#0B3B28] text-white font-extrabold text-xs transition cursor-pointer">
+            Seleccionar Lote de 114 m² →
+          </button>
+        </div>
       </div>
 
-      <!-- =====================================================================
-           COLUMNA DERECHA (5 cols): EL FUNNEL ANTI-DESCONFIANZA EN 3 PASOS
-           ===================================================================== -->
-      <div class="lg:col-span-5 lg:sticky lg:top-16" id="funnel-box">
-        <div class="glass rounded-3xl p-6 shadow-2xl border-2 border-emerald-500/50 space-y-5">
-
-          <!-- Cabecera con Fotos/Nombres del Equipo Humano Real -->
-          <div class="pb-4 border-b border-white/10">
-            <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold uppercase">
-                🧑‍💼 Atención 100% Humana · Cero Bots
-              </span>
-              <span class="text-[11px] text-slate-400 font-semibold">Tiempo: 20 seg</span>
+      <!-- TARJETA 2: ETAPA 2 (152 m² - MÁS VENDIDO) -->
+      <div class="bg-white rounded-3xl border-2 border-[#0B3B28] shadow-xl relative overflow-hidden flex flex-col transform md:-translate-y-2">
+        <div class="bg-[#0B3B28] text-[#F3D082] text-center py-1.5 text-[11px] font-extrabold uppercase tracking-widest">
+          ⭐ El Más Vendido por Familias e Inversionistas
+        </div>
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/la-estrella/frame_9.jpg" alt="Etapa 2 Lote 152m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 2 · Zona Plana Central</span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">298 Disponibles</span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-baseline">
+              <h3 class="text-xl font-extrabold text-stone-900">Lote Campestre 152 m²</h3>
+              <span class="text-xs font-bold text-stone-500">8m × 19m</span>
             </div>
-            <h3 class="text-lg font-black text-white leading-snug">
-              Arma tu Cotización y Elige Cómo Quieres Conocernos
-            </h3>
-            <p class="text-xs text-slate-300 mt-1">
-              Sin llamadas molestas ni robots. Elige el lote, dinos dónde te sientes más seguro para reunirnos y habla directo con nuestro equipo en Villavicencio.
-            </p>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-3xl font-black text-[#0B3B28] mono">$32.000.000</span>
+              <span class="text-xs text-stone-500 font-semibold">COP</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-stone-100 space-y-2 text-xs text-stone-600">
+              <div class="flex justify-between"><span>• Separación hoy:</span><strong class="text-stone-900 mono">$500.000</strong></div>
+              <div class="flex justify-between"><span>• Inicial 40% (a 30 días):</span><strong class="text-stone-900 mono">$12.800.000</strong></div>
+              <div class="flex justify-between text-emerald-900 bg-emerald-100/80 px-2.5 py-1.5 rounded-lg"><span>• 18 Cuotas sin interés:</span><strong class="mono">$1.066.667 /mes</strong></div>
+            </div>
+          </div>
+          <button onclick="selectLotAndScroll('etapa2_152')" class="w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-xs shadow-md transition cursor-pointer">
+            Cotizar Lote de 152 m² con Asesor →
+          </button>
+        </div>
+      </div>
+
+      <!-- TARJETA 3: ETAPA 1 (190 m²) -->
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col">
+        <div class="relative h-56 overflow-hidden">
+          <img src="/assets/la-estrella/frame_3.jpg" alt="Etapa 1 Lote 190m2" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+          <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-xs font-bold">Etapa 1 · Lago & Vía Principal</span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-amber-600 text-white text-xs font-extrabold">Últimos 102 Lotes</span>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex justify-between items-baseline">
+              <h3 class="text-xl font-extrabold text-stone-900">Lote Especial 190 m²</h3>
+              <span class="text-xs font-bold text-stone-500">10m × 19m</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-3xl font-black text-[#0B3B28] mono">$42.000.000</span>
+              <span class="text-xs text-stone-500 font-semibold">COP</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-stone-100 space-y-2 text-xs text-stone-600">
+              <div class="flex justify-between"><span>• Separación hoy:</span><strong class="text-stone-900 mono">$500.000</strong></div>
+              <div class="flex justify-between"><span>• Inicial 40% (a 30 días):</span><strong class="text-stone-900 mono">$16.800.000</strong></div>
+              <div class="flex justify-between text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded-lg"><span>• 18 Cuotas sin interés:</span><strong class="mono">$1.400.000 /mes</strong></div>
+            </div>
+          </div>
+          <button onclick="selectLotAndScroll('etapa1_190')" class="w-full py-3.5 rounded-xl bg-stone-900 hover:bg-[#0B3B28] text-white font-extrabold text-xs transition cursor-pointer">
+            Seleccionar Lote de 190 m² →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. PLANOS OFICIALES ACTUALIZADOS (OCTUBRE 18 DE 2026) + COTIZADOR EN VIVO
+       ===================================================================== -->
+  <section id="planos" class="py-12 bg-stone-100/80 border-y border-stone-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- COLUMNA IZQUIERDA (7 cols): VISOR LIMPIO DE PLANOS ACTUALIZADOS -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-6 shadow-md border border-stone-200 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">Disponibilidad en Tiempo Real</span>
+              <h2 class="serif-title text-2xl font-bold text-stone-900">Planos Oficiales (Corte 18 de Octubre 2026)</h2>
+              <p class="text-xs text-stone-500">Lotes en blanco = <strong>Disponibles</strong> · Lotes con punto rojo (●) = <strong>Vendidos</strong>.</p>
+            </div>
+            <div class="flex gap-1.5 bg-stone-100 p-1 rounded-2xl">
+              <button type="button" onclick="switchStageTab(1)" id="tab-stage-1" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-stone-700 hover:bg-stone-200/60 transition cursor-pointer">Etapa 1 (190m²)</button>
+              <button type="button" onclick="switchStageTab(2)" id="tab-stage-2" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-[#0B3B28] text-white shadow-xs transition cursor-pointer">Etapa 2 (152m²)</button>
+              <button type="button" onclick="switchStageTab(3)" id="tab-stage-3" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-stone-700 hover:bg-stone-200/60 transition cursor-pointer">Etapa 3 (114m²)</button>
+            </div>
+          </div>
+
+          <!-- Imagen del Plano con Zoom -->
+          <div class="rounded-2xl overflow-hidden border border-stone-200 bg-stone-50 relative group">
+            <img id="stage-blueprint-img" src="/assets/la-estrella/plano-etapa-2.png" alt="Plano Etapa 2" class="w-full h-[380px] sm:h-[430px] object-contain bg-white cursor-zoom-in" onclick="openImgModal(this.src, document.getElementById('stage-blueprint-caption').textContent)" />
+            <div class="bg-[#0B3B28] text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span id="stage-blueprint-caption" class="font-bold text-emerald-200">Etapa 2 · Zona Plana Central (152 m²) · 298 Lotes Disponibles de 525</span>
+              <div class="flex items-center gap-3">
+                <button type="button" onclick="openImgModal(document.getElementById('stage-blueprint-img').src, document.getElementById('stage-blueprint-caption').textContent)" class="text-white hover:underline font-bold cursor-pointer">🔍 Ampliar Plano</button>
+                <a id="stage-blueprint-pdf" href="/assets/la-estrella/plano-etapa-2.pdf" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold hover:bg-amber-300 transition">📄 Abrir PDF Original ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini galería de respaldo -->
+          <div id="avance-obra" class="grid grid-cols-3 gap-3 pt-2">
+            <div class="rounded-2xl overflow-hidden border border-stone-200 relative h-28 cursor-pointer" onclick="openImgModal('/assets/la-estrella/ad1.1.png', 'Portería Principal en Obra')">
+              <img src="/assets/la-estrella/ad1.1.png" class="w-full h-full object-cover" />
+              <span class="absolute bottom-1.5 left-2 bg-black/75 text-white px-2 py-0.5 rounded text-[10px] font-bold">Portería en Obra</span>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-stone-200 relative h-28 cursor-pointer" onclick="openImgModal('/assets/la-estrella/ad2.1.png', 'Inversión en Tierra Real - 35 Hectáreas')">
+              <img src="/assets/la-estrella/ad2.1.png" class="w-full h-full object-cover" />
+              <span class="absolute bottom-1.5 left-2 bg-black/75 text-white px-2 py-0.5 rounded text-[10px] font-bold">35 Hectáreas</span>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-stone-200 relative h-28 cursor-pointer" onclick="openImgModal('/assets/la-estrella/ad3.1.png', 'Vista Real desde el Lote')">
+              <img src="/assets/la-estrella/ad3.1.png" class="w-full h-full object-cover" />
+              <span class="absolute bottom-1.5 left-2 bg-black/75 text-white px-2 py-0.5 rounded text-[10px] font-bold">Vista a la Cordillera</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA (5 cols): COTIZADOR & AGENDADOR CON ASESOR HUMANO -->
+        <div id="cotizador" class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 shadow-xl border-2 border-[#0B3B28]/20 space-y-5">
+          
+          <div class="flex items-center gap-3.5 pb-4 border-b border-stone-200">
+            <div class="relative">
+              <div class="w-12 h-12 rounded-2xl bg-[#0B3B28] text-[#F3D082] flex items-center justify-center font-black text-base shadow-sm">
+                LA★
+              </div>
+              <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5"></span>
+            </div>
+            <div>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 text-[10px] font-extrabold uppercase">Sala de Ventas Villavicencio · Sin Bots</span>
+              <h3 class="text-lg font-extrabold text-stone-900 leading-tight mt-0.5">Recibe los Planos y Agenda tu Visita</h3>
+            </div>
           </div>
 
           <form id="landing-filter-form" onsubmit="submitPreFilter(event)" class="space-y-4">
-
-            <!-- PASO 1: ELEGIR ETAPA Y VER CUOTA EXACTA -->
+            
+            <!-- 1. Selección de Lote -->
             <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-emerald-300 mb-2">
-                Paso 1 · ¿Cuál Etapa y Metraje se ajusta a lo que buscas?
-              </label>
-              <div class="grid grid-cols-1 gap-2">
-                <label class="flex items-center justify-between p-3 rounded-xl border border-emerald-500/30 bg-slate-900/70 cursor-pointer hover:bg-emerald-950/50 transition">
+              <label class="block text-xs font-extrabold text-stone-800 mb-2">1. ¿Cuál lote te gustaría cotizar?</label>
+              <div class="space-y-2">
+                <label id="card-opt-3" class="flex items-center justify-between p-3 rounded-2xl border border-stone-200 bg-stone-50/70 cursor-pointer hover:border-emerald-600 transition">
                   <div class="flex items-center gap-2.5">
-                    <input type="radio" name="stage_option" value="etapa3_114" onchange="updateFilterCalc()" class="accent-emerald-400 w-4 h-4" />
+                    <input type="radio" name="stage_option" value="etapa3_114" onchange="updateFilterCalc()" class="accent-[#0B3B28] w-4 h-4" />
                     <div>
-                      <div class="text-xs font-extrabold text-white">Etapa 3 · Lote 114 m² (Caño Corcobado)</div>
-                      <div class="text-[11px] text-slate-400">Inicial 40%: $10.8M · 18 cuotas de $900.000</div>
+                      <div class="text-xs font-extrabold text-stone-900">Lote 114 m² · Etapa 3</div>
+                      <div class="text-[11px] text-stone-500">18 cuotas de $900.000 sin interés</div>
                     </div>
                   </div>
-                  <span class="text-sm font-black text-emerald-400 mono">$27.000.000</span>
+                  <span class="text-sm font-black text-[#0B3B28] mono">$27.000.000</span>
                 </label>
 
-                <label class="flex items-center justify-between p-3 rounded-xl border-2 border-emerald-400 bg-emerald-900/35 cursor-pointer transition">
+                <label id="card-opt-2" class="lot-card-active flex items-center justify-between p-3 rounded-2xl border-2 border-stone-200 bg-stone-50/70 cursor-pointer transition">
                   <div class="flex items-center gap-2.5">
-                    <input type="radio" name="stage_option" value="etapa2_152" checked onchange="updateFilterCalc()" class="accent-emerald-400 w-4 h-4" />
+                    <input type="radio" name="stage_option" value="etapa2_152" checked onchange="updateFilterCalc()" class="accent-[#0B3B28] w-4 h-4" />
                     <div>
-                      <div class="text-xs font-extrabold text-white">Etapa 2 · Lote 152 m² (Zona Plana Central) ⭐</div>
-                      <div class="text-[11px] text-slate-300">Inicial 40%: $12.8M · 18 cuotas de $1.066.667</div>
+                      <div class="text-xs font-extrabold text-stone-900">Lote 152 m² · Etapa 2 ⭐ Más Vendido</div>
+                      <div class="text-[11px] text-stone-600">18 cuotas de $1.066.667 sin interés</div>
                     </div>
                   </div>
-                  <span class="text-sm font-black text-emerald-300 mono">$32.000.000</span>
+                  <span class="text-sm font-black text-[#0B3B28] mono">$32.000.000</span>
                 </label>
 
-                <label class="flex items-center justify-between p-3 rounded-xl border border-emerald-500/30 bg-slate-900/70 cursor-pointer hover:bg-emerald-950/50 transition">
+                <label id="card-opt-1" class="flex items-center justify-between p-3 rounded-2xl border border-stone-200 bg-stone-50/70 cursor-pointer hover:border-emerald-600 transition">
                   <div class="flex items-center gap-2.5">
-                    <input type="radio" name="stage_option" value="etapa1_190" onchange="updateFilterCalc()" class="accent-emerald-400 w-4 h-4" />
+                    <input type="radio" name="stage_option" value="etapa1_190" onchange="updateFilterCalc()" class="accent-[#0B3B28] w-4 h-4" />
                     <div>
-                      <div class="text-xs font-extrabold text-white">Etapa 1 · Lote 190 m² (Lago & Vía Nacional)</div>
-                      <div class="text-[11px] text-slate-400">Inicial 40%: $16.8M · 18 cuotas de $1.400.000</div>
+                      <div class="text-xs font-extrabold text-stone-900">Lote 190 m² · Etapa 1 (Lago & Vía)</div>
+                      <div class="text-[11px] text-stone-500">18 cuotas de $1.400.000 sin interés</div>
                     </div>
                   </div>
-                  <span class="text-sm font-black text-emerald-400 mono">$42.000.000</span>
+                  <span class="text-sm font-black text-[#0B3B28] mono">$42.000.000</span>
                 </label>
               </div>
             </div>
 
-            <!-- CAJA DE TRANSPARENCIA FINANCIERA -->
-            <div class="rounded-2xl bg-slate-950 border border-emerald-500/30 p-3.5 text-xs space-y-1.5">
-              <div class="flex justify-between items-center text-slate-300">
-                <span>Separación (solo tras ver papeles/terreno):</span>
-                <span class="font-bold text-emerald-400 mono">$ 500.000 COP</span>
+            <!-- Resumen Financiero Claro -->
+            <div class="rounded-2xl bg-[#FAF8F5] border border-stone-200 p-3.5 text-xs space-y-1.5">
+              <div class="flex justify-between text-stone-600">
+                <span>Separación del lote:</span>
+                <strong class="text-stone-900 mono">$ 500.000 COP</strong>
               </div>
-              <div class="flex justify-between items-center text-slate-300">
-                <span>Cuota Inicial (40% con 30 días de plazo):</span>
-                <span id="calc-initial" class="font-bold text-white mono">$ 12.800.000 COP</span>
+              <div class="flex justify-between text-stone-600">
+                <span>Cuota Inicial (40% a 30 días):</span>
+                <strong id="calc-initial" class="text-stone-900 mono">$ 12.800.000 COP</strong>
               </div>
-              <div class="flex justify-between items-center pt-1.5 border-t border-white/10">
-                <span class="font-bold text-amber-300">Saldo 60% a 18 Meses (0% Interés):</span>
-                <span id="calc-monthly" class="font-black text-amber-300 text-sm mono">$ 1.066.667 /mes</span>
+              <div class="flex justify-between pt-1.5 border-t border-stone-200 text-[#0B3B28]">
+                <span class="font-bold">18 Cuotas Mensuales (0% Interés):</span>
+                <strong id="calc-monthly" class="font-black text-sm mono">$ 1.066.667 /mes</strong>
               </div>
             </div>
 
-            <!-- PASO 2: MODALIDAD DE CONFIANZA (Esto elimina el miedo a estafa o hurto!) -->
+            <!-- 2. Cómo prefiere ser atendido -->
             <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-1.5">
-                Paso 2 · ¿Cómo te sientes más seguro para conocer el proyecto?
-              </label>
-              <select id="filter-trust-mode" required class="w-full rounded-xl bg-slate-900 border border-amber-400/50 px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-400">
-                <option value="Quiero ir primero a la Oficina de Barrio Camoa (Calle 19 # 40-89) a revisar escrituras y planos">🏢 Ir primero a la Oficina en Barrio Camoa (Calle 19 # 40-89) a ver papeles</option>
-                <option value="Quiero visitar el terreno en la Vía Nacional Villavicencio-Acacías con David">🚗 Ir directo al terreno (a 10m de la Vía Nacional a Acacías) este fin de semana</option>
-                <option value="Estoy en otra ciudad, quiero Videollamada en vivo con el asesor mostrando planos y documentos">📹 Estoy fuera de Villavicencio: quiero Videollamada viendo documentos reales</option>
+              <label class="block text-xs font-extrabold text-stone-800 mb-1.5">2. ¿Cómo prefieres conocer el proyecto?</label>
+              <select id="filter-trust-mode" required class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:border-[#0B3B28]">
+                <option value="Quiero agendar visita guiada al terreno (Vía Villavicencio–Acacías)">🚗 Agendar visita guiada al terreno este fin de semana</option>
+                <option value="Quiero ir primero a la Oficina de Barrio Camoa (Calle 19 # 40-89) a ver documentos y planos">🏢 Ir primero a la Oficina en Barrio Camoa (Calle 19 # 40-89)</option>
+                <option value="Quiero recibir los planos en PDF y cotización por WhatsApp con un asesor">📲 Recibir planos y hablar por llamada/WhatsApp con el asesor</option>
               </select>
             </div>
 
-            <!-- PASO 3: PRESUPUESTO Y DATOS PARA ASIGNAR HUMANO -->
+            <!-- 3. Forma de pago -->
             <div>
-              <label class="block text-xs font-extrabold uppercase tracking-wider text-emerald-300 mb-1.5">
-                Paso 3 · ¿Cómo planeas pagar tu lote si te gusta?
-              </label>
-              <select id="filter-payment-ready" required class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-400">
-                <option value="Financiado: cuento con el 40% inicial y 18 cuotas mensuales sin interés">✅ Financiado: cuento con el 40% inicial y 18 cuotas sin interés</option>
-                <option value="De Contado: busco descuento por pago total en oficina">💰 Pago de Contado (tras verificar documentos en oficina)</option>
-                <option value="Con Cesantías o Vehículo en parte de pago del 40% inicial">🚗 Usar mis Cesantías o Vehículo para el 40% inicial</option>
+              <label class="block text-xs font-extrabold text-stone-800 mb-1.5">3. Modalidad de pago de tu interés:</label>
+              <select id="filter-payment-ready" required class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-bold text-stone-900 focus:outline-none focus:border-[#0B3B28]">
+                <option value="Financiado directo: 40% inicial y 18 cuotas sin interés">💳 Financiado directo a 18 meses sin intereses</option>
+                <option value="Pago de Contado (solicito beneficio por pago de contado)">💰 Pago de Contado</option>
+                <option value="Con Cesantías o Vehículo en parte de pago">🚗 Con Cesantías o Vehículo en parte de pago</option>
               </select>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- Datos de contacto -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-[11px] font-bold text-slate-300 mb-1">Tu Nombre *</label>
-                <input type="text" id="filter-name" required placeholder="Ej. Don Jorge Ramírez" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" />
+                <label class="block text-[11px] font-bold text-stone-600 mb-1">Tu Nombre Completo *</label>
+                <input type="text" id="filter-name" required placeholder="Ej. Carlos Andrés Ruiz" class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#0B3B28]" />
               </div>
               <div>
-                <label class="block text-[11px] font-bold text-slate-300 mb-1">Tu WhatsApp *</label>
-                <input type="tel" id="filter-phone" required placeholder="Ej. 311 456 7890" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 mono" />
+                <label class="block text-[11px] font-bold text-stone-600 mb-1">Tu WhatsApp *</label>
+                <input type="tel" id="filter-phone" required placeholder="Ej. 310 555 8920" class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#0B3B28] mono" />
               </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-[11px] font-bold text-slate-300 mb-1">Tu Ciudad Actual</label>
-                <input type="text" id="filter-city" value="Villavicencio" required class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-emerald-400" />
+                <label class="block text-[11px] font-bold text-stone-600 mb-1">Ciudad desde donde nos visitas</label>
+                <input type="text" id="filter-city" value="Villavicencio" required class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:outline-none focus:border-[#0B3B28]" />
               </div>
               <div>
-                <label class="block text-[11px] font-bold text-slate-300 mb-1">Elige tu Asesor Humano</label>
-                <select id="filter-advisor" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-bold text-emerald-300 focus:outline-none focus:border-emerald-400">
-                  <option value="david@nodia.com">🧑‍💼 David (Director en Terreno · 3203146653)</option>
-                  <option value="stella@nodia.com">👩‍💼 Stella (Directora Oficina Barrio Camoa)</option>
-                  <option value="camilo@nodia.com">🧑‍💼 Camilo Restrepo (Asesor Senior)</option>
+                <label class="block text-[11px] font-bold text-stone-600 mb-1">Asesor Asignado</label>
+                <select id="filter-advisor" class="w-full rounded-xl bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-xs font-bold text-[#0B3B28] focus:outline-none focus:border-[#0B3B28]">
+                  <option value="camilo@nodia.com">🧑‍💼 Asesor Agendador Sala de Ventas</option>
+                  <option value="david@nodia.com">🧑‍💼 David (Director en Terreno)</option>
+                  <option value="stella@nodia.com">👩‍💼 Stella (Oficina Barrio Camoa)</option>
                 </select>
               </div>
             </div>
 
-            <!-- BOTÓN VERDE WHATSAPP HUMANO -->
-            <button type="submit" id="btn-submit-wa" class="w-full py-4 px-5 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2.5 transition transform active:scale-[0.99] cursor-pointer">
+            <button type="submit" id="btn-submit-wa" class="w-full py-4 px-5 rounded-2xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2.5 transition transform active:scale-[0.99] cursor-pointer">
               <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
-              <span>Hablar Ahora con una Persona Real en WhatsApp</span>
+              <span>Hablar con un Asesor en WhatsApp Ahora</span>
             </button>
 
-            <div class="text-[11px] text-center text-slate-400 leading-snug">
-              🛡️ Sin bots automáticos. Te contestará personalmente el asesor elegido y recibirás tu <strong>Pasaporte QR Oficial</strong> para ingreso a Oficina o Terreno.
-            </div>
+            <p class="text-[11px] text-center text-stone-500">
+              📍 Oficina Principal: <strong>Calle 19 # 40-89, Barrio Camoa, Villavicencio</strong> · Atención directa sin intermediarios.
+            </p>
           </form>
 
         </div>
+
       </div>
-
     </div>
-  </main>
+  </section>
 
-  <!-- MODAL LIGHTBOX DE PLANOS / FOTOS -->
+  <!-- FOOTER CONSTRUCTORA -->
+  <footer class="bg-[#0B3B28] text-stone-300 py-8 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <strong class="text-white">PROYECTO CAMPESTRE LA ESTRELLA</strong> · Vereda Las Mercedes, Villavicencio – Meta (A 10m Vía Nacional a Acacías)
+      </div>
+      <div>
+        Oficina Comercial: <strong>Calle 19 # 40-89, Barrio Camoa</strong> · Teléfono Sala de Ventas: <strong>320 314 6653</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL LIGHTBOX -->
   <div id="modal-img" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4" onclick="this.classList.add('hidden'); this.classList.remove('flex');">
     <div class="max-w-5xl w-full text-center space-y-3">
-      <img id="modal-img-src" src="" class="max-h-[82vh] mx-auto rounded-2xl border border-white/20 bg-white object-contain" />
-      <div id="modal-img-caption" class="text-sm font-bold text-emerald-300"></div>
+      <img id="modal-img-src" src="" class="max-h-[84vh] mx-auto rounded-2xl bg-white object-contain shadow-2xl" />
+      <div id="modal-img-caption" class="text-sm font-bold text-white"></div>
     </div>
   </div>
 
   <!-- MODAL DE CONFIRMACIÓN Y REDIRECCIÓN DIRECTA A WHATSAPP HUMANO + CRM -->
-  <div id="modal-success" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-emerald-400 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center mx-auto text-2xl">🤝</div>
-      <h3 class="text-xl font-black text-white">¡Conectado con tu Asesor Humano!</h3>
-      <p id="modal-success-desc" class="text-xs text-slate-300 leading-relaxed"></p>
-      <div class="bg-slate-950 border border-white/10 rounded-2xl p-3.5 text-left text-xs space-y-1.5">
-        <div class="text-emerald-400 font-bold">✓ Filtro Superado: <span class="text-white">Cliente Informado y con Confianza</span></div>
-        <div class="text-emerald-400 font-bold">✓ Bot IA: <span class="text-amber-300">DESACTIVADO (Atiende Asesor en Persona)</span></div>
-        <div class="text-emerald-400 font-bold">✓ Pasaporte de Seguridad QR: <span id="modal-passcode" class="text-white mono"></span></div>
+  <div id="modal-success" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-stone-200">
+      <div class="w-14 h-14 rounded-full bg-emerald-100 text-[#0B3B28] flex items-center justify-center mx-auto text-2xl font-bold">✓</div>
+      <h3 class="text-xl font-black text-stone-900">¡Solicitud Lista para tu Asesor!</h3>
+      <p id="modal-success-desc" class="text-xs text-stone-600 leading-relaxed"></p>
+      <div class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 text-left text-xs space-y-1.5">
+        <div class="text-stone-700">✓ Estado en CRM: <strong class="text-emerald-700">Calificado (Listo para Agendar)</strong></div>
+        <div class="text-stone-700">✓ Atención: <strong class="text-stone-900">100% Humana (Sin Bot)</strong></div>
+        <div class="text-stone-700">✓ Pasaporte QR de Visita: <strong id="modal-passcode" class="text-[#0B3B28] mono"></strong></div>
       </div>
       <div class="flex flex-col gap-2.5 pt-2">
-        <a id="btn-go-real-wa" href="#" target="_blank" class="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg">
-          📲 1. Abrir Chat Personal en WhatsApp Ahora
+        <a id="btn-go-real-wa" href="#" target="_blank" class="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-md">
+          📲 1. Abrir WhatsApp del Asesor Ahora
         </a>
-        <a id="btn-go-crm-inbox" href="/" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 font-extrabold text-xs">
-          🖥️ 2. Ver cómo entró este Cliente al CRM del Coordinador →
+        <a id="btn-go-crm-inbox" href="/" class="w-full py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs">
+          🖥️ 2. Ver cómo entró este Cliente en el CRM →
         </a>
       </div>
     </div>
@@ -372,11 +559,20 @@
       [1, 2, 3].forEach(n => {
         const btn = document.getElementById('tab-stage-' + n);
         if (n === stageNum) {
-          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 transition cursor-pointer';
+          btn.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-[#0B3B28] text-white shadow-xs transition cursor-pointer';
         } else {
-          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer';
+          btn.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white text-stone-700 hover:bg-stone-200/60 transition cursor-pointer';
         }
       });
+    }
+
+    function selectLotAndScroll(val) {
+      const radio = document.querySelector(`input[name="stage_option"][value="${val}"]`);
+      if (radio) {
+        radio.checked = true;
+        updateFilterCalc();
+      }
+      document.getElementById('cotizador').scrollIntoView({ behavior: 'smooth' });
     }
 
     function updateFilterCalc() {
@@ -384,6 +580,13 @@
       const info = LOT_PRICING[selected];
       document.getElementById('calc-initial').textContent = '$ ' + info.initial.toLocaleString('es-CO') + ' COP';
       document.getElementById('calc-monthly').textContent = '$ ' + info.monthly.toLocaleString('es-CO') + ' /mes';
+      [1, 2, 3].forEach(n => {
+        const card = document.getElementById('card-opt-' + n);
+        if (card) {
+          if (n === info.stage) card.classList.add('lot-card-active');
+          else card.classList.remove('lot-card-active');
+        }
+      });
       switchStageTab(info.stage);
     }
 
@@ -400,7 +603,7 @@
 
       const btn = document.getElementById('btn-submit-wa');
       btn.disabled = true;
-      btn.innerHTML = '<span>Asignando Asesor Humano...</span>';
+      btn.innerHTML = '<span>Conectando con Sala de Ventas...</span>';
 
       try {
         const res = await fetch('/api/landing-lead', {
@@ -419,25 +622,25 @@
         });
         const data = await res.json();
         const waText = encodeURIComponent(
-          `Hola ${advisor.split('@')[0].toUpperCase()}, soy *${name}* de *${city}*. Acabo de ver el video dron y los planos actualizados de Octubre 18 en la web oficial de *Proyecto La Estrella*.\n\n` +
+          `Hola, soy *${name}* de *${city}*. Vi la página oficial de *Proyecto Campestre La Estrella* y los planos de Octubre 2026.\n\n` +
           `📐 *Lote de interés:* ${info.label} (Ref: ${info.lot_code})\n` +
-          `🛡️ *Cómo prefiero conocerlos:* ${trustMode}\n` +
-          `💳 *Forma de pago:* ${paymentPlan}\n` +
+          `📅 *Solicitud:* ${trustMode}\n` +
+          `💳 *Modalidad:* ${paymentPlan}\n` +
           `🎟️ *Pasaporte QR:* ${data.lead?.pass_code || 'EST-2026'}\n\n` +
-          `Quedo atento a tu respuesta personal.`
+          `Quedo atento para que me contactes personalmente.`
         );
         const waUrl = `https://wa.me/573203146653?text=${waText}`;
         document.getElementById('modal-passcode').textContent = data.lead?.pass_code || 'EST-2026';
         document.getElementById('modal-success-desc').textContent =
-          `${name} ya vio el video real, la oficina del Barrio Camoa y los planos de Octubre 18. Entró directo al Kanban en estado "Calificado" con el Bot APAGADO para que ${advisor} lo atienda personalmente.`;
+          `${name} quedó registrado en el Kanban en estado "Calificado" para que el asesor humano le agende su cita y lo atienda personalmente.`;
         document.getElementById('btn-go-real-wa').href = waUrl;
         document.getElementById('modal-success').classList.remove('hidden');
         document.getElementById('modal-success').classList.add('flex');
       } catch (err) {
-        alert('Error registrando filtro: ' + err.message);
+        alert('Error registrando solicitud: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span>Hablar Ahora con una Persona Real en WhatsApp</span>';
+        btn.innerHTML = '<span>Hablar con un Asesor en WhatsApp Ahora</span>';
       }
     }
   </script>
