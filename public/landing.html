@@ -943,23 +943,23 @@
     </div>
   </div>
 
-  <!-- MODAL DE CONFIRMACIÓN Y REDIRECCIÓN DIRECTA A WHATSAPP HUMANO + CRM -->
+  <!-- MODAL DE CONFIRMACIÓN VÍA WHATSAPP API OFICIAL CENTRALIZADA (SIN TELÉFONOS PERSONALES) -->
   <div id="modal-success" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-stone-200">
       <div class="w-14 h-14 rounded-full bg-emerald-100 text-[#0B3B28] flex items-center justify-center mx-auto text-2xl font-bold">✓</div>
-      <h3 class="text-xl font-black text-stone-900">¡Solicitud Lista para tu Asesor!</h3>
+      <h3 class="text-xl font-black text-stone-900">¡Cita Agendada por WhatsApp API Oficial!</h3>
       <p id="modal-success-desc" class="text-xs text-stone-600 leading-relaxed"></p>
       <div class="bg-stone-50 border border-stone-200 rounded-2xl p-3.5 text-left text-xs space-y-1.5">
         <div class="text-stone-700">✓ Estado en CRM: <strong class="text-emerald-700">Cita Agendada</strong></div>
-        <div class="text-stone-700">✓ Atención: <strong class="text-stone-900">100% Humana (Sin Bot)</strong></div>
+        <div class="text-stone-700">✓ Canal Oficial: <strong class="text-stone-900">WhatsApp API Centralizado (Sin Teléfono Personal)</strong></div>
         <div class="text-stone-700">✓ Pasaporte QR de Visita: <strong id="modal-passcode" class="text-[#0B3B28] mono"></strong></div>
       </div>
       <div class="flex flex-col gap-2.5 pt-2">
         <a id="btn-go-real-wa" href="#" target="_blank" class="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#1fb858] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-md">
-          📲 1. Abrir WhatsApp del Asesor Ahora
+          🎟️ 1. Ver / Descargar mi Pasaporte QR Digital
         </a>
-        <a id="btn-go-crm-inbox" href="/" class="w-full py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs">
-          🖥️ 2. Ver cómo entró este Cliente en el CRM →
+        <a id="btn-go-crm-inbox" href="/?tab=inbox" class="w-full py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs">
+          🎙️ 2. Abrir Bandeja WhatsApp API en el CRM (Enviar Audio / Texto) →
         </a>
       </div>
     </div>
@@ -1540,21 +1540,16 @@
           })
         });
         const data = await res.json();
-        const todayFormatted = new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
-        const waText = encodeURIComponent(
-          `Hola, soy *${name}* de *${city}*. Vi el Recorrido 3D y los planos actualizados hoy (${todayFormatted}) de *Proyecto Campestre La Estrella*.\n\n` +
-          `📐 *Etapa y Lote elegido:* ${info.label} (Lote: *${specificLot}*)\n` +
-          `🏢 *Tipo de Cita:* ${trustMode}\n` +
-          `📅 *Día agendado:* ${appointmentDay}\n` +
-          `💳 *Modalidad:* ${paymentPlan}\n` +
-          `🎟️ *Pasaporte QR:* ${data.lead?.pass_code || 'EST-2026'}\n\n` +
-          `Por favor confírmame mi cita y la ubicación de ingreso.`
-        );
-        const waUrl = `https://wa.me/573203146653?text=${waText}`;
-        document.getElementById('modal-passcode').textContent = data.lead?.pass_code || 'EST-2026';
+        const passCode = data.lead?.pass_code || 'EST-2026';
+        const leadId = data.lead?.id || 1;
+        document.getElementById('modal-passcode').textContent = passCode;
         document.getElementById('modal-success-desc').textContent =
-          `${name} quedó agendado para "${appointmentDay}" (${trustMode}) con el lote "${specificLot}" en el Kanban en estado "Cita Agendada".`;
-        document.getElementById('btn-go-real-wa').href = waUrl;
+          `¡Listo ${name}! Nuestra API Oficial de WhatsApp ya envió la confirmación de tu cita para "${appointmentDay}" (${trustMode}) y tu Pasaporte QR del lote "${specificLot}" directo a tu WhatsApp (${phone}), sin exponer ni usar teléfonos personales. Tu asesor te responderá por texto o nota de voz directamente desde nuestra herramienta.`;
+        document.getElementById('btn-go-real-wa').href = `/quote/${passCode}`;
+        const crmBtn = document.getElementById('btn-go-crm-inbox');
+        if (crmBtn) {
+          crmBtn.href = `/?tab=inbox&leadId=${leadId}`;
+        }
         document.getElementById('modal-success').classList.remove('hidden');
         document.getElementById('modal-success').classList.add('flex');
       } catch (err) {

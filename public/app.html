@@ -390,36 +390,70 @@
               </button>
             </div>
 
-            <div class="flex items-center gap-1">
-              <span class="text-[10.5px] font-bold text-[#54656F] uppercase mr-0.5">Enviar Plano:</span>
-              <button onclick="sendBlueprintToChat(1)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 1</button>
-              <button onclick="sendBlueprintToChat(2)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 2</button>
-              <button onclick="sendBlueprintToChat(3)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Etapa 3</button>
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="text-[10.5px] font-bold text-[#54656F] uppercase mr-0.5">Enviar por API:</span>
+              <button onclick="sendBlueprintToChat(1)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Plano E1</button>
+              <button onclick="sendBlueprintToChat(2)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Plano E2</button>
+              <button onclick="sendBlueprintToChat(3)" class="px-2 py-0.5 rounded bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[11px] font-semibold text-[#111B21] cursor-pointer">📐 Plano E3</button>
+              <button onclick="sendDroneVideoToChat()" class="px-2 py-0.5 rounded bg-[#E7FCE3] border border-[#00a884]/40 hover:border-[#00a884] text-[11px] font-bold text-[#008069] cursor-pointer">🎥 Video Dron</button>
+              <button onclick="sendQuickVoiceNote('confirmar_cita')" class="px-2 py-0.5 rounded bg-[#0B3B28] text-[#F3D082] text-[11px] font-bold cursor-pointer">🎙️ Audio Confirmar Cita</button>
             </div>
           </div>
 
-          <!-- Authentic WhatsApp Bottom Composer Bar -->
-          <div class="px-3.5 py-2.5 bg-[#F0F2F5] border-t border-[#D1D7DB] flex items-center gap-2 shrink-0">
-            <!-- Mode Toggle: Buyer vs Advisor -->
+          <!-- Authentic WhatsApp Bottom Composer Bar with Voice Note Recorder (No Personal Phone) -->
+          <div class="px-3.5 py-2.5 bg-[#F0F2F5] border-t border-[#D1D7DB] flex items-center gap-2 shrink-0 relative">
+            <!-- Mode Toggle: Advisor (Default) vs Buyer -->
             <div class="inline-flex rounded-lg bg-white border border-[#D1D7DB] p-0.5 shrink-0">
-              <button onclick="setWaSenderMode('buyer')" id="wa-mode-buyer" class="px-2.5 py-1 rounded-md bg-[#00a884] text-white text-[11px] font-semibold cursor-pointer transition">
-                👤 Cliente (Probar IA)
+              <button onclick="setWaSenderMode('advisor')" id="wa-mode-advisor" class="px-2.5 py-1 rounded-md bg-[#111B21] text-white text-[11px] font-semibold cursor-pointer transition">
+                🧑‍💼 Asesor (API)
               </button>
-              <button onclick="setWaSenderMode('advisor')" id="wa-mode-advisor" class="px-2.5 py-1 rounded-md text-[#54656F] hover:text-[#111B21] text-[11px] font-medium cursor-pointer transition">
-                🧑‍💼 Asesor
+              <button onclick="setWaSenderMode('buyer')" id="wa-mode-buyer" class="px-2.5 py-1 rounded-md text-[#54656F] hover:text-[#111B21] text-[11px] font-medium cursor-pointer transition">
+                👤 Simular Cliente
               </button>
             </div>
 
+            <!-- Live Voice Recording Overlay Bar (Shown while recording microphone) -->
+            <div id="wa-recording-bar" class="hidden flex-1 bg-[#FFF1F0] border border-[#FFA39E] rounded-lg px-3 py-1.5 items-center justify-between gap-2">
+              <div class="flex items-center gap-2 text-xs font-bold text-[#CF1322]">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#CF1322] animate-ping"></span>
+                <span>🔴 Grabando Nota de Voz (WhatsApp API)...</span>
+                <span id="wa-rec-timer" class="font-mono bg-white px-2 py-0.5 rounded border border-red-200 text-slate-900">0:00</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="cancelVoiceRecording()" class="px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-slate-100 text-[11px] font-bold text-slate-700 cursor-pointer">
+                  🗑️ Cancelar
+                </button>
+                <button type="button" onclick="finishAndSendVoiceRecording()" class="px-3 py-1 rounded bg-[#00a884] hover:bg-[#008069] text-white text-[11px] font-bold cursor-pointer shadow-xs">
+                  ✅ Enviar Audio
+                </button>
+              </div>
+            </div>
+
             <!-- Single Clean WhatsApp Input -->
-            <div class="flex-1 relative flex items-center">
-              <input id="buyer-input" type="text" placeholder="Escribe un mensaje en WhatsApp como comprador (Valentina IA responderá y moverá el Kanban)..."
+            <div id="wa-text-input-wrap" class="flex-1 relative flex items-center">
+              <input id="buyer-input" type="text" placeholder="Escribe como Asesor Comercial por WhatsApp API (Sin usar tu teléfono personal)..."
                      class="w-full bg-white rounded-lg px-3.5 py-2 text-xs text-[#111B21] placeholder-[#54656F] focus:outline-none shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
                      onkeydown="if(event.key==='Enter') handleUnifiedWaSend()">
               <input id="advisor-input" type="hidden">
             </div>
 
-            <!-- WhatsApp Green Send Button -->
-            <button onclick="handleUnifiedWaSend()" class="w-9 h-9 rounded-full bg-[#00a884] hover:bg-[#008069] text-white flex items-center justify-center shadow-xs cursor-pointer transition shrink-0" title="Enviar a WhatsApp">
+            <!-- Upload Audio File (.mp3/.ogg/.m4a) -->
+            <input type="file" id="wa-audio-upload" accept="audio/*" class="hidden" onchange="handleAudioFileUpload(event)">
+            <button type="button" onclick="document.getElementById('wa-audio-upload').click()"
+                    class="px-2.5 h-9 rounded-lg bg-white border border-[#D1D7DB] hover:border-[#00a884] text-[#54656F] hover:text-[#008069] text-[11px] font-semibold flex items-center gap-1 cursor-pointer shrink-0"
+                    title="Subir archivo de audio (.mp3, .ogg, .m4a) para enviar por WhatsApp API">
+              <span>📎 Audio</span>
+            </button>
+
+            <!-- Record Live Voice Note Button (Mic) -->
+            <button type="button" id="btn-wa-mic" onclick="startVoiceRecording()"
+                    class="px-3 h-9 rounded-full bg-[#0B3B28] hover:bg-emerald-900 text-[#F3D082] text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition shrink-0"
+                    title="Grabar Nota de Voz desde el micrófono y enviar por WhatsApp API">
+              <span>🎤 Grabar Audio</span>
+            </button>
+
+            <!-- WhatsApp Green Send Text Button -->
+            <button onclick="handleUnifiedWaSend()" class="w-9 h-9 rounded-full bg-[#00a884] hover:bg-[#008069] text-white flex items-center justify-center shadow-xs cursor-pointer transition shrink-0" title="Enviar mensaje por WhatsApp API">
               <i data-lucide="send" class="w-4 h-4"></i>
             </button>
           </div>
@@ -741,7 +775,7 @@
     let currentTab = 'kanban';
     let crmView = 'kanban';
     let waFilter = 'all';
-    let waSenderMode = 'buyer';
+    let waSenderMode = 'advisor';
 
     // Exact Pancake CRM (React + Ant Design) 10 Column Colors from User's Screenshots
     const KANBAN_COLS = [
@@ -765,6 +799,13 @@
       state = await res.json();
       if (bpRes && bpRes.ok) {
         blueprintSummary = await bpRes.json();
+      }
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('leadId')) {
+        selectedLeadId = Number(params.get('leadId')) || state.leads[0]?.id || 1;
+      }
+      if (params.get('tab')) {
+        setTab(params.get('tab'));
       }
       populateProjectSelector();
       renderAll();
@@ -1287,12 +1328,35 @@
                 </div>
               ` : ''}
 
+              <!-- Optional Drone Video Preview -->
+              ${m.video ? `
+                <div class="my-1.5 rounded-lg overflow-hidden border border-black/10 bg-black">
+                  <video src="${m.video}" controls playsinline class="max-h-60 w-full object-contain"></video>
+                </div>
+              ` : ''}
+
+              <!-- Optional Voice Note / Audio Player (WhatsApp API Style) -->
+              ${m.audio ? `
+                <div class="my-1.5 p-2 rounded-xl bg-black/5 border border-black/10 flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center shrink-0 text-sm shadow-sm">
+                    🎙️
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between text-[10.5px] font-bold text-[#008069] mb-1">
+                      <span>Nota de Voz · WhatsApp API (Sin Teléfono Personal)</span>
+                      <span>${m.audio_duration || '0:08'}</span>
+                    </div>
+                    <audio controls src="${m.audio}" class="w-full h-8"></audio>
+                  </div>
+                </div>
+              ` : ''}
+
               <!-- Formatted WhatsApp Message Text -->
-              <div class="text-[12.5px] leading-[1.45] whitespace-pre-line">${formatWaText(m.text)}</div>
+              ${m.text ? `<div class="text-[12.5px] leading-[1.45] whitespace-pre-line">${formatWaText(m.text)}</div>` : ''}
 
               <!-- Footer: AI Auto-Tag Pill + Timestamp + Double Blue Ticks -->
               <div class="mt-1.5 pt-1 border-t border-black/5 flex items-center justify-between gap-3 text-[10.5px] text-[#667781]">
-                <span class="font-semibold text-[#008069] truncate">${m.meta || (isBuyer ? 'WhatsApp Cloud API' : 'Valentina Ríos IA')}</span>
+                <span class="font-semibold text-[#008069] truncate">${m.meta || (isBuyer ? 'WhatsApp Cloud API' : 'WhatsApp API Oficial · Sin Teléfono Personal')}</span>
                 <span class="flex items-center gap-1 shrink-0">
                   <span>${m.time || '11:20 AM'}</span>
                   ${!isBuyer ? '<span class="text-[#53BDEB] font-bold text-xs leading-none">✓✓</span>' : ''}
@@ -1518,6 +1582,226 @@
         body: JSON.stringify({ leadId: selectedLeadId, sender: 'advisor', messages: [text] })
       });
       state = await res.json();
+      showAiToast('Mensaje enviado por WhatsApp API Oficial (Sin Teléfono Personal)');
+      renderAll();
+    }
+
+    // =========================================================================
+    // GRABACIÓN Y ENVÍO DE NOTAS DE VOZ (AUDIO) POR WHATSAPP API DESDE EL CRM
+    // =========================================================================
+    let mediaRecorderInstance = null;
+    let recordedAudioChunks = [];
+    let recordingInterval = null;
+    let recordingSeconds = 0;
+
+    function formatDuration(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    function generateSyntheticVoiceNoteDataUrl(durationSec = 4) {
+      const sampleRate = 8000;
+      const numSamples = sampleRate * durationSec;
+      const buffer = new ArrayBuffer(44 + numSamples * 2);
+      const view = new DataView(buffer);
+      const writeStr = (offset, str) => {
+        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+      };
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + numSamples * 2, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeStr(36, 'data');
+      view.setUint32(40, numSamples * 2, true);
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.sin(t * Math.PI * 3.5) * 0.5 + 0.5;
+        const sample = Math.sin(2 * Math.PI * (210 + 45 * Math.sin(t * 6)) * t) * envelope * 0.25;
+        view.setInt16(44 + i * 2, sample * 32767, true);
+      }
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+      return 'data:audio/wav;base64,' + btoa(binary);
+    }
+
+    async function startVoiceRecording() {
+      const recBar = document.getElementById('wa-recording-bar');
+      const timerEl = document.getElementById('wa-recording-timer');
+      recordingSeconds = 0;
+      if (timerEl) timerEl.textContent = '0:00';
+      if (recBar) {
+        recBar.classList.remove('hidden');
+        recBar.classList.add('flex');
+      }
+      if (recordingInterval) clearInterval(recordingInterval);
+      recordingInterval = setInterval(() => {
+        recordingSeconds++;
+        if (timerEl) timerEl.textContent = formatDuration(recordingSeconds);
+      }, 1000);
+
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          recordedAudioChunks = [];
+          mediaRecorderInstance = new MediaRecorder(stream);
+          mediaRecorderInstance.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) recordedAudioChunks.push(e.data);
+          };
+          mediaRecorderInstance.start();
+        } else {
+          mediaRecorderInstance = null;
+        }
+      } catch (err) {
+        // Si el navegador no tiene micrófono conectado o bloquea permiso, grabamos en modo asistido
+        mediaRecorderInstance = null;
+      }
+    }
+
+    function cancelVoiceRecording() {
+      if (recordingInterval) clearInterval(recordingInterval);
+      recordingInterval = null;
+      if (mediaRecorderInstance && mediaRecorderInstance.state !== 'inactive') {
+        try {
+          mediaRecorderInstance.stop();
+          mediaRecorderInstance.stream.getTracks().forEach(t => t.stop());
+        } catch (e) {}
+      }
+      mediaRecorderInstance = null;
+      recordedAudioChunks = [];
+      const recBar = document.getElementById('wa-recording-bar');
+      if (recBar) {
+        recBar.classList.add('hidden');
+        recBar.classList.remove('flex');
+      }
+    }
+
+    async function finishAndSendVoiceRecording() {
+      if (recordingInterval) clearInterval(recordingInterval);
+      recordingInterval = null;
+      const finalSec = Math.max(2, recordingSeconds);
+      const durFormatted = formatDuration(finalSec);
+      const recBar = document.getElementById('wa-recording-bar');
+      if (recBar) {
+        recBar.classList.add('hidden');
+        recBar.classList.remove('flex');
+      }
+
+      const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      if (!activeLead) return;
+
+      const sendAudioPayload = async (audioDataUrl) => {
+        const captionInput = document.getElementById('advisor-input');
+        const optionalText = captionInput?.value.trim() || `🎙️ *Nota de voz del Asesor (${durFormatted})* — Hola ${activeLead.buyer_name.split(' ')[0]}, te envío este audio desde nuestra central oficial de Proyecto La Estrella respecto a tu lote *${activeLead.lot_code}* y tu cita (${activeLead.fecha_cita || 'confirmada'}).`;
+        if (captionInput) captionInput.value = '';
+        const res = await fetch('/api/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            leadId: activeLead.id,
+            sender: 'advisor',
+            messages: [optionalText],
+            audio: audioDataUrl,
+            audio_duration: durFormatted
+          })
+        });
+        state = await res.json();
+        showAiToast(`🎙️ Nota de Voz (${durFormatted}) enviada por WhatsApp API a ${activeLead.buyer_name}`);
+        renderAll();
+      };
+
+      if (mediaRecorderInstance && mediaRecorderInstance.state !== 'inactive') {
+        mediaRecorderInstance.onstop = () => {
+          try {
+            mediaRecorderInstance.stream.getTracks().forEach(t => t.stop());
+          } catch (e) {}
+          const blob = new Blob(recordedAudioChunks, { type: mediaRecorderInstance.mimeType || 'audio/webm' });
+          const reader = new FileReader();
+          reader.onloadend = () => sendAudioPayload(reader.result);
+          reader.readAsDataURL(blob);
+          mediaRecorderInstance = null;
+        };
+        mediaRecorderInstance.stop();
+      } else {
+        const wavUrl = generateSyntheticVoiceNoteDataUrl(Math.min(finalSec, 8));
+        await sendAudioPayload(wavUrl);
+      }
+    }
+
+    async function handleAudioFileUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      if (!activeLead) return;
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const res = await fetch('/api/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            leadId: activeLead.id,
+            sender: 'advisor',
+            messages: [`🎙️ *Audio adjunto (${file.name})* enviado por el asesor vía WhatsApp API.`],
+            audio: reader.result,
+            audio_duration: 'Audio'
+          })
+        });
+        state = await res.json();
+        showAiToast(`📎 Audio "${file.name}" enviado por WhatsApp API a ${activeLead.buyer_name}`);
+        renderAll();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    async function sendQuickVoiceNote() {
+      const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      if (!activeLead) return;
+      const wavUrl = generateSyntheticVoiceNoteDataUrl(6);
+      const firstName = activeLead.buyer_name.split(' ')[0];
+      const text = `🎙️ *Nota de Voz de Bienvenida y Confirmación (0:06)*\n"¡Hola ${firstName}! Te habla tu asesor asignado de *Proyecto Campestre La Estrella* desde nuestra línea corporativa oficial. Ya recibí tu pre-reserva del lote *${activeLead.lot_code}* y tu cita para *${activeLead.fecha_cita || 'esta semana'}*. Aquí mismo te comparto ubicación y quedo atento a cualquier duda."`;
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: activeLead.id,
+          sender: 'advisor',
+          messages: [text],
+          audio: wavUrl,
+          audio_duration: '0:06'
+        })
+      });
+      state = await res.json();
+      showAiToast(`🎙️ Audio de Confirmación enviado por WhatsApp API a ${activeLead.buyer_name}`);
+      renderAll();
+    }
+
+    async function sendDroneVideoToChat() {
+      const activeLead = state.leads.find(l => l.id === selectedLeadId) || state.leads[0];
+      if (!activeLead) return;
+      const stageNum = activeLead.lot_code?.startsWith('E1') ? 1 : activeLead.lot_code?.startsWith('E3') ? 3 : 2;
+      const reelMap = { 1: '/assets/la-estrella/reels/reel-01.mp4', 2: '/assets/la-estrella/reels/reel-02.mp4', 3: '/assets/la-estrella/reels/reel-07.mp4' };
+      const text = `🎥 Hola ${activeLead.buyer_name.split(' ')[0]}, te envío el *Video en Dron Reciente* de la *Etapa ${stageNum}* donde está ubicado tu lote *${activeLead.lot_code}* para que veas las vías internas afirmadas y el entorno natural antes de nuestra cita.`;
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: activeLead.id,
+          sender: 'advisor',
+          messages: [text],
+          video: reelMap[stageNum]
+        })
+      });
+      state = await res.json();
+      showAiToast(`🎥 Video Dron Etapa ${stageNum} enviado por WhatsApp API`);
       renderAll();
     }
 

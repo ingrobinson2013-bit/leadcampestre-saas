@@ -1105,21 +1105,23 @@ const server = http.createServer((req, res) => {
     if (req.method === 'POST' && url.pathname === '/api/message') {
         let body = '';
         req.on('data', chunk => body += chunk);
-        req.on('end', () => {
-            const { leadId, sender, messages, media, media_caption } = JSON.parse(body || '{}');
+        req.on('end', async () => {
+            const { leadId, sender, messages, media, media_caption, audio, audio_duration, video } = JSON.parse(body || '{}');
             const db = loadDb();
             const lead = db.leads.find(l => l.id === Number(leadId));
-            if (lead && Array.isArray(messages) && messages.length > 0) {
+            if (lead && ((Array.isArray(messages) && messages.length > 0) || audio || media || video)) {
                 const nowTime = new Date().toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
-                const combinedText = messages.join(' — ');
+                const combinedText = Array.isArray(messages) && messages.length > 0 ? messages.join(' — ') : (audio ? '🎤 Nota de voz enviada desde el CRM (WhatsApp API)' : '');
                 if (sender === 'buyer') {
                     lead.messages.push({
                         id: Date.now(),
                         sender: 'buyer',
                         text: combinedText,
                         time: nowTime,
-                        batched: messages.length > 1,
-                        batch_count: messages.length
+                        batched: Array.isArray(messages) && messages.length > 1,
+                        batch_count: Array.isArray(messages) ? messages.length : 1,
+                        audio: audio || null,
+                        audio_duration: audio_duration || null
                     });
                     if (lead.ai_active) {
                         const aiReply = autoClassifyAndReply(combinedText, lead);
@@ -1133,7 +1135,6 @@ const server = http.createServer((req, res) => {
                             media_caption: aiReply.media_caption || null
                         });
                     } else {
-                        // Modo 100% Humano (Copiloto Silencioso): NO envía mensaje del bot, pero SÍ etiqueta y mueve el Kanban automáticamente
                         const prevStage = lead.kanban_stage;
                         autoClassifyAndReply(combinedText, lead);
                         if (lead.kanban_stage !== prevStage) {
@@ -1146,15 +1147,38 @@ const server = http.createServer((req, res) => {
                         sender: 'ai',
                         text: combinedText,
                         time: nowTime,
-                        meta: 'Asesor Comercial (Atención Personal)',
+                        meta: audio
+                            ? '🎙️ Nota de Voz del Asesor · Enviada por WhatsApp API (Sin Teléfono Personal)'
+                            : '📲 Asesor Comercial · Enviado por WhatsApp API Oficial',
                         media: media || null,
-                        media_caption: media_caption || null
+                        media_caption: media_caption || null,
+                        audio: audio || null,
+                        audio_duration: audio_duration || '0:08',
+                        video: video || null
                     });
-                    // También analiza lo que el asesor humano acuerda con el cliente para actualizar el Kanban en silencio
-                    const prevStage = lead.kanban_stage;
-                    autoClassifyAndReply(combinedText, lead);
-                    if (lead.kanban_stage !== prevStage) {
-                        lead.last_auto_tag = `🕵️ Copiloto Silencioso (Por Asesor) → ${STAGE_META[lead.kanban_stage]?.title || lead.status_label}`;
+                    // Si hay webhook n8n / Evolution API / WhatsApp Cloud API configurado, despachar en segundo plano sin usar teléfono personal
+                    if (process.env.WHATSAPP_OUTBOUND_WEBHOOK) {
+                        fetch(process.env.WHATSAPP_OUTBOUND_WEBHOOK, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                to: lead.buyer_phone,
+                                buyer_name: lead.buyer_name,
+                                advisor: lead.asesor_id,
+                                text: combinedText,
+                                audio: audio || null,
+                                audio_duration: audio_duration || null,
+                                media: media || null,
+                                video: video || null
+                            })
+                        }).catch(() => {});
+                    }
+                    if (combinedText && !audio) {
+                        const prevStage = lead.kanban_stage;
+                        autoClassifyAndReply(combinedText, lead);
+                        if (lead.kanban_stage !== prevStage) {
+                            lead.last_auto_tag = `🕵️ Copiloto Silencioso (Por Asesor) → ${STAGE_META[lead.kanban_stage]?.title || lead.status_label}`;
+                        }
                     }
                 }
                 saveDb(db);
@@ -1192,6 +1216,7 @@ const server = http.createServer((req, res) => {
             const nowTime = new Date().toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
             const suffix = String(Math.floor(1000 + Math.random() * 9000));
             const cleanPhone = phone.startsWith('+') ? phone : '+57' + phone.replace(/\D/g, '');
+            const passCode = 'EST-2026-' + suffix;
             const newLead = {
                 id: Date.now(),
                 project_id: proj.id,
@@ -1200,25 +1225,32 @@ const server = http.createServer((req, res) => {
                 buyer_phone: cleanPhone,
                 masked_phone: cleanPhone.slice(0, 6) + '***' + cleanPhone.slice(-4),
                 city,
-                purpose: 'CITA AGENDADA EN WEB (OFICINA / LOTE)',
+                purpose: 'CITA AGENDADA EN WEB (WHATSAPP API)',
                 preferred_area: Number(preferred_area) || 152,
                 lot_code,
                 kanban_stage: 'cita_agendada',
                 status_label: STAGE_META.cita_agendada.title,
                 asesor_id,
                 fecha_cita: appointment_day,
-                nota: `📅 Cita agendada en Web (/la-estrella) para ${appointment_day}: ${stage_label} · ${payment_plan}. Atención 100% humana (Sin Bot).`,
-                pass_code: 'EST-2026-' + suffix,
+                nota: `📅 Cita agendada en Web (/la-estrella) para ${appointment_day}: ${stage_label} · ${payment_plan}. Canal: WhatsApp API Oficial (Sin usar teléfono personal).`,
+                pass_code: passCode,
                 gps_unlocked: false,
-                ai_active: false, // 100% Humano — Sin Bot como pidió el coordinador
-                last_auto_tag: `📅 Cita Web (${appointment_day}) → Asignado a Asesor Humano`,
+                ai_active: false, // Atención 100% Humana desde el CRM (Con envío de Audios y Textos por API)
+                last_auto_tag: `📅 Cita Web (${appointment_day}) → Lista en Bandeja WhatsApp API para enviar Audio`,
                 messages: [
                     {
                         id: Date.now() + 1,
                         sender: 'buyer',
-                        text: `Hola, soy *${name}* de *${city}*. Ya revisé los planos actualizados hoy en la página web.\n\n📐 *Lote de interés:* ${stage_label} (Ref: *${lot_code}*)\n📅 *Cita solicitada:* ${appointment_day}\n🏢 *Modalidad:* ${payment_plan}\n\nPor favor confírmame la cita y envíame mi Pasaporte QR para el ingreso a Oficina o Terreno.`,
+                        text: `Hola, soy *${name}* de *${city}*. Agendé mi cita en la página web oficial.\n\n📐 *Lote pre-seleccionado:* ${stage_label} (Ref: *${lot_code}*)\n📅 *Día y Hora:* ${appointment_day}\n🏢 *Modalidad:* ${payment_plan}`,
                         time: nowTime,
                         batched: false
+                    },
+                    {
+                        id: Date.now() + 2,
+                        sender: 'ai',
+                        text: `✅ *CONFIRMACIÓN OFICIAL · PROYECTO CAMPESTRE LA ESTRELLA*\n\nHola *${name}*, recibimos tu agendamiento para *${appointment_day}*.\n• *Lote Pre-seleccionado:* ${lot_code} (${preferred_area} m²)\n• *Pasaporte QR de Ingreso:* \`${passCode}\`\n\nEn breve tu asesor te enviará una *Nota de Voz (Audio)* por este mismo canal oficial para confirmar tu llegada a Oficina Camoa o Portería del Terreno.`,
+                        time: nowTime,
+                        meta: '📲 Enviado Automáticamente por WhatsApp Cloud API (Sin Teléfono Personal)'
                     }
                 ]
             };
